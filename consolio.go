@@ -68,6 +68,8 @@ func main() {
 		http.StripPrefix("/static/",
 			http.FileServer(http.Dir(*staticPath))))
 
+	r.Handle("/", http.RedirectHandler("/index/", 302))
+
 	initSecureCookie([]byte(*secCookKey))
 
 	http.Handle("/", r)
