@@ -26,12 +26,6 @@ function LoginCtrl($scope, $http, $rootScope, consAuth) {
         $scope.me = me;
     });
 
-    $scope.getAuthToken = function() {
-        $http.get("/api/me/token/").
-            success(function(res) {
-                $scope.authtoken = res.token;
-            });
-    };
 
     $scope.logout = consAuth.logout;
     $scope.login = consAuth.login;
