@@ -42,6 +42,9 @@ func RewriteURL(to string, h http.Handler) http.Handler {
 
 func main() {
 	addr := flag.String("addr", ":8675", "http listen address")
+	cbServ := flag.String("couchbase", "http://localhost:8091/",
+		"URL to couchbase")
+	cbBucket := flag.String("bucket", "consolio", "couchbase bucket")
 	secCookKey := flag.String("cookieKey", "thespywholovedme",
 		"The secure cookie auth code.")
 	flag.Parse()
@@ -68,6 +71,12 @@ func main() {
 	initSecureCookie([]byte(*secCookKey))
 
 	http.Handle("/", r)
+
+	var err error
+	db, err = dbConnect(*cbServ, *cbBucket)
+	if err != nil {
+		log.Fatalf("Error connecting to couchbase: %v", err)
+	}
 
 	log.Printf("Listening on %v", *addr)
 	log.Fatal(http.ListenAndServe(*addr, nil))
