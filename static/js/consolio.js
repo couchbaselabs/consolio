@@ -22,11 +22,6 @@ function LoginCtrl($scope, $http, $rootScope, consAuth) {
     $rootScope.$watch('loggedin', function() {
         $scope.auth = consAuth.get(); });
 
-    $http.get("/api/me/").success(function(me) {
-        $scope.me = me;
-    });
-
-
     $scope.logout = consAuth.logout;
     $scope.login = consAuth.login;
 }

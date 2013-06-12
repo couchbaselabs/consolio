@@ -17,30 +17,20 @@
         <div class="container" ng-controller="LoginCtrl">
           <form class="navbar-form pull-right"
                 ng-show="loggedin">
-            <a href="/user/{{auth.username}}/new,inprogress,open">
-              <img ng-src="http://www.gravatar.com/avatar/{{auth.gravatar}}?s=28"
-                   class="uimg">
-            </a>
             <div class="btn-group">
+              <button class="btn dropdown-toggle ng-binding"
+                      data-toggle="dropdown">
+                <img ng-src="http://www.gravatar.com/avatar/{{auth.gravatar}}?s=20"
+                     class="uimg">
+                {{auth.username}}
+              </button>
               <ul class="dropdown-menu">
-                <li> <a href="/user/{{auth.username}}/new,inprogress,open">My
-                    Open Bugs</a> </li>
-                <li ng-show="me.internal">
-                  <a href="/user/special/">List
-                    Special Users</a>
-                </li>
                 <li ng-show="me.admin">
                   <a href="/admin/">Admin</a>
                 </li>
                 <li class="divider"></li>
-                <li ng-show="authtoken">{{authtoken}}</li>
-                <li ng-hide="authtoken">
-                  <a ng-click="getAuthToken()">API
-                    Auth Token</a>
-                </li>
                 <li> <a href="/prefs/">Preferences</a> </li>
-                <li> <a ng-click="logout()">Log
-                    Out</a> </li>
+                <li> <a ng-click="logout()">Log Out</a> </li>
               </ul>
             </div>
           </form>
