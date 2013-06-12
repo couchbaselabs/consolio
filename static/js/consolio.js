@@ -14,7 +14,9 @@ angular.module("consolio", ['consAuth']).
                 $locationProvider.hashPrefix('!');
             }]);
 
-function ConsolioCtrl($scope, $http) {
+function ConsolioCtrl($scope, $http, $rootScope, consAuth) {
+    $rootScope.$watch('loggedin', function() {
+        $scope.auth = consAuth.get(); });
 }
 
 

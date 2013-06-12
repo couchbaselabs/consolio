@@ -1,1 +1,13 @@
-<h1>In Dex</h1>
+<h1>Dashboard</h1>
+
+<div ng-hide="auth.loggedin">
+  <p>
+    Please <a ng-click="login()">log in</a> to make use of this
+    service.  It's quick and easy (and you don't even need to
+    register!)
+  </p>
+</div>
+
+<div ng-show="auth.loggedin">
+  <p>You are {{auth.username}}.  Maybe we have things for you.</p>
+</div>
