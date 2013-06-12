@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="consolio">
+  <head>
+    <title>I am Consolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  </head>
+
+  <body ng-controller="ConsolioCtrl">
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container" ng-controller="LoginCtrl">
+          <form class="navbar-form pull-right"
+                ng-show="loggedin">
+            <a href="/user/{{auth.username}}/new,inprogress,open">
+              <img ng-src="http://www.gravatar.com/avatar/{{auth.gravatar}}?s=28"
+                   class="uimg">
+            </a>
+            <div class="btn-group">
+              <ul class="dropdown-menu">
+                <li> <a href="/user/{{auth.username}}/new,inprogress,open">My
+                    Open Bugs</a> </li>
+                <li ng-show="me.internal">
+                  <a href="/user/special/">List
+                    Special Users</a>
+                </li>
+                <li ng-show="me.admin">
+                  <a href="/admin/">Admin</a>
+                </li>
+                <li class="divider"></li>
+                <li ng-show="authtoken">{{authtoken}}</li>
+                <li ng-hide="authtoken">
+                  <a ng-click="getAuthToken()">API
+                    Auth Token</a>
+                </li>
+                <li> <a href="/prefs/">Preferences</a> </li>
+                <li> <a ng-click="logout()">Log
+                    Out</a> </li>
+              </ul>
+            </div>
+          </form>
+          <p class="navbar-text pull-right">
+            <a ng-hide="loggedin" ng-click="login()">Log
+              In</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div ng-view></div>
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/lib/angular/angular.js"></script>
+    <script src="/static/lib/moment.min.js"></script>
+    <script src="/static/lib/lodash.min.js"></script>
+    <script src="https://login.persona.org/include.js"></script>
+    <script src="/static/js/auth.js"></script>
+    <script src="/static/js/consolio.js"></script>
+  </body>
+</html>
