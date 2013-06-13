@@ -1,4 +1,4 @@
-angular.module("consolio", ['consAuth']).
+angular.module("consolio", ['consAuth', 'consAlert']).
     filter('calDate', function() {
         return function(dstr) {
             return moment(dstr).calendar();
@@ -14,7 +14,7 @@ angular.module("consolio", ['consAuth']).
                 $locationProvider.hashPrefix('!');
             }]);
 
-function ConsolioCtrl($scope, $http, $rootScope, consAuth) {
+function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
     $rootScope.$watch('loggedin', function() {
         $scope.auth = consAuth.get(); });
 
@@ -25,7 +25,7 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth) {
     $scope.newbucket = "";
 
     $scope.newdb = function() {
-        var dbname = $("#newbucketname");
+        var dbname = $("#newbucketname").val();
         console.log("Adding a new thing");
         $http.post('/api/database/new/',
                    'name=' + encodeURIComponent(dbname),
