@@ -99,7 +99,7 @@ function AdminCtrl($scope, $http, $rootScope, $location, bAlert) {
             .success(function(data) {
                 $("#newhookname").val("");
                 $("#newhookurl").val("");
-                $scope.webhooks.push([n, u]);
+                $scope.webhooks.push(data);
             })
             .error(function(data, code) {
                 bAlert("Error " + code, "Couldn't create webhook: " + data, "error");
@@ -110,7 +110,7 @@ function AdminCtrl($scope, $http, $rootScope, $location, bAlert) {
         $http.delete("/api/webhook/" + encodeURIComponent(n) + "/")
             .success(function(data) {
                 $scope.webhooks = _.filter($scope.webhooks, function(e) {
-                    return e[0] !== n;
+                    return e.name !== n;
                 });
             })
             .error(function(data, code) {

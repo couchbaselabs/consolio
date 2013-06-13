@@ -144,7 +144,9 @@ func handleDeleteDB(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(204)
 }
 
-func handleListWebhooks(w http.ResponseWriter, req *http.Request) {
+func getWebhooks() ([]Webhook, error) {
+	rv := []Webhook{}
+
 	viewRes := struct {
 		Rows []struct {
 			Key, Value string
@@ -153,16 +155,24 @@ func handleListWebhooks(w http.ResponseWriter, req *http.Request) {
 
 	err := db.ViewCustom("consolio", "webhooks", nil, &viewRes)
 	if err != nil {
+		return rv, err
+	}
+
+	for _, r := range viewRes.Rows {
+		rv = append(rv, Webhook{Name: r.Key, Url: r.Value, Type: "webhook"})
+	}
+
+	return rv, err
+}
+
+func handleListWebhooks(w http.ResponseWriter, req *http.Request) {
+	hooks, err := getWebhooks()
+	if err != nil {
 		showError(w, req, err.Error(), 500)
 		return
 	}
 
-	rv := []interface{}{}
-	for _, r := range viewRes.Rows {
-		rv = append(rv, []string{r.Key, r.Value})
-	}
-
-	mustEncode(w, rv)
+	mustEncode(w, hooks)
 }
 
 func adminRequired(r *http.Request, rm *mux.RouteMatch) bool {
