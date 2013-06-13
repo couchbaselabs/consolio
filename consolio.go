@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/couchbaselabs/go-couchbase"
 	"github.com/gorilla/mux"
@@ -31,6 +32,36 @@ func mustEncode(w io.Writer, i interface{}) {
 	if err := e.Encode(i); err != nil {
 		panic(err)
 	}
+}
+
+func isValidDBName(n string) bool {
+	return true
+}
+
+func handleNewDB(w http.ResponseWriter, req *http.Request) {
+	d := Database{
+		Name:    strings.TrimSpace(req.FormValue("name")),
+		Type:    "database",
+		Owner:   whoami(req).Id,
+		Enabled: true,
+	}
+
+	if !isValidDBName(d.Name) {
+		showError(w, req, "Invalid DB Name", 400)
+		return
+	}
+
+	added, err := db.Add("db-"+d.Name, 0, d)
+	if err != nil {
+		showError(w, req, "Error adding to DB: "+err.Error(), 500)
+		return
+	}
+	if !added {
+		showError(w, req, "Did not add to DB (no error)", 500)
+		return
+	}
+
+	mustEncode(w, d)
 }
 
 func RewriteURL(to string, h http.Handler) http.Handler {
@@ -67,6 +98,8 @@ func main() {
 	r.PathPrefix("/static/").Handler(
 		http.StripPrefix("/static/",
 			http.FileServer(http.Dir(*staticPath))))
+
+	r.HandleFunc("/api/database/new/", handleNewDB).Methods("POST")
 
 	r.Handle("/", http.RedirectHandler("/index/", 302))
 

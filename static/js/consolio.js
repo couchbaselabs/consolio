@@ -18,6 +18,7 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
     $rootScope.$watch('loggedin', function() {
         $scope.auth = consAuth.get(); });
 
+    $scope.databases = [];
     $http.get("/api/my/databases/").success(function(databases) {
         $scope.databases = databases;
     });
