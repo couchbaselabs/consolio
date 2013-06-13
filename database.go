@@ -1,45 +1,24 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
-	"time"
 
 	"github.com/couchbaselabs/go-couchbase"
+	"github.com/couchbaselabs/go-couchbase/util"
 )
 
-type viewMarker struct {
-	Version   int       `json:"version"`
-	Timestamp time.Time `json:"timestamp"`
-	Type      string    `json:"type"`
-}
-
-const ddocKey = "/@consolioddocVersion"
-const ddocVersion = 0
-const designDoc = ``
-
-func updateView(d *couchbase.Bucket) error {
-	marker := viewMarker{}
-	err := d.Get(ddocKey, &marker)
-	if err != nil {
-		log.Printf("Error checking view version: %v", err)
-	}
-	if marker.Version < ddocVersion {
-		log.Printf("Installing new version of views (old version=%v)",
-			marker.Version)
-		doc := json.RawMessage([]byte(designDoc))
-		err = d.PutDDoc("cbugg", &doc)
-		if err != nil {
-			return err
-		}
-		marker.Version = ddocVersion
-		marker.Timestamp = time.Now().UTC()
-		marker.Type = "ddocmarker"
-
-		return d.Set(ddocKey, 0, &marker)
-	}
-	return nil
-}
+const ddocKey = "consolio"
+const markerKey = "/@consolioddocVersion"
+const ddocVersion = 1
+const ddocBody = `{
+  "id": "_design/consolio",
+  "views": {
+    "databases": {
+      "map": "function (doc, meta) {\n  if (doc.type === 'database') {\n    emit([doc.owner, doc.name], doc.size);\n  }\n}",
+      "reduce": "_sum"
+    }
+  }
+}`
 
 func dbConnect(serv, bucket string) (*couchbase.Bucket, error) {
 
@@ -50,9 +29,6 @@ func dbConnect(serv, bucket string) (*couchbase.Bucket, error) {
 		return nil, err
 	}
 
-	if designDoc != "" {
-		err = updateView(rv)
-	}
-
-	return rv, err
+	return rv, couchbaseutil.UpdateView(rv,
+		ddocKey, markerKey, ddocBody, ddocVersion)
 }
