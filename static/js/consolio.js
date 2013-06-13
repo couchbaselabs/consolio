@@ -8,7 +8,9 @@ angular.module("consolio", ['consAuth', 'consAlert']).
             function($routeProvider, $locationProvider) {
                 $routeProvider.
                     when('/index/', {templateUrl: '/static/partials/index.html',
-                               controller: 'ConsolioCtrl'}).
+                                     controller: 'ConsolioCtrl'}).
+                    when('/db/:name/', {templateUrl: '/static/partials/db.html',
+                                        controller: 'DBCtrl'}).
                     otherwise({redirectTo: '/index/'});
                 $locationProvider.html5Mode(true);
                 $locationProvider.hashPrefix('!');
@@ -19,7 +21,7 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
         $scope.auth = consAuth.get(); });
 
     $scope.databases = [];
-    $http.get("/api/my/databases/").success(function(databases) {
+    $http.get("/api/database/").success(function(databases) {
         $scope.databases = databases;
     });
 
@@ -28,7 +30,7 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
     $scope.newdb = function() {
         var dbname = $("#newbucketname").val();
         console.log("Adding a new thing");
-        $http.post('/api/database/new/',
+        $http.post('/api/database/',
                    'name=' + encodeURIComponent(dbname),
                    {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
             .error(function(data, code) {
@@ -44,6 +46,9 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
     };
 }
 
+function DBCtrl($scope, $http, $routeParams, $rootScope, consAuth, bAlert) {
+    $scope.dbname = $routeParams.name;
+}
 
 function LoginCtrl($scope, $http, $rootScope, consAuth) {
     $rootScope.$watch('loggedin', function() {

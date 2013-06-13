@@ -122,6 +122,7 @@ func main() {
 	// application pages
 	appPages := []string{
 		"/index/",
+		"/db/",
 	}
 
 	for _, p := range appPages {
@@ -133,8 +134,8 @@ func main() {
 		http.StripPrefix("/static/",
 			http.FileServer(http.Dir(*staticPath))))
 
-	r.HandleFunc("/api/my/databases/", handleListDBs).Methods("GET")
-	r.HandleFunc("/api/database/new/", handleNewDB).Methods("POST")
+	r.HandleFunc("/api/database/", handleListDBs).Methods("GET")
+	r.HandleFunc("/api/database/", handleNewDB).Methods("POST")
 
 	r.Handle("/", http.RedirectHandler("/index/", 302))
 

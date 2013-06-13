@@ -13,7 +13,7 @@
 
   <h2 ng-show="databases">Your Databases</h2>
   <ul ng-show="databases">
-    <li ng-repeat="d in databases">{{d.name}}</li>
+    <li ng-repeat="d in databases"><a href="/db/{{d.name}}/">{{d.name}}</a></li>
   </ul>
 
   <form ng-submit="newdb()">
