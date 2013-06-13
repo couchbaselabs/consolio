@@ -14,3 +14,8 @@ type Webhook struct {
 	Url  string `json:"url"`
 	Type string `json:"type"`
 }
+
+type HookEvent struct {
+	Type     string   `json:"type"`
+	Database Database `json:"database"`
+}

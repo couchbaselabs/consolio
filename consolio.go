@@ -1,22 +1,26 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"flag"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/couchbaselabs/go-couchbase"
 	"github.com/dustin/gomemcached"
 	"github.com/gorilla/mux"
-	"net/url"
 )
 
 var staticPath = flag.String("static", "static", "Path to the static content")
 
 var db *couchbase.Bucket
+
+var eventCh = make(chan HookEvent, 10)
 
 func showError(w http.ResponseWriter, r *http.Request,
 	msg string, code int) {
@@ -62,6 +66,8 @@ func handleNewDB(w http.ResponseWriter, req *http.Request) {
 		showError(w, req, "Did not add to DB (no error)", 500)
 		return
 	}
+
+	eventCh <- HookEvent{"create", d}
 
 	mustEncode(w, d)
 }
@@ -140,6 +146,8 @@ func handleDeleteDB(w http.ResponseWriter, req *http.Request) {
 		showError(w, req, err.Error(), 500)
 		return
 	}
+
+	eventCh <- HookEvent{"delete", d}
 
 	w.WriteHeader(204)
 }
@@ -226,6 +234,52 @@ func RewriteURL(to string, h http.Handler) http.Handler {
 	})
 }
 
+func runHook(wh Webhook, content []byte) error {
+	req, err := http.NewRequest("POST", wh.Url, bytes.NewReader(content))
+	if err != nil {
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+	if res.StatusCode >= 300 {
+		return fmt.Errorf("HTTP Error: %v", res.Status)
+	}
+	return nil
+}
+
+func runHooks(h HookEvent) {
+	hooks, err := getWebhooks()
+	if err != nil {
+		log.Printf("Error getting web hooks:  %v", err)
+		return
+	}
+
+	content, err := json.Marshal(h)
+	if err != nil {
+		log.Printf("Error marshaling hook event: %v", err)
+		return
+	}
+
+	for _, wh := range hooks {
+		err := runHook(wh, content)
+		if err != nil {
+			log.Printf("Error running hook %v -> %v: %v", h, wh, err)
+		}
+	}
+}
+
+func hookRunner() {
+	for h := range eventCh {
+		runHooks(h)
+	}
+}
+
 func main() {
 	addr := flag.String("addr", ":8675", "http listen address")
 	cbServ := flag.String("couchbase", "http://localhost:8091/",
@@ -234,6 +288,8 @@ func main() {
 	secCookKey := flag.String("cookieKey", "thespywholovedme",
 		"The secure cookie auth code.")
 	flag.Parse()
+
+	go hookRunner()
 
 	r := mux.NewRouter()
 
