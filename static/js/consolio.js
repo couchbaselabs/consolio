@@ -11,14 +11,17 @@ angular.module("consolio", ['consAuth', 'consAlert']).
                                      controller: 'ConsolioCtrl'}).
                     when('/db/:name/', {templateUrl: '/static/partials/db.html',
                                         controller: 'DBCtrl'}).
+                    when('/admin/', {templateUrl: '/static/partials/admin.html',
+                                     controller: 'AdminCtrl'}).
                     otherwise({redirectTo: '/index/'});
                 $locationProvider.html5Mode(true);
                 $locationProvider.hashPrefix('!');
             }]);
 
 function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
-    $rootScope.$watch('loggedin', function() {
-        $scope.auth = consAuth.get(); });
+    $rootScope.$watch('loggedin', function() { $scope.auth = consAuth.get(); });
+
+    $http.get("/api/me/").success(function(me) { $scope.me = me; });
 
     $scope.databases = [];
     $http.get("/api/database/").success(function(databases) {
@@ -68,9 +71,57 @@ function DBCtrl($scope, $http, $routeParams, $rootScope, $location, consAuth, bA
     };
 }
 
+function AdminCtrl($scope, $http, $rootScope, $location, bAlert) {
+    $http.get("/api/me/")
+        .success(function(data) {
+            $scope.me = data;
+        })
+        .error(function(data, error) {
+            $location.path("/index/");
+        });
+
+    $scope.webhooks = [];
+    $http.get("/api/webhook/")
+        .success(function(data) {
+            $scope.webhooks = data;
+        })
+        .error(function(data, error) {
+            bAlert("Error " + code, "Couldn't get webhooks: " + data, "error");
+        });
+
+    $scope.add = function() {
+        var n = $("#newhookname").val();
+        var u = $("#newhookurl").val();
+        $http.post("/api/webhook/",
+                   'name=' + encodeURIComponent(n) +
+                   '&url=' + encodeURIComponent(u),
+                   {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
+            .success(function(data) {
+                $("#newhookname").val("");
+                $("#newhookurl").val("");
+                $scope.webhooks.push([n, u]);
+            })
+            .error(function(data, code) {
+                bAlert("Error " + code, "Couldn't create webhook: " + data, "error");
+            });
+    };
+
+    $scope.delete = function(n) {
+        $http.delete("/api/webhook/" + encodeURIComponent(n) + "/")
+            .success(function(data) {
+                $scope.webhooks = _.filter($scope.webhooks, function(e) {
+                    return e[0] !== n;
+                });
+            })
+            .error(function(data, code) {
+                bAlert("Error " + code, "Couldn't delete webhook: " + data, "error");
+            });
+    };
+}
+
 function LoginCtrl($scope, $http, $rootScope, consAuth) {
-    $rootScope.$watch('loggedin', function() {
-        $scope.auth = consAuth.get(); });
+    $rootScope.$watch('loggedin', function() { $scope.auth = consAuth.get(); });
+    $http.get("/api/me/").success(function(me) { $scope.me = me; });
 
     $scope.logout = consAuth.logout;
     $scope.login = consAuth.login;

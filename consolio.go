@@ -11,6 +11,7 @@ import (
 	"github.com/couchbaselabs/go-couchbase"
 	"github.com/dustin/gomemcached"
 	"github.com/gorilla/mux"
+	"net/url"
 )
 
 var staticPath = flag.String("static", "static", "Path to the static content")
@@ -143,6 +144,71 @@ func handleDeleteDB(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(204)
 }
 
+func handleListWebhooks(w http.ResponseWriter, req *http.Request) {
+	viewRes := struct {
+		Rows []struct {
+			Key, Value string
+		}
+	}{}
+
+	err := db.ViewCustom("consolio", "webhooks", nil, &viewRes)
+	if err != nil {
+		showError(w, req, err.Error(), 500)
+		return
+	}
+
+	rv := []interface{}{}
+	for _, r := range viewRes.Rows {
+		rv = append(rv, []string{r.Key, r.Value})
+	}
+
+	mustEncode(w, rv)
+}
+
+func adminRequired(r *http.Request, rm *mux.RouteMatch) bool {
+	return whoami(r).Admin
+}
+
+func handleNewWebhook(w http.ResponseWriter, req *http.Request) {
+	wh := Webhook{
+		Name: req.FormValue("name"),
+		Url:  req.FormValue("url"),
+		Type: "webhook",
+	}
+
+	_, err := url.Parse(wh.Url)
+	if err != nil {
+		showError(w, req, err.Error(), 500)
+		return
+	}
+
+	k := "wh-" + wh.Name
+	err = db.Set(k, 0, wh)
+	if err != nil {
+		showError(w, req, err.Error(), 500)
+		return
+	}
+
+	mustEncode(w, wh)
+}
+
+func handleDeleteWebhook(w http.ResponseWriter, req *http.Request) {
+	k := "wh-" + mux.Vars(req)["name"]
+	err := db.Delete(k)
+	switch {
+	case gomemcached.IsNotFound(err):
+		showError(w, req, "Not found", 404)
+	case err != nil:
+		showError(w, req, err.Error(), 500)
+	default:
+		w.WriteHeader(204)
+	}
+}
+
+func handleMe(w http.ResponseWriter, req *http.Request) {
+	mustEncode(w, whoami(req))
+}
+
 func RewriteURL(to string, h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		r.URL.Path = to
@@ -168,6 +234,7 @@ func main() {
 	appPages := []string{
 		"/index/",
 		"/db/",
+		"/admin/",
 	}
 
 	for _, p := range appPages {
@@ -183,6 +250,14 @@ func main() {
 	r.HandleFunc("/api/database/{name}/", handleDeleteDB).Methods("DELETE")
 	r.HandleFunc("/api/database/", handleListDBs).Methods("GET")
 	r.HandleFunc("/api/database/", handleNewDB).Methods("POST")
+	r.HandleFunc("/api/me/", handleMe).Methods("GET")
+
+	r.HandleFunc("/api/webhook/",
+		handleListWebhooks).Methods("GET").MatcherFunc(adminRequired)
+	r.HandleFunc("/api/webhook/",
+		handleNewWebhook).Methods("POST").MatcherFunc(adminRequired)
+	r.HandleFunc("/api/webhook/{name}/",
+		handleDeleteWebhook).Methods("DELETE").MatcherFunc(adminRequired)
 
 	r.Handle("/", http.RedirectHandler("/index/", 302))
 

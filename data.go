@@ -8,3 +8,9 @@ type Database struct {
 	Enabled  bool   `json:"enabled"`
 	Size     int64  `json:"size"`
 }
+
+type Webhook struct {
+	Name string `json:"name"`
+	Url  string `json:"url"`
+	Type string `json:"type"`
+}
