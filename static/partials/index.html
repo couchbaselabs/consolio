@@ -10,6 +10,12 @@
 
 <div ng-show="auth.loggedin">
   <p>You are {{auth.username}}.  Maybe we have things for you.</p>
+
+  <h2 ng-show="databases">Your Databases</h2>
+  <ul ng-show="databases">
+    <li ng-repeat="d in databases">{{d.name}}</li>
+  </ul>
+
   <form ng-submit="newdb()">
     Create a new bucket named
     <input ng-bind="newbucket" id="newbucketname" type="text" />

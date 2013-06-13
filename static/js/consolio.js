@@ -37,6 +37,7 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
             })
             .success(function(data) {
                 console.log("Worked!");
+                $("#newbucketname").val("");
                 $scope.newbucket="";
                 $scope.databases.push(data);
             });

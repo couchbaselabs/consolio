@@ -64,6 +64,40 @@ func handleNewDB(w http.ResponseWriter, req *http.Request) {
 	mustEncode(w, d)
 }
 
+func handleListDBs(w http.ResponseWriter, req *http.Request) {
+	viewRes := struct {
+		Rows []struct {
+			Doc struct {
+				Json *json.RawMessage
+			}
+		}
+	}{}
+
+	me := whoami(req).Id
+
+	empty := &json.RawMessage{'{', '}'}
+	err := db.ViewCustom("consolio", "databases",
+		map[string]interface{}{
+			"reduce":       false,
+			"include_docs": true,
+			"start_key":    []interface{}{me},
+			"end_key":      []interface{}{me, empty},
+		},
+		&viewRes)
+	if err != nil {
+		showError(w, req, "Did Error listing stuff: "+
+			err.Error(), 500)
+		return
+	}
+
+	rv := []interface{}{}
+	for _, r := range viewRes.Rows {
+		rv = append(rv, r.Doc.Json)
+	}
+
+	mustEncode(w, rv)
+}
+
 func RewriteURL(to string, h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		r.URL.Path = to
@@ -99,6 +133,7 @@ func main() {
 		http.StripPrefix("/static/",
 			http.FileServer(http.Dir(*staticPath))))
 
+	r.HandleFunc("/api/my/databases/", handleListDBs).Methods("GET")
 	r.HandleFunc("/api/database/new/", handleNewDB).Methods("POST")
 
 	r.Handle("/", http.RedirectHandler("/index/", 302))
