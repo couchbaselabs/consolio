@@ -46,8 +46,26 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
     };
 }
 
-function DBCtrl($scope, $http, $routeParams, $rootScope, consAuth, bAlert) {
+function DBCtrl($scope, $http, $routeParams, $rootScope, $location, consAuth, bAlert) {
     $scope.dbname = $routeParams.name;
+    var dburl = "/api/database/" + $scope.dbname + "/";
+    $http.get(dburl)
+        .success(function(data) {
+            $scope.db = data;
+        })
+        .error(function(data, code) {
+            bAlert("Error " + code, "Couldn't get DB: " + data, "error");
+        });
+
+    $scope.delete = function() {
+        $http.delete(dburl)
+            .success(function(data) {
+                $location.path("/index/");
+            })
+            .error(function(data, code) {
+                bAlert("Error " + code, "Couldn't delete DB: " + data, "error");
+            });
+    };
 }
 
 function LoginCtrl($scope, $http, $rootScope, consAuth) {

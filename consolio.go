@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/couchbaselabs/go-couchbase"
+	"github.com/dustin/gomemcached"
 	"github.com/gorilla/mux"
 )
 
@@ -92,10 +93,54 @@ func handleListDBs(w http.ResponseWriter, req *http.Request) {
 
 	rv := []interface{}{}
 	for _, r := range viewRes.Rows {
-		rv = append(rv, r.Doc.Json)
+		if r.Doc.Json != nil {
+			rv = append(rv, r.Doc.Json)
+		}
 	}
 
 	mustEncode(w, rv)
+}
+
+func handleGetDB(w http.ResponseWriter, req *http.Request) {
+	d := Database{}
+	err := db.Get("db-"+mux.Vars(req)["name"], &d)
+	switch {
+	case gomemcached.IsNotFound(err):
+		showError(w, req, "Not found", 404)
+	case err != nil:
+		showError(w, req, err.Error(), 500)
+	case d.Type != "database":
+		showError(w, req, "Incorrect type", 400)
+	case d.Owner != whoami(req).Id:
+		showError(w, req, "Not your DB", 403)
+	default:
+		d.Password = ""
+		mustEncode(w, d)
+	}
+}
+
+func handleDeleteDB(w http.ResponseWriter, req *http.Request) {
+	d := Database{}
+	k := "db-" + mux.Vars(req)["name"]
+	err := db.Get(k, &d)
+	switch {
+	case gomemcached.IsNotFound(err):
+		showError(w, req, "Not found", 404)
+	case err != nil:
+		showError(w, req, err.Error(), 500)
+	case d.Type != "database":
+		showError(w, req, "Incorrect type", 400)
+	case d.Owner != whoami(req).Id:
+		showError(w, req, "Not your DB", 403)
+	}
+
+	err = db.Delete(k)
+	if err != nil {
+		showError(w, req, err.Error(), 500)
+		return
+	}
+
+	w.WriteHeader(204)
 }
 
 func RewriteURL(to string, h http.Handler) http.Handler {
@@ -134,6 +179,8 @@ func main() {
 		http.StripPrefix("/static/",
 			http.FileServer(http.Dir(*staticPath))))
 
+	r.HandleFunc("/api/database/{name}/", handleGetDB).Methods("GET")
+	r.HandleFunc("/api/database/{name}/", handleDeleteDB).Methods("DELETE")
 	r.HandleFunc("/api/database/", handleListDBs).Methods("GET")
 	r.HandleFunc("/api/database/", handleNewDB).Methods("POST")
 
