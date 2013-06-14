@@ -16,6 +16,9 @@ const ddocBody = `{
     "databases": {
       "map": "function (doc, meta) {\n  if (doc.type === 'database') {\n    emit([doc.owner, doc.name], doc.size);\n  }\n}",
       "reduce": "_sum"
+    },
+    "webhooks": {
+      "map": "function (doc, meta) {\n  if (doc.type === 'webhook') {\n    emit(doc.name, doc.url);\n  }\n}"
     }
   }
 }`
