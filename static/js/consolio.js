@@ -32,18 +32,19 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
 
     $scope.newdb = function() {
         var dbname = $("#newbucketname").val();
+        var password = $("#newbucketpass").val();
         console.log("Adding a new thing");
         $http.post('/api/database/',
-                   'name=' + encodeURIComponent(dbname),
+                   'name=' + encodeURIComponent(dbname) +
+                   '&password=' + encodeURIComponent(password),
                    {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
             .error(function(data, code) {
                 bAlert("Error " + code, "Couldn't create " + dbname +
                        ": " + data, "error");
             })
             .success(function(data) {
-                console.log("Worked!");
                 $("#newbucketname").val("");
-                $scope.newbucket="";
+                $("#newbucketpass").val("");
                 $scope.databases.push(data);
             });
     };

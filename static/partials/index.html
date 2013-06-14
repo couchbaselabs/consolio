@@ -17,8 +17,9 @@
   </ul>
 
   <form ng-submit="newdb()">
-    Create a new bucket named
-    <input ng-bind="newbucket" id="newbucketname" type="text" />
+    Create a new bucket<br>
+    Name: <input ng-bind="newbucket" id="newbucketname" type="text" /><br/>
+    Pass: <input ng-bind="newbucketpass" id="newbucketpass" type="password" /><br/>
     <input type="submit"/>
   </form>
 </div>

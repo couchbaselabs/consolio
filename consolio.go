@@ -46,10 +46,11 @@ func isValidDBName(n string) bool {
 
 func handleNewDB(w http.ResponseWriter, req *http.Request) {
 	d := Database{
-		Name:    strings.TrimSpace(req.FormValue("name")),
-		Type:    "database",
-		Owner:   whoami(req).Id,
-		Enabled: true,
+		Name:     strings.TrimSpace(req.FormValue("name")),
+		Password: encrypt(strings.TrimSpace(req.FormValue("password"))),
+		Type:     "database",
+		Owner:    whoami(req).Id,
+		Enabled:  true,
 	}
 
 	if !isValidDBName(d.Name) {
@@ -121,7 +122,6 @@ func handleGetDB(w http.ResponseWriter, req *http.Request) {
 	case d.Owner != whoami(req).Id:
 		showError(w, req, "Not your DB", 403)
 	default:
-		d.Password = ""
 		mustEncode(w, d)
 	}
 }
@@ -287,7 +287,12 @@ func main() {
 	cbBucket := flag.String("bucket", "consolio", "couchbase bucket")
 	secCookKey := flag.String("cookieKey", "thespywholovedme",
 		"The secure cookie auth code.")
+	keyRing := flag.String("keyring", "", "pgp keyring")
+	encryptTo := flag.String("encryptTo", "",
+		"pgp IDs for password recipients (comma separated)")
 	flag.Parse()
+
+	initPgp(*keyRing, strings.Split(*encryptTo, ","))
 
 	go hookRunner()
 
