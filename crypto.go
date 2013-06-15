@@ -16,8 +16,6 @@ import (
 	"code.google.com/p/go.crypto/openpgp/armor"
 )
 
-const pgpkeymask = uint64(0xffffffff)
-
 var encryptKeys openpgp.EntityList
 
 func encrypt(s string) string {
