@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/couchbaselabs/go-couchbase"
 	"github.com/dustin/gomemcached"
@@ -51,6 +52,7 @@ func handleNewDB(w http.ResponseWriter, req *http.Request) {
 		Type:     "database",
 		Owner:    whoami(req).Id,
 		Enabled:  true,
+		LastMod:  time.Now().UTC(),
 	}
 
 	if !isValidDBName(d.Name) {
