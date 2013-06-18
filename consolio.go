@@ -2,6 +2,8 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha1"
+	"encoding/hex"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -21,7 +23,7 @@ var staticPath = flag.String("static", "static", "Path to the static content")
 
 var db *couchbase.Bucket
 
-var eventCh = make(chan HookEvent, 10)
+var eventCh = make(chan ChangeEvent, 10)
 
 func showError(w http.ResponseWriter, r *http.Request,
 	msg string, code int) {
@@ -70,9 +72,41 @@ func handleNewDB(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	eventCh <- HookEvent{"create", d}
+	err = recordEvent("create", d)
+	if err != nil {
+		showError(w, req, "Did not record mutation event: "+err.Error(), 500)
+		return
+	}
 
 	mustEncode(w, d)
+}
+
+func tstr(t time.Time) string {
+	return t.Format("20060102150405.999999999")
+}
+
+func hashstr(s string) string {
+	h := sha1.New()
+	_, err := h.Write([]byte(s))
+	if err != nil {
+		panic(err)
+	}
+	return hex.EncodeToString(h.Sum(nil))
+}
+
+func recordEvent(t string, d Database) error {
+	ts := time.Now().UTC()
+	k := "ch-" + t + "-" + tstr(ts) + "-" + hashstr(d.Name)[:8]
+	ev := ChangeEvent{Type: t, Database: d, Timestamp: ts}
+	a, err := db.Add(k, 0, ev)
+	if err != nil {
+		return err
+	}
+	if !a {
+		return fmt.Errorf("Failed to add %v", k)
+	}
+	eventCh <- ev
+	return nil
 }
 
 func handleListDBs(w http.ResponseWriter, req *http.Request) {
@@ -149,7 +183,11 @@ func handleDeleteDB(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	eventCh <- HookEvent{"delete", d}
+	err = recordEvent("create", d)
+	if err != nil {
+		showError(w, req, "Did not record mutation event: "+err.Error(), 500)
+		return
+	}
 
 	w.WriteHeader(204)
 }
@@ -255,7 +293,7 @@ func runHook(wh Webhook, content []byte) error {
 	return nil
 }
 
-func runHooks(h HookEvent) {
+func runHooks(h ChangeEvent) {
 	hooks, err := getWebhooks()
 	if err != nil {
 		log.Printf("Error getting web hooks:  %v", err)
