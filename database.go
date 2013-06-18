@@ -19,6 +19,9 @@ const ddocBody = `{
     },
     "webhooks": {
       "map": "function (doc, meta) {\n  if (doc.type === 'webhook') {\n    emit(doc.name, doc.url);\n  }\n}"
+    },
+    "events": {
+      "map": "function (doc, meta) {\n  if (doc.type === 'create' || doc.type === 'delete') {\n    emit([doc.processed ? 'done' : 'todo', doc.ts], null);\n  }\n}"
     }
   }
 }`
