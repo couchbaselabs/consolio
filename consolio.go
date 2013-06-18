@@ -95,6 +95,10 @@ func hashstr(s string) string {
 }
 
 func recordEvent(t string, d Database) error {
+	if t == "delete" {
+		d.Password = ""
+	}
+
 	ts := time.Now().UTC()
 	k := "ch-" + t + "-" + tstr(ts) + "-" + hashstr(d.Name)[:8]
 	ev := ChangeEvent{Type: t, Database: d, Timestamp: ts}

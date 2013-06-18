@@ -7,7 +7,7 @@ import (
 
 type Database struct {
 	Name     string    `json:"name"`
-	Password string    `json:"password"`
+	Password string    `json:"password,omitempty"`
 	Type     string    `json:"type"`
 	Owner    string    `json:"owner"`
 	Enabled  bool      `json:"enabled"`
