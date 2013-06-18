@@ -183,7 +183,7 @@ func handleDeleteDB(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	err = recordEvent("create", d)
+	err = recordEvent("delete", d)
 	if err != nil {
 		showError(w, req, "Did not record mutation event: "+err.Error(), 500)
 		return
