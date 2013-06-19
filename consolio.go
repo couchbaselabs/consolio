@@ -272,6 +272,7 @@ func handleDeleteWebhook(w http.ResponseWriter, req *http.Request) {
 func handleListTODO(w http.ResponseWriter, req *http.Request) {
 	viewRes := struct {
 		Rows []struct {
+			ID  string
 			Doc struct {
 				Json ChangeEvent
 			}
@@ -289,10 +290,31 @@ func handleListTODO(w http.ResponseWriter, req *http.Request) {
 
 	rv := []ChangeEvent{}
 	for _, r := range viewRes.Rows {
+		r.Doc.Json.ID = r.ID
 		rv = append(rv, r.Doc.Json)
 	}
 
 	mustEncode(w, rv)
+}
+
+func handleMarkTaskDone(w http.ResponseWriter, req *http.Request) {
+	ce := ChangeEvent{}
+	k := mux.Vars(req)["id"]
+	err := db.Get(k, &ce)
+	if err != nil {
+		showError(w, req, err.Error(), 500)
+		return
+	}
+
+	ce.Processed = time.Now().UTC()
+
+	err = db.Set(k, 0, ce)
+	if err != nil {
+		showError(w, req, err.Error(), 500)
+		return
+	}
+
+	w.WriteHeader(204)
 }
 
 func handleMe(w http.ResponseWriter, req *http.Request) {
@@ -403,6 +425,7 @@ func main() {
 		handleDeleteWebhook).Methods("DELETE").MatcherFunc(adminRequired)
 
 	r.HandleFunc(*backendPrefix+"todo/", handleListTODO)
+	r.HandleFunc(*backendPrefix+"todo/{id}", handleMarkTaskDone).Methods("POST")
 
 	r.Handle("/", http.RedirectHandler("/index/", 302))
 

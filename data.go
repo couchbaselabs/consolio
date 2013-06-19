@@ -26,6 +26,8 @@ type ChangeEvent struct {
 	Database  Database  `json:"database"`
 	Timestamp time.Time `json:"ts"`
 	Processed time.Time `json:"processed"`
+
+	ID string
 }
 
 func (c ChangeEvent) MarshalJSON() ([]byte, error) {
@@ -37,6 +39,9 @@ func (c ChangeEvent) MarshalJSON() ([]byte, error) {
 
 	if !c.Processed.IsZero() {
 		m["processed"] = c.Processed
+	}
+	if c.ID != "" {
+		m["id"] = c.ID
 	}
 
 	return json.Marshal(m)
