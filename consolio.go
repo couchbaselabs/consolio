@@ -20,6 +20,8 @@ import (
 )
 
 var staticPath = flag.String("static", "static", "Path to the static content")
+var backendPrefix = flag.String("backendPrefix", "/backend/",
+	"HTTP path prefix for backend API")
 
 var db *couchbase.Bucket
 
@@ -267,6 +269,32 @@ func handleDeleteWebhook(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
+func handleListTODO(w http.ResponseWriter, req *http.Request) {
+	viewRes := struct {
+		Rows []struct {
+			Doc struct {
+				Json ChangeEvent
+			}
+		}
+	}{}
+
+	err := db.ViewCustom("consolio", "events", map[string]interface{}{
+		"include_docs": true,
+		"start_key":    []string{"todo"},
+	}, &viewRes)
+	if err != nil {
+		showError(w, req, err.Error(), 500)
+		return
+	}
+
+	rv := []ChangeEvent{}
+	for _, r := range viewRes.Rows {
+		rv = append(rv, r.Doc.Json)
+	}
+
+	mustEncode(w, rv)
+}
+
 func handleMe(w http.ResponseWriter, req *http.Request) {
 	mustEncode(w, whoami(req))
 }
@@ -373,6 +401,8 @@ func main() {
 		handleNewWebhook).Methods("POST").MatcherFunc(adminRequired)
 	r.HandleFunc("/api/webhook/{name}/",
 		handleDeleteWebhook).Methods("DELETE").MatcherFunc(adminRequired)
+
+	r.HandleFunc(*backendPrefix+"todo/", handleListTODO)
 
 	r.Handle("/", http.RedirectHandler("/index/", 302))
 
