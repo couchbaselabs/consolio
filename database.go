@@ -9,7 +9,7 @@ import (
 
 const ddocKey = "consolio"
 const markerKey = "/@consolioddocVersion"
-const ddocVersion = 1
+const ddocVersion = 2
 const ddocBody = `{
   "id": "_design/consolio",
   "views": {
