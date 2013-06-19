@@ -17,6 +17,8 @@ import (
 	"github.com/couchbaselabs/go-couchbase"
 	"github.com/dustin/gomemcached"
 	"github.com/gorilla/mux"
+
+	"github.com/couchbaselabs/consolio/types"
 )
 
 var staticPath = flag.String("static", "static", "Path to the static content")
@@ -25,7 +27,7 @@ var backendPrefix = flag.String("backendPrefix", "/backend/",
 
 var db *couchbase.Bucket
 
-var eventCh = make(chan ChangeEvent, 10)
+var eventCh = make(chan consolio.ChangeEvent, 10)
 
 func showError(w http.ResponseWriter, r *http.Request,
 	msg string, code int) {
@@ -50,7 +52,7 @@ func isValidDBName(n string) bool {
 }
 
 func handleNewDB(w http.ResponseWriter, req *http.Request) {
-	d := Database{
+	d := consolio.Database{
 		Name:     strings.TrimSpace(req.FormValue("name")),
 		Password: encrypt(strings.TrimSpace(req.FormValue("password"))),
 		Type:     "database",
@@ -96,14 +98,14 @@ func hashstr(s string) string {
 	return hex.EncodeToString(h.Sum(nil))
 }
 
-func recordEvent(t string, d Database) error {
+func recordEvent(t string, d consolio.Database) error {
 	if t == "delete" {
 		d.Password = ""
 	}
 
 	ts := time.Now().UTC()
 	k := "ch-" + t + "-" + tstr(ts) + "-" + hashstr(d.Name)[:8]
-	ev := ChangeEvent{Type: t, Database: d, Timestamp: ts}
+	ev := consolio.ChangeEvent{Type: t, Database: d, Timestamp: ts}
 	a, err := db.Add(k, 0, ev)
 	if err != nil {
 		return err
@@ -152,7 +154,7 @@ func handleListDBs(w http.ResponseWriter, req *http.Request) {
 }
 
 func handleGetDB(w http.ResponseWriter, req *http.Request) {
-	d := Database{}
+	d := consolio.Database{}
 	err := db.Get("db-"+mux.Vars(req)["name"], &d)
 	switch {
 	case gomemcached.IsNotFound(err):
@@ -169,7 +171,7 @@ func handleGetDB(w http.ResponseWriter, req *http.Request) {
 }
 
 func handleDeleteDB(w http.ResponseWriter, req *http.Request) {
-	d := Database{}
+	d := consolio.Database{}
 	k := "db-" + mux.Vars(req)["name"]
 	err := db.Get(k, &d)
 	switch {
@@ -274,7 +276,7 @@ func handleListTODO(w http.ResponseWriter, req *http.Request) {
 		Rows []struct {
 			ID  string
 			Doc struct {
-				Json ChangeEvent
+				Json consolio.ChangeEvent
 			}
 		}
 	}{}
@@ -288,7 +290,7 @@ func handleListTODO(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	rv := []ChangeEvent{}
+	rv := []consolio.ChangeEvent{}
 	for _, r := range viewRes.Rows {
 		r.Doc.Json.ID = r.ID
 		rv = append(rv, r.Doc.Json)
@@ -298,7 +300,7 @@ func handleListTODO(w http.ResponseWriter, req *http.Request) {
 }
 
 func handleMarkTaskDone(w http.ResponseWriter, req *http.Request) {
-	ce := ChangeEvent{}
+	ce := consolio.ChangeEvent{}
 	k := mux.Vars(req)["id"]
 	err := db.Get(k, &ce)
 	if err != nil {
@@ -347,7 +349,7 @@ func runHook(wh Webhook, content []byte) error {
 	return nil
 }
 
-func runHooks(h ChangeEvent) {
+func runHooks(h consolio.ChangeEvent) {
 	hooks, err := getWebhooks()
 	if err != nil {
 		log.Printf("Error getting web hooks:  %v", err)
