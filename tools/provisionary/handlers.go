@@ -1,21 +1,117 @@
 package main
 
 import (
+	"flag"
+	"fmt"
+	"io"
+	"io/ioutil"
 	"log"
+	"net/http"
+	"net/url"
+	"strings"
 
 	"github.com/couchbaselabs/consolio/types"
 )
 
 type handler func(consolio.ChangeEvent, string) error
 
-var handlers []handler
+var (
+	cbgbUrlFlag = flag.String("cbgb", "", "CBGB base URL")
+
+	cbgbUrl        string
+	handlers       []handler
+	cancelRedirect = fmt.Errorf("redirected")
+)
 
 func initHandlers() {
 	handlers = append(handlers, logHandler)
+
+	if *cbgbUrlFlag != "" {
+		u, err := url.Parse(*cbgbUrlFlag)
+		if err != nil {
+			log.Fatalf("Error parsing cbgb URL: %v", err)
+		}
+		u.Path = "/_api/buckets"
+		cbgbUrl = u.String()
+
+		handlers = append(handlers, cbgbHandler)
+	}
 }
 
 func logHandler(e consolio.ChangeEvent, pw string) error {
 	log.Printf("Found %v -> %v %v - %q",
 		e.ID, e.Type, e.Database.Name, pw)
+	return nil
+}
+
+func isRedirected(e error) bool {
+	if x, ok := e.(*url.Error); ok {
+		return x.Err == cancelRedirect
+	}
+	return false
+}
+
+func cbgbHandler(e consolio.ChangeEvent, pw string) error {
+	switch e.Type {
+	case "create":
+		return cbgbCreate(e.Database.Name, pw)
+	case "delete":
+		return cbgbDelete(e.Database.Name)
+	}
+	return fmt.Errorf("Unhandled event type: %v", e.Type)
+}
+
+func cbgbDelete(dbname string) error {
+	u := cbgbUrl + "/" + dbname
+	req, err := http.NewRequest("DELETE", u, nil)
+	if err != nil {
+		return err
+	}
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+	if res.StatusCode != 204 {
+		return fmt.Errorf("Unexpected HTTP status from cbgb: %v",
+			res.Status)
+	}
+
+	return nil
+}
+
+func cbgbCreate(dbname, pw string) error {
+	client := &http.Client{
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return cancelRedirect
+		},
+	}
+
+	vals := url.Values{}
+	vals.Set("name", dbname)
+	vals.Set("password", pw)
+	vals.Set("quotaBytes", fmt.Sprintf("%d", 256*1024*1024))
+	vals.Set("memoryOnly", "0")
+	req, err := http.NewRequest("POST", cbgbUrl,
+		strings.NewReader(vals.Encode()))
+	if err != nil {
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	resp, err := client.Do(req)
+	if !isRedirected(err) {
+		if err != nil {
+			return err
+		}
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != 303 {
+		bodyText, _ := ioutil.ReadAll(io.LimitReader(resp.Body, 512))
+		return fmt.Errorf("HTTP error creating bucket: %v\n%s",
+			resp.Status, bodyText)
+	}
+
 	return nil
 }
