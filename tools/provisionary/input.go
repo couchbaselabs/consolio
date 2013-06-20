@@ -75,6 +75,20 @@ func decrypt(s string) (string, error) {
 	return string(bytes), err
 }
 
+func markDone(id string) error {
+	u := *todoUrl + id
+	res, err := http.Post(u, "application/x-www-form-urlencoded", nil)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+	if res.StatusCode != 204 {
+		return fmt.Errorf("HTTP error marking task done: %v", res.Status)
+	}
+
+	return nil
+}
+
 func verifyThings() error {
 	log.Printf("Verifying...")
 	res, err := http.Get(*todoUrl)
@@ -100,6 +114,11 @@ func verifyThings() error {
 		}
 		log.Printf("Found %v -> %v %v - %v",
 			e.ID, e.Type, e.Database.Name, pw)
+
+		err = markDone(e.ID)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
