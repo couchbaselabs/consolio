@@ -20,9 +20,9 @@ func provisionLoop() {
 		case <-t:
 		case <-hookCh:
 		}
-		err := verifyThings()
+		err := processTodo()
 		if err != nil {
-			log.Printf("Error verifying things: %v", err)
+			log.Printf("Error processing things: %v", err)
 		}
 	}
 }

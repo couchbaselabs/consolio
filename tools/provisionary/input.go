@@ -89,8 +89,8 @@ func markDone(id string) error {
 	return nil
 }
 
-func verifyThings() error {
-	log.Printf("Verifying...")
+func processTodo() error {
+	log.Printf("Processing TODOs...")
 	res, err := http.Get(*todoUrl)
 	if err != nil {
 		return err
