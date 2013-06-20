@@ -11,7 +11,8 @@
 <div ng-show="auth.loggedin">
   <p>You are {{auth.username}}.  Maybe we have things for you.</p>
 
-  <h2 ng-show="databases">Your Databases</h2>
+  <h2>Your Databases</h2>
+  <p ng-hide="databases"><em>No databases defined yet</em></p>
   <ul ng-show="databases">
     <li ng-repeat="d in databases"><a href="/db/{{d.name}}/">{{d.name}}</a></li>
   </ul>

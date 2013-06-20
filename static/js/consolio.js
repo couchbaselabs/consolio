@@ -33,7 +33,6 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
     $scope.newdb = function() {
         var dbname = $("#newbucketname").val();
         var password = $("#newbucketpass").val();
-        console.log("Adding a new thing");
         $http.post('/api/database/',
                    'name=' + encodeURIComponent(dbname) +
                    '&password=' + encodeURIComponent(password),
@@ -45,7 +44,9 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
             .success(function(data) {
                 $("#newbucketname").val("");
                 $("#newbucketpass").val("");
-                $scope.databases.push(data);
+                if ((!$scope.databases) || $scope.databases.length == 0) {
+                    $scope.databases = [data];
+                }
             });
     };
 }
