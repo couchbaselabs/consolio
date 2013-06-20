@@ -44,9 +44,9 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
             .success(function(data) {
                 $("#newbucketname").val("");
                 $("#newbucketpass").val("");
-                if ((!$scope.databases) || $scope.databases.length == 0) {
-                    $scope.databases = [data];
-                }
+                var tmp = $scope.databases.slice(0);
+                tmp.push(data);
+                $scope.databases = tmp;
             });
     };
 }
