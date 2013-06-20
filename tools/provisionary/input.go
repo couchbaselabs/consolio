@@ -43,6 +43,10 @@ func initCrypto() {
 }
 
 func decrypt(s string) (string, error) {
+	if s == "" {
+		return "", nil
+	}
+
 	raw, err := armor.Decode(strings.NewReader(s))
 	if err != nil {
 		return "", err
@@ -91,9 +95,11 @@ func verifyThings() error {
 
 	for _, e := range data {
 		pw, err := decrypt(e.Database.Password)
-		log.Printf("Found %v -> %v %v - %v/%v",
-			e.ID, e.Type, e.Database.Name,
-			pw, err)
+		if err != nil {
+			return err
+		}
+		log.Printf("Found %v -> %v %v - %v",
+			e.ID, e.Type, e.Database.Name, pw)
 	}
 
 	return nil
