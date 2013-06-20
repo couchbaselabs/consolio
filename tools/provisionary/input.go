@@ -51,8 +51,10 @@ func processTodo() error {
 		if err != nil {
 			return err
 		}
-		log.Printf("Found %v -> %v %v - %v",
-			e.ID, e.Type, e.Database.Name, pw)
+
+		for _, h := range handlers {
+			h(e, pw)
+		}
 
 		err = markDone(e.ID)
 		if err != nil {

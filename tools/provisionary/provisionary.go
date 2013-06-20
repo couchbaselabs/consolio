@@ -31,6 +31,7 @@ func main() {
 	flag.Parse()
 
 	initCrypto()
+	initHandlers()
 
 	go provisionLoop()
 
