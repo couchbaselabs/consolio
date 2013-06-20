@@ -284,6 +284,7 @@ func handleListTODO(w http.ResponseWriter, req *http.Request) {
 	err := db.ViewCustom("consolio", "events", map[string]interface{}{
 		"include_docs": true,
 		"start_key":    []string{"todo"},
+		"stale":        false,
 	}, &viewRes)
 	if err != nil {
 		showError(w, req, err.Error(), 500)
