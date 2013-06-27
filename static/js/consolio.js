@@ -29,8 +29,8 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
     });
 
     $scope.syncgws = [];
-    $http.get("/api/sgw/").success(function(databases) {
-        $scope.sgws = syncgws;
+    $http.get("/api/sgw/").success(function(sgws) {
+        $scope.syncgws = sgws;
     });
 
     $scope.newbucket = "";
@@ -59,11 +59,15 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
     };
 
     $scope.newsgw = function() {
-        var dbname = $("#newsgwname").val();
+        var sgwname = $("#newsgwname").val();
         var password = $("#newsgwpass").val();
+        var dbname = $("#newsgwdb").val();
+        var func = $("#newswsync").val();
         $http.post('/api/sgw/',
-                   'name=' + encodeURIComponent(dbname) +
-                   '&password=' + encodeURIComponent(password),
+                   'name=' + encodeURIComponent(sgwname) +
+                   '&password=' + encodeURIComponent(password) +
+                   '&dbname=' + encodeURIComponent(dbname) +
+                   '&syncfun=' + encodeURIComponent(func),
                    {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
             .error(function(data, code) {
                 bAlert("Error " + code, "Couldn't create " + dbname +
@@ -72,6 +76,7 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
             .success(function(data) {
                 $("#newsgwname").val("");
                 $("#newsgwpass").val("");
+                $("#newsgwdb").val("");
                 var tmp = $scope.syncgws.slice(0);
                 tmp.push(data);
                 $scope.syncgws = tmp;

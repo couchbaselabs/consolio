@@ -89,13 +89,16 @@ func handleNewDB(w http.ResponseWriter, req *http.Request) {
 
 func handleNewSGW(w http.ResponseWriter, req *http.Request) {
 	d := consolio.Item{
-		Name:      strings.TrimSpace(req.FormValue("name")),
-		Password:  encrypt(strings.TrimSpace(req.FormValue("password"))),
-		Type:      sgwType,
-		Owner:     whoami(req).Id,
-		Enabled:   true,
-		LastMod:   time.Now().UTC(),
-		ExtraInfo: map[string]interface{}{"dbname": strings.TrimSpace(req.FormValue("dbname"))},
+		Name:     strings.TrimSpace(req.FormValue("name")),
+		Password: encrypt(strings.TrimSpace(req.FormValue("password"))),
+		Type:     sgwType,
+		Owner:    whoami(req).Id,
+		Enabled:  true,
+		LastMod:  time.Now().UTC(),
+		ExtraInfo: map[string]interface{}{
+			"dbname": strings.TrimSpace(req.FormValue("dbname")),
+			"sync":   strings.TrimSpace(req.FormValue("syncfun")),
+		},
 	}
 
 	if !isValidDBName(d.Name) {
