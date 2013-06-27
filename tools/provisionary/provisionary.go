@@ -27,6 +27,13 @@ func provisionLoop() {
 	}
 }
 
+func maybefire() {
+	select {
+	case hookCh <- true:
+	default:
+	}
+}
+
 func main() {
 	flag.Parse()
 
@@ -35,11 +42,10 @@ func main() {
 
 	go provisionLoop()
 
+	maybefire()
+
 	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
-		select {
-		case hookCh <- true:
-		default:
-		}
+		maybefire()
 		w.WriteHeader(202)
 	})
 
