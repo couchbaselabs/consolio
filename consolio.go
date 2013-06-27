@@ -27,6 +27,9 @@ var staticPath = flag.String("static", "static", "Path to the static content")
 var backendPrefix = flag.String("backendPrefix", "/backend/",
 	"HTTP path prefix for backend API")
 
+var slumdb = flag.String("slum", "http://localhost:8091/",
+	"URL to syncgw's couchbase")
+
 var db *couchbase.Bucket
 
 var eventCh = make(chan consolio.ChangeEvent, 10)
@@ -229,8 +232,8 @@ func handleMkSGWConf(w http.ResponseWriter, req *http.Request) {
 	}
 
 	for _, r := range viewRes.Rows {
-		// TODO: Find DB!
 		h := r.Doc.Json.ExtraInfo
+		h["server"] = *slumdb
 		h["bucket"] = h["dbname"]
 		delete(h, "dbname")
 		rv.Databases[r.Key[2]] = h

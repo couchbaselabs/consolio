@@ -11,6 +11,8 @@ angular.module("consolio", ['consAuth', 'consAlert']).
                                      controller: 'ConsolioCtrl'}).
                     when('/db/:name/', {templateUrl: '/static/partials/db.html',
                                         controller: 'DBCtrl'}).
+                    when('/sgw/:name/', {templateUrl: '/static/partials/sgw.html',
+                                        controller: 'SGWCtrl'}).
                     when('/admin/', {templateUrl: '/static/partials/admin.html',
                                      controller: 'AdminCtrl'}).
                     otherwise({redirectTo: '/index/'});
@@ -103,6 +105,28 @@ function DBCtrl($scope, $http, $routeParams, $rootScope, $location, consAuth, bA
             })
             .error(function(data, code) {
                 bAlert("Error " + code, "Couldn't delete DB: " + data, "error");
+            });
+    };
+}
+
+function SGWCtrl($scope, $http, $routeParams, $rootScope, $location, consAuth, bAlert) {
+    $scope.sgwname = $routeParams.name;
+    var sgwurl = "/api/sgw/" + $scope.sgwname + "/";
+    $http.get(sgwurl)
+        .success(function(data) {
+            $scope.sgw = data;
+        })
+        .error(function(data, code) {
+            bAlert("Error " + code, "Couldn't get SGW: " + data, "error");
+        });
+
+    $scope.delete = function() {
+        $http.delete(sgwurl)
+            .success(function(data) {
+                $location.path("/index/");
+            })
+            .error(function(data, code) {
+                bAlert("Error " + code, "Couldn't delete SGW: " + data, "error");
             });
     };
 }
