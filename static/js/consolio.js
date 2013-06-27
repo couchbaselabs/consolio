@@ -62,12 +62,12 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
 
     $scope.newsgw = function() {
         var sgwname = $("#newsgwname").val();
-        var password = $("#newsgwpass").val();
+        var guest = $("#newsgwguest").val();
         var dbname = $("#newsgwdb").val();
         var func = $("#newswsync").val();
         $http.post('/api/sgw/',
                    'name=' + encodeURIComponent(sgwname) +
-                   '&password=' + encodeURIComponent(password) +
+                   '&guest=' + (guest?"true":"false") +
                    '&dbname=' + encodeURIComponent(dbname) +
                    '&syncfun=' + encodeURIComponent(func),
                    {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
@@ -77,7 +77,7 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
             })
             .success(function(data) {
                 $("#newsgwname").val("");
-                $("#newsgwpass").val("");
+                $("#newsgwguest").val("");
                 $("#newsgwdb").val("");
                 var tmp = $scope.syncgws.slice(0);
                 tmp.push(data);

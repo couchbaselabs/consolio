@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -20,16 +21,20 @@ var slumdb = flag.String("slum", "http://localhost:8091/",
 
 func handleNewSGW(w http.ResponseWriter, req *http.Request) {
 	d := consolio.Item{
-		Name:     strings.TrimSpace(req.FormValue("name")),
-		Password: encrypt(strings.TrimSpace(req.FormValue("password"))),
-		Type:     sgwType,
-		Owner:    whoami(req).Id,
-		Enabled:  true,
-		LastMod:  time.Now().UTC(),
+		Name:    strings.TrimSpace(req.FormValue("name")),
+		Type:    sgwType,
+		Owner:   whoami(req).Id,
+		Enabled: true,
+		LastMod: time.Now().UTC(),
 		ExtraInfo: map[string]interface{}{
 			"dbname": strings.TrimSpace(req.FormValue("dbname")),
 			"sync":   strings.TrimSpace(req.FormValue("syncfun")),
 		},
+	}
+
+	if b, _ := strconv.ParseBool(req.FormValue("guest")); b {
+		guestInfo := json.RawMessage(`{"disabled": false, "admin_channels": ["*"] }`)
+		d.ExtraInfo["users"] = map[string]interface{}{"GUEST": &guestInfo}
 	}
 
 	if !isValidDBName(d.Name) {

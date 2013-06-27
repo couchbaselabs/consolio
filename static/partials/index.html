@@ -35,14 +35,13 @@
   <form ng-show="wantnewsgw" ng-submit="newsgw()">
     Create a new sync gateway<br>
     Name: <input ng-bind="newsgwname" id="newsgwname" type="text" /><br/>
-    Pass: <input ng-bind="newsgwpass" id="newsgwpass" type="password" /><br/>
+    <label>Allow Guest? <input type="checkbox" id="newsgwguest" /></label><br/>
     DB: <select id="newsgwdb"><option ng-repeat="d in databases">{{d.name}}</option></select><br/>
     Sync Function:<br/>
     <textarea id="newswsync" rows="5" cols="80">
 function(doc) {
   channel(doc.channels);
-}
-    </textarea><br/>
+}</textarea><br/>
     <input type="submit"/>
   </form>
 
