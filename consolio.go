@@ -170,8 +170,8 @@ func listItem(w http.ResponseWriter, req *http.Request, t string) {
 			"reduce":       false,
 			"include_docs": true,
 			"stale":        false,
-			"start_key":    []interface{}{me, t},
-			"end_key":      []interface{}{me, t, empty},
+			"start_key":    []interface{}{t, me},
+			"end_key":      []interface{}{t, me, empty},
 		},
 		&viewRes)
 	if err != nil {
@@ -185,6 +185,55 @@ func listItem(w http.ResponseWriter, req *http.Request, t string) {
 		if r.Doc.Json != nil {
 			rv = append(rv, r.Doc.Json)
 		}
+	}
+
+	mustEncode(w, rv)
+}
+
+func handleMkSGWConf(w http.ResponseWriter, req *http.Request) {
+	viewRes := struct {
+		Rows []struct {
+			Key []string
+			Doc struct {
+				Json consolio.Item
+			}
+		}
+	}{}
+
+	empty := &json.RawMessage{'{', '}'}
+	err := db.ViewCustom("consolio", "items",
+		map[string]interface{}{
+			"reduce":       false,
+			"include_docs": true,
+			"stale":        false,
+			"start_key":    []interface{}{sgwType},
+			"end_key":      []interface{}{sgwType, empty},
+		},
+		&viewRes)
+	if err != nil {
+		showError(w, req, "Did Error listing stuff: "+
+			err.Error(), 500)
+		return
+	}
+
+	rv := struct {
+		Intf      string                            `json:"interface"`
+		AdminIntf string                            `json:"adminInterface"`
+		Log       []string                          `json:"log"`
+		Databases map[string]map[string]interface{} `json:"databases"`
+	}{
+		Intf:      ":4984",
+		AdminIntf: ":4985",
+		Log:       []string{"REST"},
+		Databases: map[string]map[string]interface{}{},
+	}
+
+	for _, r := range viewRes.Rows {
+		// TODO: Find DB!
+		h := r.Doc.Json.ExtraInfo
+		h["bucket"] = h["dbname"]
+		delete(h, "dbname")
+		rv.Databases[r.Key[2]] = h
 	}
 
 	mustEncode(w, rv)
@@ -529,6 +578,7 @@ func main() {
 
 	r.HandleFunc(*backendPrefix+"todo/", handleListTODO)
 	r.HandleFunc(*backendPrefix+"todo/{id}", handleMarkTaskDone).Methods("POST")
+	r.HandleFunc(*backendPrefix+"sgwconf/", handleMkSGWConf)
 
 	r.Handle("/", http.RedirectHandler("/index/", 302))
 

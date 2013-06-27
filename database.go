@@ -9,7 +9,7 @@ import (
 
 const ddocKey = "consolio"
 const markerKey = "/@consolioddocVersion"
-const ddocVersion = 3
+const ddocVersion = 4
 const ddocBody = `{
   "id": "_design/consolio",
   "views": {
@@ -20,7 +20,7 @@ const ddocBody = `{
       "map": "function (doc, meta) {\n  if (doc.type === 'create' || doc.type === 'delete') {\n    emit([doc.processed ? 'done' : 'todo', doc.ts], null);\n  }\n}"
     },
     "items": {
-      "map": "function (doc, meta) {\n  if (doc.owner && doc.type && doc.name) {\n    emit([doc.owner, doc.type, doc.name], doc.size || 0);\n  }\n}",
+      "map": "function (doc, meta) {\n  if (doc.owner && doc.type && doc.name) {\n    emit([doc.type, doc.owner, doc.name], doc.size || 0);\n  }\n}",
       "reduce": "_sum"
     }
   }
