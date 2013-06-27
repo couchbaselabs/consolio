@@ -40,7 +40,7 @@ func initHandlers() {
 
 func logHandler(e consolio.ChangeEvent, pw string) error {
 	log.Printf("Found %v -> %v %v - %q",
-		e.ID, e.Type, e.Database.Name, pw)
+		e.ID, e.Type, e.Item.Name, pw)
 	return nil
 }
 
@@ -52,11 +52,15 @@ func isRedirected(e error) bool {
 }
 
 func cbgbHandler(e consolio.ChangeEvent, pw string) error {
+	if e.Item.Type != "database" {
+		log.Printf("Ignoring non-database type: %v (%v)",
+			e.Item.Name, e.Item.Type)
+	}
 	switch e.Type {
 	case "create":
-		return cbgbCreate(e.Database.Name, pw)
+		return cbgbCreate(e.Item.Name, pw)
 	case "delete":
-		return cbgbDelete(e.Database.Name)
+		return cbgbDelete(e.Item.Name)
 	}
 	return fmt.Errorf("Unhandled event type: %v", e.Type)
 }

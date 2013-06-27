@@ -9,19 +9,19 @@ import (
 
 const ddocKey = "consolio"
 const markerKey = "/@consolioddocVersion"
-const ddocVersion = 2
+const ddocVersion = 3
 const ddocBody = `{
   "id": "_design/consolio",
   "views": {
-    "databases": {
-      "map": "function (doc, meta) {\n  if (doc.type === 'database') {\n    emit([doc.owner, doc.name], doc.size);\n  }\n}",
-      "reduce": "_sum"
-    },
     "webhooks": {
       "map": "function (doc, meta) {\n  if (doc.type === 'webhook') {\n    emit(doc.name, doc.url);\n  }\n}"
     },
     "events": {
       "map": "function (doc, meta) {\n  if (doc.type === 'create' || doc.type === 'delete') {\n    emit([doc.processed ? 'done' : 'todo', doc.ts], null);\n  }\n}"
+    },
+    "items": {
+      "map": "function (doc, meta) {\n  if (doc.owner && doc.type && doc.name) {\n    emit([doc.owner, doc.type, doc.name], doc.size || 0);\n  }\n}",
+      "reduce": "_sum"
     }
   }
 }`

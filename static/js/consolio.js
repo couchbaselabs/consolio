@@ -28,7 +28,14 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
         $scope.databases = databases;
     });
 
+    $scope.syncgws = [];
+    $http.get("/api/sgw/").success(function(databases) {
+        $scope.sgws = syncgws;
+    });
+
     $scope.newbucket = "";
+    $scope.wantnewdb = false;
+    $scope.wantnewsgw = false;
 
     $scope.newdb = function() {
         var dbname = $("#newbucketname").val();
@@ -47,6 +54,28 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
                 var tmp = $scope.databases.slice(0);
                 tmp.push(data);
                 $scope.databases = tmp;
+                $scope.wantnewdb = false;
+            });
+    };
+
+    $scope.newsgw = function() {
+        var dbname = $("#newsgwname").val();
+        var password = $("#newsgwpass").val();
+        $http.post('/api/sgw/',
+                   'name=' + encodeURIComponent(dbname) +
+                   '&password=' + encodeURIComponent(password),
+                   {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
+            .error(function(data, code) {
+                bAlert("Error " + code, "Couldn't create " + dbname +
+                       ": " + data, "error");
+            })
+            .success(function(data) {
+                $("#newsgwname").val("");
+                $("#newsgwpass").val("");
+                var tmp = $scope.syncgws.slice(0);
+                tmp.push(data);
+                $scope.syncgws = tmp;
+                $scope.wantnewsgw = false;
             });
     };
 }

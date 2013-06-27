@@ -47,7 +47,7 @@ func processTodo() error {
 	}
 
 	for _, e := range data {
-		pw, err := decrypt(e.Database.Password)
+		pw, err := decrypt(e.Item.Password)
 		if err != nil {
 			return err
 		}

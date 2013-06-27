@@ -17,10 +17,27 @@
     <li ng-repeat="d in databases"><a href="/db/{{d.name}}/">{{d.name}}</a></li>
   </ul>
 
-  <form ng-submit="newdb()">
-    Create a new bucket<br>
+  <button ng-hide="wantnewdb" ng-click="wantnewdb = true">New Database</button>
+  <form ng-show="wantnewdb" ng-submit="newdb()">
+    Create a new database<br>
     Name: <input ng-bind="newbucket" id="newbucketname" type="text" /><br/>
     Pass: <input ng-bind="newbucketpass" id="newbucketpass" type="password" /><br/>
     <input type="submit"/>
   </form>
+
+  <h2>Your Sync Gateways</h2>
+  <p ng-hide="syncgws"><em>No sync gateways defined yet</em></p>
+  <ul ng-show="syncgws">
+    <li ng-repeat="d in syncgws"><a href="/sgw/{{d.name}}/">{{d.name}}</a></li>
+  </ul>
+
+  <button ng-hide="wantnewsgw" ng-click="wantnewsgw = true">New Sync Gateway</button>
+  <form ng-show="wantnewsgw" ng-submit="newsgw()">
+    Create a new sync gateway<br>
+    Name: <input ng-bind="newsgwname" id="newsgwname" type="text" /><br/>
+    Pass: <input ng-bind="newsgwpass" id="newsgwpass" type="password" /><br/>
+    DB: <select id="newsgwdb"><option ng-repeat="d in databases">{{d.name}}</option></select><br/>
+    <input type="submit"/>
+  </form>
+
 </div>

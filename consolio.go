@@ -21,6 +21,8 @@ import (
 	"github.com/couchbaselabs/consolio/types"
 )
 
+const sgwType = "sync_gateway"
+
 var staticPath = flag.String("static", "static", "Path to the static content")
 var backendPrefix = flag.String("backendPrefix", "/backend/",
 	"HTTP path prefix for backend API")
@@ -52,7 +54,7 @@ func isValidDBName(n string) bool {
 }
 
 func handleNewDB(w http.ResponseWriter, req *http.Request) {
-	d := consolio.Database{
+	d := consolio.Item{
 		Name:     strings.TrimSpace(req.FormValue("name")),
 		Password: encrypt(strings.TrimSpace(req.FormValue("password"))),
 		Type:     "database",
@@ -85,6 +87,41 @@ func handleNewDB(w http.ResponseWriter, req *http.Request) {
 	mustEncode(w, d)
 }
 
+func handleNewSGW(w http.ResponseWriter, req *http.Request) {
+	d := consolio.Item{
+		Name:      strings.TrimSpace(req.FormValue("name")),
+		Password:  encrypt(strings.TrimSpace(req.FormValue("password"))),
+		Type:      sgwType,
+		Owner:     whoami(req).Id,
+		Enabled:   true,
+		LastMod:   time.Now().UTC(),
+		ExtraInfo: map[string]interface{}{"dbname": strings.TrimSpace(req.FormValue("dbname"))},
+	}
+
+	if !isValidDBName(d.Name) {
+		showError(w, req, "Invalid DB Name", 400)
+		return
+	}
+
+	added, err := db.Add("sgw-"+d.Name, 0, d)
+	if err != nil {
+		showError(w, req, "Error adding to DB: "+err.Error(), 500)
+		return
+	}
+	if !added {
+		showError(w, req, "Did not add to DB (no error)", 500)
+		return
+	}
+
+	err = recordEvent("create", d)
+	if err != nil {
+		showError(w, req, "Did not record mutation event: "+err.Error(), 500)
+		return
+	}
+
+	mustEncode(w, d)
+}
+
 func tstr(t time.Time) string {
 	return t.Format("20060102150405.999999999")
 }
@@ -98,14 +135,10 @@ func hashstr(s string) string {
 	return hex.EncodeToString(h.Sum(nil))
 }
 
-func recordEvent(t string, d consolio.Database) error {
-	if t == "delete" {
-		d.Password = ""
-	}
-
+func recordEvent(t string, i consolio.Item) error {
 	ts := time.Now().UTC()
-	k := "ch-" + t + "-" + tstr(ts) + "-" + hashstr(d.Name)[:8]
-	ev := consolio.ChangeEvent{Type: t, Database: d, Timestamp: ts}
+	k := "ch-" + t + "-" + tstr(ts) + "-" + hashstr(i.Name)[:8]
+	ev := consolio.ChangeEvent{Type: t, Item: i, Timestamp: ts}
 	a, err := db.Add(k, 0, ev)
 	if err != nil {
 		return err
@@ -117,7 +150,7 @@ func recordEvent(t string, d consolio.Database) error {
 	return nil
 }
 
-func handleListDBs(w http.ResponseWriter, req *http.Request) {
+func listItem(w http.ResponseWriter, req *http.Request, t string) {
 	viewRes := struct {
 		Rows []struct {
 			Doc struct {
@@ -129,12 +162,13 @@ func handleListDBs(w http.ResponseWriter, req *http.Request) {
 	me := whoami(req).Id
 
 	empty := &json.RawMessage{'{', '}'}
-	err := db.ViewCustom("consolio", "databases",
+	err := db.ViewCustom("consolio", "items",
 		map[string]interface{}{
 			"reduce":       false,
 			"include_docs": true,
-			"start_key":    []interface{}{me},
-			"end_key":      []interface{}{me, empty},
+			"stale":        false,
+			"start_key":    []interface{}{me, t},
+			"end_key":      []interface{}{me, t, empty},
 		},
 		&viewRes)
 	if err != nil {
@@ -153,8 +187,16 @@ func handleListDBs(w http.ResponseWriter, req *http.Request) {
 	mustEncode(w, rv)
 }
 
+func handleListDBs(w http.ResponseWriter, req *http.Request) {
+	listItem(w, req, "database")
+}
+
+func handleListSGWs(w http.ResponseWriter, req *http.Request) {
+	listItem(w, req, sgwType)
+}
+
 func handleGetDB(w http.ResponseWriter, req *http.Request) {
-	d := consolio.Database{}
+	d := consolio.Item{}
 	err := db.Get("db-"+mux.Vars(req)["name"], &d)
 	switch {
 	case gomemcached.IsNotFound(err):
@@ -171,7 +213,7 @@ func handleGetDB(w http.ResponseWriter, req *http.Request) {
 }
 
 func handleDeleteDB(w http.ResponseWriter, req *http.Request) {
-	d := consolio.Database{}
+	d := consolio.Item{}
 	k := "db-" + mux.Vars(req)["name"]
 	err := db.Get(k, &d)
 	switch {
@@ -191,6 +233,55 @@ func handleDeleteDB(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	d.Password = ""
+	err = recordEvent("delete", d)
+	if err != nil {
+		showError(w, req, "Did not record mutation event: "+err.Error(), 500)
+		return
+	}
+
+	w.WriteHeader(204)
+}
+
+func handleGetSGW(w http.ResponseWriter, req *http.Request) {
+	d := consolio.Item{}
+	err := db.Get("sgw-"+mux.Vars(req)["name"], &d)
+	switch {
+	case gomemcached.IsNotFound(err):
+		showError(w, req, "Not found", 404)
+	case err != nil:
+		showError(w, req, err.Error(), 500)
+	case d.Type != sgwType:
+		showError(w, req, "Incorrect type", 400)
+	case d.Owner != whoami(req).Id:
+		showError(w, req, "Not your SGW", 403)
+	default:
+		mustEncode(w, d)
+	}
+}
+
+func handleDeleteSGW(w http.ResponseWriter, req *http.Request) {
+	d := consolio.Item{}
+	k := "sgw-" + mux.Vars(req)["name"]
+	err := db.Get(k, &d)
+	switch {
+	case gomemcached.IsNotFound(err):
+		showError(w, req, "Not found", 404)
+	case err != nil:
+		showError(w, req, err.Error(), 500)
+	case d.Type != sgwType:
+		showError(w, req, "Incorrect type", 400)
+	case d.Owner != whoami(req).Id:
+		showError(w, req, "Not your SGW", 403)
+	}
+
+	err = db.Delete(k)
+	if err != nil {
+		showError(w, req, err.Error(), 500)
+		return
+	}
+
+	d.Password = ""
 	err = recordEvent("delete", d)
 	if err != nil {
 		showError(w, req, "Did not record mutation event: "+err.Error(), 500)
@@ -418,6 +509,12 @@ func main() {
 	r.HandleFunc("/api/database/{name}/", handleDeleteDB).Methods("DELETE")
 	r.HandleFunc("/api/database/", handleListDBs).Methods("GET")
 	r.HandleFunc("/api/database/", handleNewDB).Methods("POST")
+
+	r.HandleFunc("/api/sgw/{name}/", handleGetSGW).Methods("GET")
+	r.HandleFunc("/api/sgw/{name}/", handleDeleteSGW).Methods("DELETE")
+	r.HandleFunc("/api/sgw/", handleListSGWs).Methods("GET")
+	r.HandleFunc("/api/sgw/", handleNewSGW).Methods("POST")
+
 	r.HandleFunc("/api/me/", handleMe).Methods("GET")
 
 	r.HandleFunc("/api/webhook/",
