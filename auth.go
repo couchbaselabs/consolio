@@ -28,7 +28,7 @@ func getUser(email string) (consolio.User, error) {
 	rv := consolio.User{}
 	k := "u-" + email
 	err := db.Get(k, &rv)
-	if err == nil && rv.Type != "consolio.User" {
+	if err == nil && rv.Type != "User" {
 		return consolio.User{}, NotAUser
 	}
 	return rv, err
@@ -89,7 +89,7 @@ func whoami(r *http.Request) consolio.User {
 			u, err := getUser(userpass[0])
 			if err != nil {
 				u.Id = userpass[0]
-				u.Type = "consolio.User"
+				u.Type = "User"
 			}
 			return u
 		}
