@@ -19,6 +19,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/couchbaselabs/consolio/types"
+	"strconv"
 )
 
 var staticPath = flag.String("static", "static", "Path to the static content")
@@ -322,6 +323,45 @@ func handleMarkTaskDone(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(204)
 }
 
+func handleUpdateItem(prefix string, w http.ResponseWriter, req *http.Request) {
+	k := prefix + "-" + mux.Vars(req)["name"]
+	it := &consolio.Item{}
+	err := db.Get(k, it)
+	if err != nil {
+		showError(w, req, "Not found", 404)
+		return
+	}
+
+	if u := req.FormValue("url"); u != "" {
+		it.URL = u
+	}
+
+	if s := req.FormValue("size"); s != "" {
+		si, err := strconv.ParseInt(s, 10, 64)
+		if err != nil {
+			showError(w, req, err.Error(), 400)
+			return
+		}
+		it.Size = si
+	}
+
+	err = db.Set(k, 0, it)
+	if err != nil {
+		showError(w, req, err.Error(), 500)
+		return
+	}
+
+	w.WriteHeader(204)
+}
+
+func handleUpdateSGW(w http.ResponseWriter, req *http.Request) {
+	handleUpdateItem("sgw", w, req)
+}
+
+func handleUpdateDB(w http.ResponseWriter, req *http.Request) {
+	handleUpdateItem("db", w, req)
+}
+
 func handleMe(w http.ResponseWriter, req *http.Request) {
 	mustEncode(w, whoami(req))
 }
@@ -437,6 +477,8 @@ func main() {
 
 	r.HandleFunc(*backendPrefix+"todo/", handleListTODO)
 	r.HandleFunc(*backendPrefix+"todo/{id}", handleMarkTaskDone).Methods("POST")
+	r.HandleFunc(*backendPrefix+"update/sgw/{name}", handleUpdateSGW).Methods("POST")
+	r.HandleFunc(*backendPrefix+"update/db/{name}", handleUpdateDB).Methods("POST")
 	r.HandleFunc(*backendPrefix+"sgwconf/", handleMkSGWConf)
 
 	r.Handle("/", http.RedirectHandler("/index/", 302))

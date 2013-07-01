@@ -19,6 +19,7 @@ var (
 	cbgbUrlFlag = flag.String("cbgb", "", "CBGB base URL")
 
 	cbgbUrl        string
+	cbgbDB         string
 	handlers       []handler
 	cancelRedirect = fmt.Errorf("redirected")
 )
@@ -33,6 +34,8 @@ func initHandlers() {
 		}
 		u.Path = "/_api/buckets"
 		cbgbUrl = u.String()
+		u.Path = "/"
+		cbgbDB = u.String()
 
 		handlers = append(handlers, cbgbHandler)
 	}
@@ -117,5 +120,5 @@ func cbgbCreate(dbname, pw string) error {
 			resp.Status, bodyText)
 	}
 
-	return nil
+	return updateItem("db", dbname, cbgbDB+dbname)
 }

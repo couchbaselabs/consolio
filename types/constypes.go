@@ -12,8 +12,11 @@ type Item struct {
 	Owner     string                 `json:"owner"`
 	Enabled   bool                   `json:"enabled"`
 	LastMod   time.Time              `json:"lastmod"`
-	Size      int64                  `json:"size"`
 	ExtraInfo map[string]interface{} `json:"extra"`
+
+	// Stuff provided by the service
+	Size int64  `json:"size"`
+	URL  string `json:"url"`
 }
 
 type ChangeEvent struct {
