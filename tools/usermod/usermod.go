@@ -6,23 +6,16 @@ import (
 	"log"
 
 	"github.com/couchbaselabs/go-couchbase"
+
+	"github.com/couchbaselabs/consolio/types"
 )
 
 var db *couchbase.Bucket
 
-type User struct {
-	Id        string                 `json:"id"`
-	Type      string                 `json:"type"`
-	Admin     bool                   `json:"admin"`
-	AuthToken string                 `json:"auth_token,omitmepty"`
-	Internal  bool                   `json:"internal"`
-	Prefs     map[string]interface{} `json:"prefs"`
-}
-
 func updateUser(email string, isAdmin, isInternal bool) {
 	key := "u-" + email
 
-	var user User
+	var user consolio.User
 	err := db.Update(key, 0, func(current []byte) ([]byte, error) {
 		if len(current) > 0 {
 			err := json.Unmarshal(current, &user)
