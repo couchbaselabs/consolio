@@ -17,9 +17,11 @@ type handler func(consolio.ChangeEvent, string) error
 
 var (
 	cbgbUrlFlag = flag.String("cbgb", "", "CBGB base URL")
+	sgwUrlFlag  = flag.String("sgw", "", "URL to sync gateway")
 
 	cbgbUrl        string
 	cbgbDB         string
+	sgwDB          string
 	handlers       []handler
 	cancelRedirect = fmt.Errorf("redirected")
 )
@@ -38,6 +40,17 @@ func initHandlers() {
 		cbgbDB = u.String()
 
 		handlers = append(handlers, cbgbHandler)
+	}
+
+	if *sgwUrlFlag != "" {
+		u, err := url.Parse(*sgwUrlFlag)
+		if err != nil {
+			log.Fatalf("Error parsing sgw URL: %v", err)
+		}
+		u.Path = "/"
+		sgwDB = u.String()
+
+		handlers = append(handlers, sgwHandler)
 	}
 }
 
@@ -121,4 +134,18 @@ func cbgbCreate(dbname, pw string) error {
 	}
 
 	return updateItem("db", dbname, cbgbDB+dbname)
+}
+
+func sgwHandler(e consolio.ChangeEvent, pw string) error {
+	if e.Item.Type != "sgw" {
+		log.Printf("Ignoring non-sgw type: %v (%v)",
+			e.Item.Name, e.Item.Type)
+	}
+	switch e.Type {
+	case "create":
+		return updateItem("sgw", e.Item.Name, sgwDB+e.Item.Name)
+	case "delete":
+		// nothing here
+	}
+	return fmt.Errorf("Unhandled sgw event type: %v", e.Type)
 }

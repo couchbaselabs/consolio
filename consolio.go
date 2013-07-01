@@ -444,6 +444,7 @@ func main() {
 	appPages := []string{
 		"/index/",
 		"/db/",
+		"/sgw/",
 		"/admin/",
 	}
 
