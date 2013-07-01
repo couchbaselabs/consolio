@@ -9,17 +9,21 @@ import (
 	"net/url"
 )
 
-var bindAddr = flag.String("bind", ":8083", "HTTP listen address")
-var targetUrl = flag.String("dest", "http://localhost:4985/", "Target DB.")
+var proxyBind = flag.String("proxybind", ":8083", "HTTP listen address")
+var targetUrl = flag.String("syncurl", "http://localhost:4985/",
+	"sync gateway admin URL")
 
-var target *url.URL
+var proxyTarget *url.URL
 var brokenHost string
 
+func proxyAllow(req *http.Request) bool {
+	return true
+}
+
 func direct(req *http.Request) {
-	permitted := true
-	if permitted {
-		req.URL.Scheme = target.Scheme
-		req.URL.Host = target.Host
+	if proxyAllow(req) {
+		req.URL.Scheme = proxyTarget.Scheme
+		req.URL.Host = proxyTarget.Host
 	} else {
 		req.URL.Scheme = "http"
 		req.URL.Host = brokenHost
@@ -32,14 +36,16 @@ func (e errorizer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	http.Error(w, "NO", 403)
 }
 
-func main() {
-	flag.Parse()
+func sgwProxy() {
+	if *proxyBind == "" || *targetUrl == "" {
+		return
+	}
 
 	u, err := url.Parse(*targetUrl)
 	if err != nil {
 		log.Printf("Error parsing target URL: %v", err)
 	}
-	target = u
+	proxyTarget = u
 
 	proxy := &httputil.ReverseProxy{Director: direct}
 
@@ -56,5 +62,5 @@ func main() {
 	brokenHost = errorist.Addr().String()
 	log.Printf("Errorizer is on %v", brokenHost)
 
-	log.Fatal(http.ListenAndServe(*bindAddr, proxy))
+	log.Fatal(http.ListenAndServe(*proxyBind, proxy))
 }
