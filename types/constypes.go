@@ -44,3 +44,12 @@ func (c ChangeEvent) MarshalJSON() ([]byte, error) {
 
 	return json.Marshal(m)
 }
+
+type User struct {
+	Id        string                 `json:"id"`
+	Type      string                 `json:"type"`
+	Admin     bool                   `json:"admin"`
+	AuthToken string                 `json:"auth_token,omitmepty"`
+	Internal  bool                   `json:"internal"`
+	Prefs     map[string]interface{} `json:"prefs"`
+}

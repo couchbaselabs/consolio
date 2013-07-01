@@ -13,6 +13,8 @@ import (
 	"time"
 
 	"github.com/gorilla/securecookie"
+
+	"github.com/couchbaselabs/consolio/types"
 )
 
 const (
@@ -20,23 +22,14 @@ const (
 	AUTH_COOKIE        = "consolio"
 )
 
-type User struct {
-	Id        string                 `json:"id"`
-	Type      string                 `json:"type"`
-	Admin     bool                   `json:"admin"`
-	AuthToken string                 `json:"auth_token,omitmepty"`
-	Internal  bool                   `json:"internal"`
-	Prefs     map[string]interface{} `json:"prefs"`
-}
-
 var NotAUser = errors.New("not a user")
 
-func getUser(email string) (User, error) {
-	rv := User{}
+func getUser(email string) (consolio.User, error) {
+	rv := consolio.User{}
 	k := "u-" + email
 	err := db.Get(k, &rv)
-	if err == nil && rv.Type != "user" {
-		return User{}, NotAUser
+	if err == nil && rv.Type != "consolio.User" {
+		return consolio.User{}, NotAUser
 	}
 	return rv, err
 }
@@ -56,9 +49,9 @@ func initSecureCookie(hashKey []byte) {
 	secureCookie = securecookie.New(hashKey, nil)
 }
 
-func userFromCookie(cookie string) (User, error) {
+func userFromCookie(cookie string) (consolio.User, error) {
 	val := browserIdData{}
-	err := secureCookie.Decode("user", cookie, &val)
+	err := secureCookie.Decode("consolio.User", cookie, &val)
 	if err == nil {
 		u, err := getUser(val.Email)
 		if err != nil {
@@ -66,10 +59,10 @@ func userFromCookie(cookie string) (User, error) {
 		}
 		return u, nil
 	}
-	return User{}, err
+	return consolio.User{}, err
 }
 
-func whoami(r *http.Request) User {
+func whoami(r *http.Request) consolio.User {
 	if cookie, err := r.Cookie(AUTH_COOKIE); err == nil {
 		u, err := userFromCookie(cookie.Value)
 		if err == nil {
@@ -79,29 +72,29 @@ func whoami(r *http.Request) User {
 	if ahdr := r.Header.Get("Authorization"); ahdr != "" {
 		parts := strings.Split(ahdr, " ")
 		if len(parts) < 2 {
-			return User{}
+			return consolio.User{}
 		}
 		decoded, err := base64.StdEncoding.DecodeString(parts[1])
 		if err != nil {
-			return User{}
+			return consolio.User{}
 		}
 		userpass := strings.SplitN(string(decoded), ":", 2)
 
 		user, err := getUser(userpass[0])
 		if err != nil {
-			return User{}
+			return consolio.User{}
 		}
 
 		if user.AuthToken == userpass[1] {
 			u, err := getUser(userpass[0])
 			if err != nil {
 				u.Id = userpass[0]
-				u.Type = "user"
+				u.Type = "consolio.User"
 			}
 			return u
 		}
 	}
-	return User{}
+	return consolio.User{}
 }
 
 func md5string(i string) string {
@@ -171,7 +164,7 @@ func performAuth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	encoded, err := secureCookie.Encode("user", resdata)
+	encoded, err := secureCookie.Encode("consolio.User", resdata)
 	if err != nil {
 		showError(w, r, "Couldn't encode cookie: "+err.Error(), 500)
 		return
