@@ -26,11 +26,19 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
     $http.get("/api/me/").success(function(me) { $scope.me = me; });
 
     $scope.databases = [];
+    $scope.syncgws = [];
+
+    $scope.availableDBs = function() {
+        return _.filter($scope.databases, function(db) {
+            return !_.any($scope.syncgws, function(sgw) {
+                return db.name === sgw.extra.dbname;
+            });
+        });
+    };
+
     $http.get("/api/database/").success(function(databases) {
         $scope.databases = databases;
     });
-
-    $scope.syncgws = [];
     $http.get("/api/sgw/").success(function(sgws) {
         $scope.syncgws = sgws;
     });
@@ -57,7 +65,7 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
                 tmp.push(data);
                 $scope.databases = tmp;
                 $scope.wantnewdb = false;
-            });
+                });
     };
 
     $scope.newsgw = function() {
