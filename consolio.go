@@ -468,6 +468,7 @@ func main() {
 	r.HandleFunc("/api/sgw/", handleNewSGW).Methods("POST")
 
 	r.HandleFunc("/api/me/", handleMe).Methods("GET")
+	r.HandleFunc("/api/me/token/", handleUserAuthToken).Methods("GET")
 
 	r.HandleFunc("/api/webhook/",
 		handleListWebhooks).Methods("GET").MatcherFunc(adminRequired)

@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"crypto/md5"
+	"crypto/rand"
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
@@ -24,11 +25,39 @@ const (
 
 var NotAUser = errors.New("not a user")
 
+var alphabet []byte
+
+func init() {
+	letters := "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+		"abcdefghijklmnopqrstuvwxyz" +
+		"0123456789"
+
+	for _, r := range letters {
+		alphabet = append(alphabet, byte(r))
+	}
+}
+
+func randstring(l int) string {
+	stuff := make([]byte, l)
+	bytesread, err := rand.Read(stuff)
+	if err != nil {
+		panic(err)
+	}
+	if bytesread != l {
+		panic("short read")
+	}
+
+	for i := range stuff {
+		stuff[i] = alphabet[int(stuff[i])%len(alphabet)]
+	}
+	return string(stuff)
+}
+
 func getUser(email string) (consolio.User, error) {
 	rv := consolio.User{}
 	k := "u-" + email
 	err := db.Get(k, &rv)
-	if err == nil && rv.Type != "User" {
+	if err == nil && rv.Type != "user" {
 		return consolio.User{}, NotAUser
 	}
 	return rv, err
@@ -208,4 +237,45 @@ func serveLogout(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.SetCookie(w, cookie)
+}
+
+func handleUserAuthToken(w http.ResponseWriter, r *http.Request) {
+	me := whoami(r)
+	// If the user doesn't have an auth token, make one.
+	if me.AuthToken == "" {
+		handleUpdateUserAuthToken(w, r)
+		return
+	}
+
+	mustEncode(w, map[string]string{"token": me.AuthToken})
+}
+
+func handleUpdateUserAuthToken(w http.ResponseWriter, r *http.Request) {
+	me := whoami(r)
+	key := "u-" + me.Id
+	user := consolio.User{}
+
+	err := db.Update(key, 0, func(current []byte) ([]byte, error) {
+		if len(current) > 0 {
+			err := json.Unmarshal(current, &user)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		// Common fields
+		user.Id = me.Id
+		user.Type = "user"
+
+		user.AuthToken = randstring(16)
+
+		return json.Marshal(user)
+	})
+
+	if err != nil {
+		showError(w, r, err.Error(), 500)
+		return
+	}
+
+	mustEncode(w, map[string]string{"token": user.AuthToken})
 }
