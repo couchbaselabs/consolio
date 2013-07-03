@@ -186,6 +186,8 @@ func sgwCreate(e consolio.ChangeEvent, pw string) error {
 		return err
 	}
 
+	log.Printf("Provisioning with %s", b)
+
 	req, err := http.NewRequest("PUT", sgwAdmin+e.Item.Name+"/",
 		bytes.NewReader(b))
 	if err != nil {
