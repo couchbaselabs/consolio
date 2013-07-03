@@ -7,17 +7,34 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"strings"
+
+	"github.com/couchbaselabs/consolio/types"
 )
 
 var proxyBind = flag.String("proxybind", ":8083", "HTTP listen address")
 var targetUrl = flag.String("syncurl", "http://localhost:4985/",
 	"sync gateway admin URL")
+var proxyAllowAdmin = flag.Bool("proxyadmin", false, "Proxy all admin reqs")
 
 var proxyTarget *url.URL
 var brokenHost string
 
 func proxyAllow(req *http.Request) bool {
-	return true
+	u := whoami(req)
+	if *proxyAllowAdmin && u.Admin {
+		return true
+	}
+
+	parts := strings.Split(req.URL.Path, "/")
+	if len(parts) < 2 {
+		return false
+	}
+	name := parts[1]
+
+	d := consolio.Item{}
+	err := db.Get("sgw-"+name, &d)
+	return err == nil && d.Owner == u.Id
 }
 
 func direct(req *http.Request) {
@@ -62,5 +79,6 @@ func sgwProxy() {
 	brokenHost = errorist.Addr().String()
 	log.Printf("Errorizer is on %v", brokenHost)
 
+	log.Printf("Running sgw proxy on %v", *proxyBind)
 	log.Fatal(http.ListenAndServe(*proxyBind, proxy))
 }
