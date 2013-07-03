@@ -201,7 +201,11 @@ func sgwCreate(e consolio.ChangeEvent, pw string) error {
 		}
 	}
 	defer resp.Body.Close()
-	if resp.StatusCode != 303 {
+	if resp.StatusCode == 412 {
+		log.Printf("%q seems to already exist", e.Item.Name)
+		return nil
+	}
+	if resp.StatusCode != 201 {
 		bodyText, _ := ioutil.ReadAll(io.LimitReader(resp.Body, 512))
 		return fmt.Errorf("HTTP error creating bucket: %v\n%s",
 			resp.Status, bodyText)
