@@ -45,6 +45,13 @@ func markDone(id string) error {
 	return nil
 }
 
+func maybeAppend(errs []error, e error) []error {
+	if e != nil {
+		errs = append(errs, e)
+	}
+	return errs
+}
+
 func processTodo() error {
 	log.Printf("Processing TODOs...")
 	res, err := http.Get(*backendUrl + "todo/")
@@ -69,13 +76,18 @@ func processTodo() error {
 			return err
 		}
 
+		errs := []error{}
 		for _, h := range handlers {
-			h(e, pw)
+			errs = maybeAppend(errs, h(e, pw))
 		}
 
-		err = markDone(e.ID)
-		if err != nil {
-			return err
+		if len(errs) == 0 {
+			err = markDone(e.ID)
+			if err != nil {
+				return err
+			}
+		} else {
+			log.Printf("There were errors processing event: %v", errs)
 		}
 	}
 
