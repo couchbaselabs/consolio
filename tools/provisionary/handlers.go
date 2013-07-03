@@ -177,7 +177,7 @@ func sgwCreate(e consolio.ChangeEvent, pw string) error {
 	for k, v := range e.Item.ExtraInfo {
 		conf[k] = v
 	}
-	conf["server"] = sgwDB
+	conf["server"] = cbgbDB
 	conf["bucket"] = conf["dbname"]
 	delete(conf, "dbname")
 
