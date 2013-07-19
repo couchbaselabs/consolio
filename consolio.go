@@ -19,6 +19,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/couchbaselabs/consolio/types"
+	"regexp"
 	"strconv"
 )
 
@@ -48,8 +49,10 @@ func mustEncode(w io.Writer, i interface{}) {
 	}
 }
 
+var dbValidator = regexp.MustCompile(`^([-+=/_.@\p{L}\p{Nd}]+|\*)$`)
+
 func isValidDBName(n string) bool {
-	return true
+	return len(n) > 0 && n[0] != '_' && dbValidator.MatchString(n)
 }
 
 func handleNewDB(w http.ResponseWriter, req *http.Request) {
