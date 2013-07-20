@@ -103,6 +103,16 @@ func handleMkSGWConf(w http.ResponseWriter, req *http.Request) {
 		h := r.Doc.Json.ExtraInfo
 		h["server"] = *slumdb
 		h["bucket"] = h["dbname"]
+
+		bname, ok := h["bucket"].(string)
+		if ok {
+			d := consolio.Item{}
+			err := db.Get("db-"+bname, &d)
+			if err == nil {
+				h["bucket_pass"] = d.Password
+			}
+		}
+
 		delete(h, "dbname")
 		rv.Databases[r.Key[2]] = h
 	}
