@@ -1,7 +1,6 @@
-package main
+package consoliotools
 
 import (
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -18,14 +17,12 @@ import (
 )
 
 var (
-	keyRingPath = flag.String("keyring", "", "Your secret keyring")
-	keyPassword = flag.String("password", "", "Crypto password")
-
-	keys openpgp.EntityList
+	password string
+	keys     openpgp.EntityList
 )
 
-func initCrypto() {
-	f, err := os.Open(*keyRingPath)
+func InitCrypto(keyRingPath, pass string) {
+	f, err := os.Open(keyRingPath)
 	if err != nil {
 		log.Fatalf("Can't open keyring: %v", err)
 	}
@@ -35,9 +32,11 @@ func initCrypto() {
 	if err != nil {
 		log.Fatalf("Can't read keyring: %v", err)
 	}
+
+	password = pass
 }
 
-func decrypt(s string) (string, error) {
+func Decrypt(s string) (string, error) {
 	if s == "" {
 		return "", nil
 	}
@@ -49,7 +48,7 @@ func decrypt(s string) (string, error) {
 
 	d, err := openpgp.ReadMessage(raw.Body, keys,
 		func(keys []openpgp.Key, symmetric bool) ([]byte, error) {
-			kp := []byte(*keyPassword)
+			kp := []byte(password)
 			if symmetric {
 				return kp, nil
 			}

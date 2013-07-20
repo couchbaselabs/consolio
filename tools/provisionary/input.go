@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/couchbaselabs/consolio/tools"
 	"github.com/couchbaselabs/consolio/types"
 )
 
@@ -71,7 +72,7 @@ func processTodo() error {
 	}
 
 	for _, e := range data {
-		pw, err := decrypt(e.Item.Password)
+		pw, err := consoliotools.Decrypt(e.Item.Password)
 		if err != nil {
 			return err
 		}

@@ -5,11 +5,17 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/couchbaselabs/consolio/tools"
 )
 
-var addr = flag.String("bindaddr", ":8555", "HTTP bind address")
-var pollFreq = flag.Duration("pollfreq", time.Minute*5,
-	"How frequently to run failsafe polling")
+var (
+	addr     = flag.String("bindaddr", ":8555", "HTTP bind address")
+	pollFreq = flag.Duration("pollfreq", time.Minute*5,
+		"How frequently to run failsafe polling")
+	keyRingPath = flag.String("keyring", "", "Your secret keyring")
+	keyPassword = flag.String("password", "", "Crypto password")
+)
 
 var hookCh = make(chan bool, 1)
 
@@ -37,7 +43,7 @@ func maybefire() {
 func main() {
 	flag.Parse()
 
-	initCrypto()
+	consoliotools.InitCrypto(*keyRingPath, *keyPassword)
 	initHandlers()
 
 	go provisionLoop()
