@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
@@ -10,8 +12,6 @@ import (
 	"net/url"
 	"strings"
 
-	"bytes"
-	"encoding/json"
 	"github.com/couchbaselabs/consolio/types"
 )
 
