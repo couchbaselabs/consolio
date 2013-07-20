@@ -19,7 +19,7 @@ var (
 type Database struct {
 	Sync, Users    *json.RawMessage
 	Bucket, Server string
-	Pass           string `json:"bucket_pass"`
+	Pass           string `json:"db_pass"`
 }
 
 func (d Database) MarshalJSON() ([]byte, error) {

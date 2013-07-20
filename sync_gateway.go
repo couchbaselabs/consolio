@@ -32,6 +32,15 @@ func handleNewSGW(w http.ResponseWriter, req *http.Request) {
 		},
 	}
 
+	bname, ok := d.ExtraInfo["dbname"].(string)
+	if ok {
+		bucket := consolio.Item{}
+		err := db.Get("db-"+bname, &bucket)
+		if err == nil {
+			d.ExtraInfo["db_pass"] = bucket.Password
+		}
+	}
+
 	if b, _ := strconv.ParseBool(req.FormValue("guest")); b {
 		guestInfo := json.RawMessage(`{"disabled": false, "admin_channels": ["*"] }`)
 		d.ExtraInfo["users"] = map[string]interface{}{"GUEST": &guestInfo}
@@ -103,15 +112,6 @@ func handleMkSGWConf(w http.ResponseWriter, req *http.Request) {
 		h := r.Doc.Json.ExtraInfo
 		h["server"] = *slumdb
 		h["bucket"] = h["dbname"]
-
-		bname, ok := h["bucket"].(string)
-		if ok {
-			d := consolio.Item{}
-			err := db.Get("db-"+bname, &d)
-			if err == nil {
-				h["bucket_pass"] = d.Password
-			}
-		}
 
 		delete(h, "dbname")
 		rv.Databases[r.Key[2]] = h
