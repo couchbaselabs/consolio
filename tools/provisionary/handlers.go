@@ -12,6 +12,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/couchbaselabs/consolio/tools"
 	"github.com/couchbaselabs/consolio/types"
 )
 
@@ -166,6 +167,36 @@ func sgwHandler(e consolio.ChangeEvent, pw string) error {
 	return fmt.Errorf("Unhandled sgw event type: %v", e.Type)
 }
 
+func getServerUrl(m map[string]interface{}) string {
+	server, ok := m["server"].(string)
+	if !ok {
+		return server
+	}
+
+	bucket, ok := m["bucket"].(string)
+	if !ok {
+		return server
+	}
+
+	pass, ok := m["db_pass"].(string)
+	if !ok {
+		return server
+	}
+
+	u, err := url.Parse(server)
+	if err == nil {
+		pass, err := consoliotools.Decrypt(pass)
+		if err == nil {
+			u.User = url.UserPassword(bucket, pass)
+		} else {
+			log.Printf("Error decrypting password: %v", err)
+		}
+		server = u.String()
+	}
+
+	return server
+}
+
 func sgwCreate(e consolio.ChangeEvent, pw string) error {
 	client := &http.Client{
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
@@ -177,9 +208,10 @@ func sgwCreate(e consolio.ChangeEvent, pw string) error {
 	for k, v := range e.Item.ExtraInfo {
 		conf[k] = v
 	}
-	conf["server"] = cbgbDB
 	conf["bucket"] = conf["dbname"]
+	conf["server"] = getServerUrl(conf)
 	delete(conf, "dbname")
+	delete(conf, "db_pass")
 
 	b, err := json.Marshal(conf)
 	if err != nil {
