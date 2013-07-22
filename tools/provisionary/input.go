@@ -18,6 +18,11 @@ var (
 
 func updateItem(t, dbname, urlstring string) error {
 	u := *backendUrl + "update/" + t + "/" + dbname
+	pu, err := url.Parse(urlstring)
+	if err == nil {
+		pu.User = nil
+		urlstring = pu.String()
+	}
 	log.Printf("Posting url=%v to %v", urlstring, u)
 	res, err := http.PostForm(u, url.Values{"url": []string{urlstring}})
 	if err != nil {
