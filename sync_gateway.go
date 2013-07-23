@@ -39,6 +39,7 @@ func handleNewSGW(w http.ResponseWriter, req *http.Request) {
 		if err == nil {
 			d.ExtraInfo["db_pass"] = bucket.Password
 		}
+		d.ExtraInfo["server"] = bucket.URL
 	}
 
 	if b, _ := strconv.ParseBool(req.FormValue("guest")); b {
