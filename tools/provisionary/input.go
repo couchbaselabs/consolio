@@ -37,9 +37,9 @@ func updateItem(t, dbname, urlstring string) error {
 	return nil
 }
 
-func markDone(id string) error {
+func markDone(id, errstr string) error {
 	u := *backendUrl + "todo/" + id
-	res, err := http.Post(u, "application/x-www-form-urlencoded", nil)
+	res, err := http.PostForm(u, url.Values{"error": []string{errstr}})
 	if err != nil {
 		return err
 	}
@@ -88,11 +88,12 @@ func processTodo() error {
 		}
 
 		if len(errs) == 0 {
-			err = markDone(e.ID)
+			err = markDone(e.ID, "")
 			if err != nil {
 				return err
 			}
 		} else {
+			markDone(e.ID, fmt.Sprintf("%v", errs))
 			log.Printf("There were errors processing event: %v", errs)
 		}
 	}

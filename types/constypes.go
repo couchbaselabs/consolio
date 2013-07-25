@@ -2,6 +2,7 @@ package consolio
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -19,11 +20,17 @@ type Item struct {
 	URL  string `json:"url"`
 }
 
+func (i Item) String() string {
+	return fmt.Sprintf("%v:%v", i.Type, i.Name)
+}
+
 type ChangeEvent struct {
 	Type      string    `json:"type"`
 	Item      Item      `json:"item"`
 	Timestamp time.Time `json:"ts"`
 	Processed time.Time `json:"processed"`
+	Error     string    `json:"error,omitempty"`
+	Failures  int       `json:"failures'`
 
 	ID string
 }

@@ -23,6 +23,8 @@ import (
 	"strconv"
 )
 
+const maxFailures = 5
+
 var staticPath = flag.String("static", "static", "Path to the static content")
 var backendPrefix = flag.String("backendPrefix", "/backend/",
 	"HTTP path prefix for backend API")
@@ -306,7 +308,7 @@ func handleListTODO(w http.ResponseWriter, req *http.Request) {
 	mustEncode(w, rv)
 }
 
-func handleMarkTaskDone(w http.ResponseWriter, req *http.Request) {
+func handleTaskStatus(w http.ResponseWriter, req *http.Request) {
 	ce := consolio.ChangeEvent{}
 	k := mux.Vars(req)["id"]
 	err := db.Get(k, &ce)
@@ -315,7 +317,19 @@ func handleMarkTaskDone(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	ce.Processed = time.Now().UTC()
+	ce.Error = req.FormValue("error")
+	if ce.Error == "" {
+		ce.Processed = time.Now().UTC()
+	} else {
+		log.Printf("Failure on event %v (%v) - %v",
+			ce.ID, ce.Item, ce.Error)
+		ce.Failures++
+		if ce.Failures > maxFailures {
+			log.Printf("Giving up on %v (%v) after %v",
+				ce.ID, ce.Item, ce.Error)
+			ce.Processed = time.Now().UTC()
+		}
+	}
 
 	err = db.Set(k, 0, ce)
 	if err != nil {
@@ -481,7 +495,7 @@ func main() {
 		handleDeleteWebhook).Methods("DELETE").MatcherFunc(adminRequired)
 
 	r.HandleFunc(*backendPrefix+"todo/", handleListTODO)
-	r.HandleFunc(*backendPrefix+"todo/{id}", handleMarkTaskDone).Methods("POST")
+	r.HandleFunc(*backendPrefix+"todo/{id}", handleTaskStatus).Methods("POST")
 	r.HandleFunc(*backendPrefix+"update/sgw/{name}", handleUpdateSGW).Methods("POST")
 	r.HandleFunc(*backendPrefix+"update/db/{name}", handleUpdateDB).Methods("POST")
 	r.HandleFunc(*backendPrefix+"sgwconf/", handleMkSGWConf)
