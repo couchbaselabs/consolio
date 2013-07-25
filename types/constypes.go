@@ -37,9 +37,10 @@ type ChangeEvent struct {
 
 func (c ChangeEvent) MarshalJSON() ([]byte, error) {
 	m := map[string]interface{}{
-		"type": c.Type,
-		"item": c.Item,
-		"ts":   c.Timestamp,
+		"type":     c.Type,
+		"item":     c.Item,
+		"ts":       c.Timestamp,
+		"failures": c.Failures,
 	}
 
 	if !c.Processed.IsZero() {
