@@ -8,11 +8,11 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
-	"log"
 	"net/http"
 	"strings"
 	"time"
 
+	"github.com/golang/glog"
 	"github.com/gorilla/securecookie"
 
 	"github.com/couchbaselabs/consolio/types"
@@ -187,7 +187,7 @@ func performAuth(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if time.Now().Unix()*1000 >= int64(resdata.Expires) {
-		log.Printf("browserId assertion had expired as of %v",
+		glog.Infof("browserId assertion had expired as of %v",
 			resdata.Expires)
 		showError(w, r, "Browserid assertion is expired", 500)
 		return
@@ -206,7 +206,7 @@ func performAuth(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, cookie)
 
-	log.Printf("Logged in %v", resdata.Email)
+	glog.Infof("Logged in %v", resdata.Email)
 
 	mustEncode(w, map[string]interface{}{
 		"email":    resdata.Email,
@@ -220,7 +220,7 @@ func serveLogin(w http.ResponseWriter, r *http.Request) {
 	if me.Id == "" {
 		performAuth(w, r)
 	} else {
-		log.Printf("Reusing existing thing: %v", me.Id)
+		glog.Infof("Reusing existing thing: %v", me.Id)
 		mustEncode(w, map[string]interface{}{
 			"email":    me.Id,
 			"emailmd5": md5string(me.Id),

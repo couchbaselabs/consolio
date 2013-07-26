@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
+
+	"github.com/golang/glog"
 
 	"github.com/couchbaselabs/consolio/tools"
 	"github.com/couchbaselabs/consolio/types"
@@ -23,13 +24,13 @@ func updateItem(t, dbname, urlstring string) error {
 		pu.User = nil
 		urlstring = pu.String()
 	}
-	log.Printf("Posting url=%v to %v", urlstring, u)
+	glog.Infof("Posting url=%v to %v", urlstring, u)
 	res, err := http.PostForm(u, url.Values{"url": []string{urlstring}})
 	if err != nil {
 		return err
 	}
 	defer res.Body.Close()
-	log.Printf("Got %v", res.Status)
+	glog.Infof("Got %v", res.Status)
 	if res.StatusCode != 204 {
 		return fmt.Errorf("HTTP error marking task done: %v", res.Status)
 	}
@@ -59,7 +60,7 @@ func maybeAppend(errs []error, e error) []error {
 }
 
 func processTodo() error {
-	log.Printf("Processing TODOs...")
+	glog.Infof("Processing TODOs...")
 	res, err := http.Get(*backendUrl + "todo/")
 	if err != nil {
 		return err
@@ -94,7 +95,7 @@ func processTodo() error {
 			}
 		} else {
 			markDone(e.ID, fmt.Sprintf("%v", errs))
-			log.Printf("There were errors processing event: %v", errs)
+			glog.Infof("There were errors processing event: %v", errs)
 		}
 	}
 

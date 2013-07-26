@@ -3,7 +3,6 @@ package consoliotools
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"strings"
 
@@ -14,6 +13,7 @@ import (
 
 	"code.google.com/p/go.crypto/openpgp"
 	"code.google.com/p/go.crypto/openpgp/armor"
+	"github.com/golang/glog"
 )
 
 var (
@@ -24,13 +24,13 @@ var (
 func InitCrypto(keyRingPath, pass string) {
 	f, err := os.Open(keyRingPath)
 	if err != nil {
-		log.Fatalf("Can't open keyring: %v", err)
+		glog.Fatalf("Can't open keyring: %v", err)
 	}
 	defer f.Close()
 
 	keys, err = openpgp.ReadKeyRing(f)
 	if err != nil {
-		log.Fatalf("Can't read keyring: %v", err)
+		glog.Fatalf("Can't read keyring: %v", err)
 	}
 
 	password = pass

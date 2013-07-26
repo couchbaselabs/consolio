@@ -2,11 +2,11 @@ package main
 
 import (
 	"flag"
-	"log"
 	"net/http"
 	"time"
 
 	"github.com/couchbaselabs/consolio/tools"
+	"github.com/golang/glog"
 )
 
 var (
@@ -28,7 +28,7 @@ func provisionLoop() {
 		}
 		err := processTodo()
 		if err != nil {
-			log.Printf("Error processing things: %v", err)
+			glog.Infof("Error processing things: %v", err)
 		}
 	}
 }
@@ -55,5 +55,5 @@ func main() {
 		w.WriteHeader(202)
 	})
 
-	log.Fatal(http.ListenAndServe(*addr, nil))
+	glog.Fatal(http.ListenAndServe(*addr, nil))
 }

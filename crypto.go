@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"io"
-	"log"
 	"os"
 	"strings"
 
@@ -14,6 +13,7 @@ import (
 
 	"code.google.com/p/go.crypto/openpgp"
 	"code.google.com/p/go.crypto/openpgp/armor"
+	"github.com/golang/glog"
 )
 
 var encryptKeys openpgp.EntityList
@@ -23,16 +23,16 @@ func encrypt(s string) string {
 
 	wa, err := armor.Encode(buf, "PGP MESSAGE", nil)
 	if err != nil {
-		log.Fatalf("Can't make armor: %v", err)
+		glog.Fatalf("Can't make armor: %v", err)
 	}
 
 	w, err := openpgp.Encrypt(wa, encryptKeys, nil, nil, nil)
 	if err != nil {
-		log.Fatalf("Error encrypting: %v", err)
+		glog.Fatalf("Error encrypting: %v", err)
 	}
 	_, err = io.Copy(w, strings.NewReader(s))
 	if err != nil {
-		log.Fatalf("Error encrypting: %v", err)
+		glog.Fatalf("Error encrypting: %v", err)
 	}
 	w.Close()
 	wa.Close()
@@ -74,13 +74,13 @@ func primaryIdentity(e *openpgp.Entity) *openpgp.Identity {
 func initPgp(kr string, keyids []string) {
 	f, err := os.Open(kr)
 	if err != nil {
-		log.Fatalf("Can't open keyring: %v", err)
+		glog.Fatalf("Can't open keyring: %v", err)
 	}
 	defer f.Close()
 
 	kl, err := openpgp.ReadKeyRing(f)
 	if err != nil {
-		log.Fatalf("Can't read keyring: %v", err)
+		glog.Fatalf("Can't read keyring: %v", err)
 	}
 
 	var hprefs, sprefs []uint8
@@ -99,12 +99,12 @@ func initPgp(kr string, keyids []string) {
 	}
 
 	if len(encryptKeys) != len(keyids) {
-		log.Fatalf("Couldn't find all keys")
+		glog.Fatalf("Couldn't find all keys")
 	}
 	if len(hprefs) == 0 {
-		log.Fatalf("No common hashes for encryption keys")
+		glog.Fatalf("No common hashes for encryption keys")
 	}
 	if len(sprefs) == 0 {
-		log.Fatalf("No common symmetric ciphers for encryption keys")
+		glog.Fatalf("No common symmetric ciphers for encryption keys")
 	}
 }

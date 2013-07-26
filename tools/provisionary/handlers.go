@@ -7,10 +7,11 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/golang/glog"
 
 	"github.com/couchbaselabs/consolio/tools"
 	"github.com/couchbaselabs/consolio/types"
@@ -34,7 +35,7 @@ var (
 func mustParseURL(ustr string) *url.URL {
 	u, err := url.Parse(ustr)
 	if err != nil {
-		log.Fatalf("Error parsing URL %q: %v", ustr, err)
+		glog.Fatalf("Error parsing URL %q: %v", ustr, err)
 	}
 	return u
 }
@@ -66,7 +67,7 @@ func initHandlers() {
 }
 
 func logHandler(e consolio.ChangeEvent, pw string) error {
-	log.Printf("Found %v -> %v %v - %q",
+	glog.Infof("Found %v -> %v %v - %q",
 		e.ID, e.Type, e.Item.Name, pw)
 	return nil
 }
@@ -80,7 +81,7 @@ func isRedirected(e error) bool {
 
 func cbgbHandler(e consolio.ChangeEvent, pw string) error {
 	if e.Item.Type != "database" {
-		log.Printf("Ignoring non-database type: %v (%v)",
+		glog.Infof("Ignoring non-database type: %v (%v)",
 			e.Item.Name, e.Item.Type)
 		return nil
 	}
@@ -105,7 +106,7 @@ func cbgbDelete(dbname string) error {
 	}
 	defer res.Body.Close()
 	if res.StatusCode == 404 {
-		log.Printf("Missing while deleting DB %q, must already be gone", dbname)
+		glog.Infof("Missing while deleting DB %q, must already be gone", dbname)
 		return nil
 	}
 	if res.StatusCode != 204 {
@@ -154,7 +155,7 @@ func cbgbCreate(dbname, pw string) error {
 
 func sgwHandler(e consolio.ChangeEvent, pw string) error {
 	if e.Item.Type != "sync_gateway" {
-		log.Printf("Ignoring non-sgw type: %v (%v)",
+		glog.Infof("Ignoring non-sgw type: %v (%v)",
 			e.Item.Name, e.Item.Type)
 		return nil
 	}
@@ -189,7 +190,7 @@ func getServerUrl(m map[string]interface{}) string {
 		if err == nil {
 			u.User = url.UserPassword(bucket, pass)
 		} else {
-			log.Printf("Error decrypting password: %v", err)
+			glog.Infof("Error decrypting password: %v", err)
 		}
 		server = u.String()
 	}
@@ -218,7 +219,7 @@ func sgwCreate(e consolio.ChangeEvent, pw string) error {
 		return err
 	}
 
-	log.Printf("Provisioning with %s", b)
+	glog.Infof("Provisioning with %s", b)
 
 	req, err := http.NewRequest("PUT", sgwAdmin+e.Item.Name+"/",
 		bytes.NewReader(b))
@@ -236,7 +237,7 @@ func sgwCreate(e consolio.ChangeEvent, pw string) error {
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode == 412 {
-		log.Printf("%q seems to already exist", e.Item.Name)
+		glog.Infof("%q seems to already exist", e.Item.Name)
 		return nil
 	}
 	if resp.StatusCode != 201 {
@@ -260,7 +261,7 @@ func sgwDelete(e consolio.ChangeEvent, pw string) error {
 	}
 	defer res.Body.Close()
 	if res.StatusCode == 404 {
-		log.Printf("Didn't find DB.  Must already be gone.")
+		glog.Infof("Didn't find DB.  Must already be gone.")
 		return nil
 	}
 	if res.StatusCode != 200 {

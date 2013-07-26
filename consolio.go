@@ -8,7 +8,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -18,6 +17,7 @@ import (
 
 	"github.com/couchbaselabs/go-couchbase"
 	"github.com/dustin/gomemcached"
+	"github.com/golang/glog"
 	"github.com/gorilla/mux"
 
 	"github.com/couchbaselabs/consolio/types"
@@ -35,7 +35,7 @@ var eventCh = make(chan consolio.ChangeEvent, 10)
 
 func showError(w http.ResponseWriter, r *http.Request,
 	msg string, code int) {
-	log.Printf("Reporting error %v/%v", code, msg)
+	glog.Infof("Reporting error %v/%v", code, msg)
 	http.Error(w, msg, code)
 }
 
@@ -412,20 +412,20 @@ func runHook(wh Webhook, content []byte) error {
 func runHooks(h consolio.ChangeEvent) {
 	hooks, err := getWebhooks()
 	if err != nil {
-		log.Printf("Error getting web hooks:  %v", err)
+		glog.Infof("Error getting web hooks:  %v", err)
 		return
 	}
 
 	content, err := json.Marshal(h)
 	if err != nil {
-		log.Printf("Error marshaling hook event: %v", err)
+		glog.Infof("Error marshaling hook event: %v", err)
 		return
 	}
 
 	for _, wh := range hooks {
 		err := runHook(wh, content)
 		if err != nil {
-			log.Printf("Error running hook %v -> %v: %v", h, wh, err)
+			glog.Infof("Error running hook %v -> %v: %v", h, wh, err)
 		}
 	}
 }
@@ -509,11 +509,11 @@ func main() {
 	var err error
 	db, err = dbConnect(*cbServ, *cbBucket)
 	if err != nil {
-		log.Fatalf("Error connecting to couchbase: %v", err)
+		glog.Fatalf("Error connecting to couchbase: %v", err)
 	}
 
 	go sgwProxy()
 
-	log.Printf("Listening on %v", *addr)
-	log.Fatal(http.ListenAndServe(*addr, nil))
+	glog.Infof("Listening on %v", *addr)
+	glog.Fatal(http.ListenAndServe(*addr, nil))
 }

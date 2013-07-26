@@ -1,10 +1,9 @@
 package main
 
 import (
-	"log"
-
 	"github.com/couchbaselabs/go-couchbase"
 	"github.com/couchbaselabs/go-couchbase/util"
+	"github.com/golang/glog"
 )
 
 const ddocKey = "consolio"
@@ -28,7 +27,7 @@ const ddocBody = `{
 
 func dbConnect(serv, bucket string) (*couchbase.Bucket, error) {
 
-	log.Printf("Connecting to couchbase bucket %v at %v",
+	glog.Infof("Connecting to couchbase bucket %v at %v",
 		bucket, serv)
 	rv, err := couchbase.GetBucket(serv, "default", bucket)
 	if err != nil {

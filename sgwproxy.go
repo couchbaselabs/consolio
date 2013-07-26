@@ -2,12 +2,13 @@ package main
 
 import (
 	"flag"
-	"log"
 	"net"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"strings"
+
+	"github.com/golang/glog"
 
 	"github.com/couchbaselabs/consolio/types"
 )
@@ -60,7 +61,7 @@ func sgwProxy() {
 
 	u, err := url.Parse(*targetUrl)
 	if err != nil {
-		log.Printf("Error parsing target URL: %v", err)
+		glog.Infof("Error parsing target URL: %v", err)
 	}
 	proxyTarget = u
 
@@ -68,17 +69,17 @@ func sgwProxy() {
 
 	a, err := net.ResolveTCPAddr("tcp", "127.0.0.1:0")
 	if err != nil {
-		log.Fatalf("Can't resolve address: %v", err)
+		glog.Fatalf("Can't resolve address: %v", err)
 	}
 	errorist, err := net.ListenTCP("tcp", a)
 	if err != nil {
-		log.Fatalf("Error creating errorist: %v", err)
+		glog.Fatalf("Error creating errorist: %v", err)
 	}
 	go http.Serve(errorist, errorizer{})
 
 	brokenHost = errorist.Addr().String()
-	log.Printf("Errorizer is on %v", brokenHost)
+	glog.Infof("Errorizer is on %v", brokenHost)
 
-	log.Printf("Running sgw proxy on %v", *proxyBind)
-	log.Fatal(http.ListenAndServe(*proxyBind, proxy))
+	glog.Infof("Running sgw proxy on %v", *proxyBind)
+	glog.Fatal(http.ListenAndServe(*proxyBind, proxy))
 }
