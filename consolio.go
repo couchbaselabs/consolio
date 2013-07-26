@@ -11,6 +11,8 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -19,8 +21,6 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/couchbaselabs/consolio/types"
-	"regexp"
-	"strconv"
 )
 
 const maxFailures = 5
