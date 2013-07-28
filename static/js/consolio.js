@@ -22,6 +22,7 @@ angular.module("consolio", ['consAuth', 'consAlert']).
 
 function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
     $rootScope.$watch('loggedin', function() { $scope.auth = consAuth.get(); });
+    $scope.login = consAuth.login;
 
     $http.get("/api/me/").success(function(me) { $scope.me = me; });
 
