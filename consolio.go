@@ -322,10 +322,10 @@ func handleTaskStatus(w http.ResponseWriter, req *http.Request) {
 		ce.Processed = time.Now().UTC()
 	} else {
 		ce.Failures++
-		log.Printf("Failure #%v on event %v (%v) - %v",
+		glog.Warningf("Failure #%v on event %v (%v) - %v",
 			ce.Failures, k, ce.Item, ce.Error)
 		if ce.Failures > maxFailures {
-			log.Printf("Giving up on %v (%v) after %v",
+			glog.Errorf("Giving up on %v (%v) after %v",
 				k, ce.Item, ce.Error)
 			ce.Processed = time.Now().UTC()
 		}
