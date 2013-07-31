@@ -30,7 +30,7 @@ type ChangeEvent struct {
 	Timestamp time.Time `json:"ts"`
 	Processed time.Time `json:"processed"`
 	Error     string    `json:"error,omitempty"`
-	Failures  int       `json:"failures'`
+	Failures  int       `json:"failures"`
 
 	ID string
 }
