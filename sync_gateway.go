@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"flag"
 	"net/http"
 	"strconv"
@@ -9,6 +10,7 @@ import (
 	"time"
 
 	"github.com/dustin/gomemcached"
+	"github.com/golang/glog"
 	"github.com/gorilla/mux"
 
 	"github.com/couchbaselabs/consolio/types"
@@ -19,11 +21,38 @@ const sgwType = "sync_gateway"
 var slumdb = flag.String("slum", "http://localhost:8091/",
 	"URL to syncgw's couchbase")
 
+var notAdded = errors.New("Not added")
+
+func generateRandomBucket(owner, genFor string) (*consolio.Item, error) {
+	d := consolio.Item{
+		Name:     "dbgen-" + randstring(12),
+		Password: encrypt(randstring(12)),
+		Type:     "database",
+		Owner:    owner,
+		Enabled:  true,
+		LastMod:  time.Now().UTC(),
+		ExtraInfo: map[string]interface{}{
+			"generated_for": genFor,
+		},
+	}
+
+	added, err := db.Add("db-"+d.Name, 0, d)
+	if err != nil {
+		return nil, err
+	}
+	if !added {
+		return nil, notAdded
+	}
+
+	return &d, recordEvent("create", d)
+}
+
 func handleNewSGW(w http.ResponseWriter, req *http.Request) {
+	me := whoami(req)
 	d := consolio.Item{
 		Name:    strings.TrimSpace(req.FormValue("name")),
 		Type:    sgwType,
-		Owner:   whoami(req).Id,
+		Owner:   me.Id,
 		Enabled: true,
 		LastMod: time.Now().UTC(),
 		ExtraInfo: map[string]interface{}{
@@ -40,6 +69,15 @@ func handleNewSGW(w http.ResponseWriter, req *http.Request) {
 			d.ExtraInfo["db_pass"] = bucket.Password
 		}
 		d.ExtraInfo["server"] = bucket.URL
+	} else {
+		bucket, err := generateRandomBucket(me.Id, d.Name)
+		if err != nil {
+			showError(w, req,
+				"Could not setup creation of tmp db: "+err.Error(), 500)
+		}
+		d.ExtraInfo["db_pass"] = bucket.Password
+		d.ExtraInfo["server"] = bucket.URL
+		d.ExtraInfo["generated_db"] = bucket.Name
 	}
 
 	if b, _ := strconv.ParseBool(req.FormValue("guest")); b {
@@ -166,7 +204,12 @@ func handleDeleteSGW(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	w.WriteHeader(204)
+	if ob, ok := d.ExtraInfo["generated_db"]; ok {
+		glog.Info("Issuing delete of automatically generated db: %v", ob)
+		mux.Vars(req)["name"] = ob.(string)
+	} else {
+		w.WriteHeader(204)
+	}
 }
 
 func handleListSGWs(w http.ResponseWriter, req *http.Request) {

@@ -37,37 +37,11 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
         });
     };
 
-    $http.get("/api/database/").success(function(databases) {
-        $scope.databases = databases;
-    });
     $http.get("/api/sgw/").success(function(sgws) {
         $scope.syncgws = sgws;
     });
 
-    $scope.newbucket = "";
-    $scope.wantnewdb = false;
     $scope.wantnewsgw = false;
-
-    $scope.newdb = function() {
-        var dbname = $("#newbucketname").val();
-        var password = $("#newbucketpass").val();
-        $http.post('/api/database/',
-                   'name=' + encodeURIComponent(dbname) +
-                   '&password=' + encodeURIComponent(password),
-                   {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
-            .error(function(data, code) {
-                bAlert("Error " + code, "Couldn't create " + dbname +
-                       ": " + data, "error");
-            })
-            .success(function(data) {
-                $("#newbucketname").val("");
-                $("#newbucketpass").val("");
-                var tmp = $scope.databases.slice(0);
-                tmp.push(data);
-                $scope.databases = tmp;
-                $scope.wantnewdb = false;
-                });
-    };
 
     $scope.newsgw = function() {
         var sgwname = $("#newsgwname").val();
