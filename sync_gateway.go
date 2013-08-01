@@ -75,6 +75,7 @@ func handleNewSGW(w http.ResponseWriter, req *http.Request) {
 			showError(w, req,
 				"Could not setup creation of tmp db: "+err.Error(), 500)
 		}
+		glog.Infof("Created random bucket: %v for %v", bucket.Name, d.Name)
 		d.ExtraInfo["db_pass"] = bucket.Password
 		d.ExtraInfo["server"] = bucket.URL
 		d.ExtraInfo["generated_db"] = bucket.Name
