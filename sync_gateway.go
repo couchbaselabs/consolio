@@ -24,7 +24,7 @@ var sgwPersonaOrigin = flag.String("sgw.personaOrigin",
 	"http://sync.couchbasecloud.com/",
 	"persona origin URL for the sync gateway")
 var sgwPersonaRegister = flag.Bool("sgw.personaRegister",
-	false, "whether to require persona registration")
+	false, "automatically provision persona authenticated users")
 
 var notAdded = errors.New("Not added")
 
