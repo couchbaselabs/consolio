@@ -62,7 +62,7 @@ func handleNewSGW(w http.ResponseWriter, req *http.Request) {
 	}
 
 	bname, ok := d.ExtraInfo["dbname"].(string)
-	if ok {
+	if ok && bname != "" {
 		bucket := consolio.Item{}
 		err := db.Get("db-"+bname, &bucket)
 		if err == nil {
