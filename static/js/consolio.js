@@ -51,7 +51,6 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
         $http.post('/api/sgw/',
                    'name=' + encodeURIComponent(sgwname) +
                    '&guest=' + (guest?"true":"false") +
-                   '&dbname=' + encodeURIComponent(dbname) +
                    '&syncfun=' + encodeURIComponent(func),
                    {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
             .error(function(data, code) {

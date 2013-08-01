@@ -61,14 +61,15 @@ func handleNewSGW(w http.ResponseWriter, req *http.Request) {
 		},
 	}
 
-	bname, ok := d.ExtraInfo["dbname"].(string)
-	if ok && bname != "" {
+	bname, _ := d.ExtraInfo["dbname"].(string)
+	if bname != "" {
 		bucket := consolio.Item{}
 		err := db.Get("db-"+bname, &bucket)
 		if err == nil {
 			d.ExtraInfo["db_pass"] = bucket.Password
 		} else {
 			showError(w, req, "Error validating bucket: "+err.Error(), 500)
+			return
 		}
 		d.ExtraInfo["server"] = bucket.URL
 		glog.Infof("Using existing bucket: %v for %v", bucket.Name, d.Name)
