@@ -45,7 +45,7 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
 
     $scope.newsgw = function() {
         var sgwname = $("#newsgwname").val();
-        var guest = $("#newsgwguest").val();
+        var guest = $("#newsgwguest").is(":checked");
         var dbname = $("#newsgwdb").val();
         var func = $("#newswsync").val();
         $http.post('/api/sgw/',
