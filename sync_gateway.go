@@ -67,8 +67,11 @@ func handleNewSGW(w http.ResponseWriter, req *http.Request) {
 		err := db.Get("db-"+bname, &bucket)
 		if err == nil {
 			d.ExtraInfo["db_pass"] = bucket.Password
+		} else {
+			showError(w, req, "Error validating bucket: "+err.Error(), 500)
 		}
 		d.ExtraInfo["server"] = bucket.URL
+		glog.Infof("Using existing bucket: %v for %v", bucket.Name, d.Name)
 	} else {
 		bucket, err := generateRandomBucket(me.Id, d.Name)
 		if err != nil {
