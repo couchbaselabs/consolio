@@ -4,4 +4,13 @@
   Current URL:  <tt>{{sgw.url}}</tt>
 </p>
 
+<div ng-show="authtoken && sgw.url">
+  <h2>Admin URL</h2>
+
+  <tt>http://{{sgwname}}:{{authtoken}}@syncadm.couchbasecloud.com/{{sgwname}}</tt>
+</div>
+<div ng-hide="authtoken || !sgw.url">
+  <button ng-click="getAuthToken()" class="btn">Reveal admin URL</button>
+</div>
+
 <button ng-click="delete()" class="btn btn-danger">Delete {{sgwname}}</button>

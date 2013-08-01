@@ -111,6 +111,15 @@ function SGWCtrl($scope, $http, $routeParams, $rootScope, $location, consAuth, b
                 bAlert("Error " + code, "Couldn't delete SGW: " + data, "error");
             });
     };
+
+    $scope.authtoken = "";
+
+    $scope.getAuthToken = function() {
+        $http.get("/api/me/token/").
+            success(function(res) {
+                $scope.authtoken = res.token;
+            });
+    };
 }
 
 function AdminCtrl($scope, $http, $rootScope, $location, bAlert) {
