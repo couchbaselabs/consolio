@@ -212,6 +212,7 @@ func handleDeleteSGW(w http.ResponseWriter, req *http.Request) {
 	if ob, ok := d.ExtraInfo["generated_db"]; ok {
 		glog.Info("Issuing delete of automatically generated db: %v", ob)
 		mux.Vars(req)["name"] = ob.(string)
+		handleDeleteDB(w, req)
 	} else {
 		w.WriteHeader(204)
 	}
