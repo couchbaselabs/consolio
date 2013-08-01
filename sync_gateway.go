@@ -20,6 +20,11 @@ const sgwType = "sync_gateway"
 
 var slumdb = flag.String("slum", "http://localhost:8091/",
 	"URL to syncgw's couchbase")
+var sgwPersonaOrigin = flag.String("sgw.personaOrigin",
+	"http://sync.couchbasecloud.com/",
+	"persona origin URL for the sync gateway")
+var sgwPersonaRegister = flag.Bool("sgw.personaRegister",
+	false, "whether to require persona registration")
 
 var notAdded = errors.New("Not added")
 
@@ -141,16 +146,26 @@ func handleMkSGWConf(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	// "persona": { "origin": "http://example.com/", "register": true },
+
+	type Persona struct {
+		Origin   string `json:"origin"`
+		Register bool   `json:"register"`
+	}
+
 	rv := struct {
 		Intf      string                            `json:"interface"`
 		AdminIntf string                            `json:"adminInterface"`
 		Log       []string                          `json:"log"`
 		Databases map[string]map[string]interface{} `json:"databases"`
+
+		Persona Persona `json:"persona"`
 	}{
 		Intf:      ":4984",
 		AdminIntf: ":4985",
 		Log:       []string{"REST"},
 		Databases: map[string]map[string]interface{}{},
+		Persona:   Persona{*sgwPersonaOrigin, *sgwPersonaRegister},
 	}
 
 	for _, r := range viewRes.Rows {

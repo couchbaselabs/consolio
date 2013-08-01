@@ -49,6 +49,7 @@ func (d Database) MarshalJSON() ([]byte, error) {
 type Config struct {
 	AdminInterface *json.RawMessage `json:"adminInterface"`
 	Interface      *json.RawMessage `json:"interface"`
+	Persona        *json.RawMessage `json:"persona"`
 	Log            *json.RawMessage `json:"log"`
 	Databases      map[string]Database
 }
