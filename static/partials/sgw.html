@@ -7,7 +7,7 @@
 <div ng-show="authtoken && sgw.url">
   <h2>Admin URL</h2>
 
-  <tt>http://{{sgwname}}:{{authtoken}}@syncadm.couchbasecloud.com:8083/{{sgwname}}</tt>
+  <tt>http://{{authuser}}:{{authtoken}}@syncadm.couchbasecloud.com:8083/{{sgwname}}</tt>
 </div>
 <div ng-hide="authtoken || !sgw.url">
   <button ng-click="getAuthToken()" class="btn">Reveal admin URL</button>

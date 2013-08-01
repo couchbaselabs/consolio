@@ -117,6 +117,8 @@ function SGWCtrl($scope, $http, $routeParams, $rootScope, $location, consAuth, b
     $scope.getAuthToken = function() {
         $http.get("/api/me/token/").
             success(function(res) {
+                // This isn't exactly right, but it's pretty close
+                $scope.authuser = encodeURIComponent($scope.sgw.owner);
                 $scope.authtoken = res.token;
             });
     };
