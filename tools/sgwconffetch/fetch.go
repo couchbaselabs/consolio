@@ -26,7 +26,9 @@ func (d Database) MarshalJSON() ([]byte, error) {
 	m := map[string]interface{}{}
 	m["bucket"] = d.Bucket
 	m["sync"] = d.Sync
-	m["users"] = d.Users
+	if d.Users != nil {
+		m["users"] = d.Users
+	}
 
 	u, err := url.Parse(d.Server)
 	if err == nil {
