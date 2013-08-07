@@ -35,6 +35,7 @@ func generateRandomBucket(owner, genFor string) (*consolio.Item, error) {
 		Type:     "database",
 		Owner:    owner,
 		Enabled:  true,
+		URL:      *slumdb,
 		LastMod:  time.Now().UTC(),
 		ExtraInfo: map[string]interface{}{
 			"generated_for": genFor,
