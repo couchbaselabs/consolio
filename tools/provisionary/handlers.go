@@ -169,7 +169,6 @@ func sgwHandler(e consolio.ChangeEvent, pw string) error {
 }
 
 func getServerUrl(m map[string]interface{}) string {
-	glog.Infof("Getting server URL from %+v", m)
 	server, ok := m["server"].(string)
 	if !ok {
 		return server
@@ -206,8 +205,7 @@ func sgwCreate(e consolio.ChangeEvent, pw string) error {
 		},
 	}
 
-	glog.Infof("Got sgw create message: %+v", e)
-	glog.Infof("Item: %+v, info:  %+v", e.Item, e.Item.ExtraInfo)
+	glog.Infof("Got sgw create message: %+v/%+v", e, e.Item)
 
 	conf := map[string]interface{}{}
 	for k, v := range e.Item.ExtraInfo {
