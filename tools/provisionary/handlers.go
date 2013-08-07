@@ -205,6 +205,8 @@ func sgwCreate(e consolio.ChangeEvent, pw string) error {
 		},
 	}
 
+	glog.Info("Got sgw create message: %+v", e)
+
 	conf := map[string]interface{}{}
 	for k, v := range e.Item.ExtraInfo {
 		conf[k] = v
