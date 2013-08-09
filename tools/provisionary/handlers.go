@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strings"
 
 	"github.com/golang/glog"
@@ -198,6 +199,24 @@ func getServerUrl(m map[string]interface{}) string {
 	return server
 }
 
+var obscRe = regexp.MustCompile("http://[-A-z0-9]+:[A-z0-9]+@")
+var innerRe = regexp.MustCompile(":[A-z0-9]+@")
+
+func obscurePassword(b []byte) []byte {
+	return obscRe.ReplaceAllFunc(b, func(match []byte) []byte {
+		rv := make([]byte, len(match))
+		copy(rv, match)
+		return innerRe.ReplaceAllFunc(rv, func(m []byte) []byte {
+			for i := range m {
+				m[i] = 'x'
+			}
+			m[0] = ':'
+			m[len(m)-1] = '@'
+			return m
+		})
+	})
+}
+
 func sgwCreate(e consolio.ChangeEvent, pw string) error {
 	client := &http.Client{
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
@@ -221,7 +240,7 @@ func sgwCreate(e consolio.ChangeEvent, pw string) error {
 		return err
 	}
 
-	glog.Infof("Provisioning with %s", b)
+	glog.Infof("Provisioning with %s", obscurePassword(b))
 
 	req, err := http.NewRequest("PUT", sgwAdmin+e.Item.Name+"/",
 		bytes.NewReader(b))
