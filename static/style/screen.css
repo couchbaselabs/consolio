@@ -1,3 +1,32 @@
 #app {
     margin-top: 48px;
 }
+
+#logo {
+    height: 50px;
+    float: left;
+    margin-right: 10px;
+}
+
+#logotype {
+    font-size: 150%;
+    color: white;
+    margin-right: 10px;
+}
+
+#splash {
+    color: white;
+    background: black url(http://cbfs-ext.hq.couchbase.com/projects/couchbasecloud/psychadelic_fractal.jpg) no-repeat top center;
+}
+
+#gravatar {
+    float: left;
+    margin-right: 10px;
+}
+
+.tos_term {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.ng-cloak { display: none !important; }

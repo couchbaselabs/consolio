@@ -1,33 +1,9 @@
-<h1>Dashboard</h1>
-
-<div ng-hide="auth.loggedin">
-  <p>
-    Please <a ng-click="login()">log in</a> to make use of this
-    service.  It's quick and easy (and you don't even need to
-    register!)
-  </p>
+<div id="splash" class="jumbotron">
+    <div class="container">
+        <h1>Welcome to Couchbase Cloud</h1>
+        <p>Couchbase Cloud Sandbox is a free service for developers to get started with Couchbase Lite, Sync Gateway and Couchbase Server.</p>
+        <p><a class="btn btn-primary btn-lg">Learn more</a></p>
+    </div>
 </div>
 
-<div ng-show="auth.loggedin">
-  <p>You are {{auth.username}}.  Maybe we have things for you.</p>
 
-  <h2>Your Sync Gateways</h2>
-  <p ng-hide="syncgws"><em>No sync gateways defined yet</em></p>
-  <ul ng-show="syncgws">
-    <li ng-repeat="d in syncgws"><a href="/sgw/{{d.name}}/">{{d.name}}</a></li>
-  </ul>
-
-  <button ng-hide="wantnewsgw" ng-click="wantnewsgw = true">New Sync Gateway</button>
-  <form ng-show="wantnewsgw" ng-submit="newsgw()">
-    Create a new sync gateway<br>
-    Name: <input ng-bind="newsgwname" id="newsgwname" type="text" /><br/>
-    <label>Allow Guest? <input type="checkbox" id="newsgwguest" /></label><br/>
-    Sync Function:<br/>
-    <textarea id="newswsync" rows="5" cols="80">
-function(doc) {
-  channel(doc.channels);
-}</textarea><br/>
-    <input type="submit"/>
-  </form>
-
-</div>

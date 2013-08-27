@@ -463,6 +463,10 @@ func main() {
 		"/db/",
 		"/sgw/",
 		"/admin/",
+	    "/terms_of_service/",
+	    "/acceptable_use/",
+	    "/privacy_policy/",
+	    "/dashboard/",
 	}
 
 	for _, p := range appPages {

@@ -7,8 +7,12 @@ angular.module("consolio", ['consAuth', 'consAlert']).
     config(['$routeProvider', '$locationProvider',
             function($routeProvider, $locationProvider) {
                 $routeProvider.
-                    when('/index/', {templateUrl: '/static/partials/index.html',
-                                     controller: 'ConsolioCtrl'}).
+                    when('/index/', {templateUrl: '/static/partials/index.html'}).
+                    when('/terms_of_service/', {templateUrl: '/static/partials/terms_of_service.html'}).
+                    when('/acceptable_use/', {templateUrl: '/static/partials/acceptable_use.html'}).
+                    when('/privacy_policy/', {templateUrl: '/static/partials/privacy_policy.html'}).
+                    when('/dashboard/', {templateUrl: '/static/partials/dashboard.html',
+                                         controller: 'DashCtrl'}).
                     when('/db/:name/', {templateUrl: '/static/partials/db.html',
                                         controller: 'DBCtrl'}).
                     when('/sgw/:name/', {templateUrl: '/static/partials/sgw.html',
@@ -21,8 +25,11 @@ angular.module("consolio", ['consAuth', 'consAlert']).
             }]);
 
 function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
+
+}
+
+function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
     $rootScope.$watch('loggedin', function() { $scope.auth = consAuth.get(); });
-    $scope.login = consAuth.login;
 
     $http.get("/api/me/").success(function(me) { $scope.me = me; });
 
@@ -38,6 +45,7 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
     };
 
     $http.get("/api/sgw/").success(function(sgws) {
+        console.log(sgws);
         $scope.syncgws = sgws;
     });
 
@@ -49,13 +57,13 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
         var dbname = $("#newsgwdb").val();
         var func = $("#newswsync").val();
         $http.post('/api/sgw/',
-                   'name=' + encodeURIComponent(sgwname) +
-                   '&guest=' + (guest?"true":"false") +
-                   '&syncfun=' + encodeURIComponent(func),
-                   {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
+            'name=' + encodeURIComponent(sgwname) +
+                '&guest=' + (guest?"true":"false") +
+                '&syncfun=' + encodeURIComponent(func),
+            {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
             .error(function(data, code) {
                 bAlert("Error " + code, "Couldn't create " + dbname +
-                       ": " + data, "error");
+                    ": " + data, "error");
             })
             .success(function(data) {
                 $("#newsgwname").val("");
@@ -68,6 +76,7 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
             });
     };
 }
+
 
 function DBCtrl($scope, $http, $routeParams, $rootScope, $location, consAuth, bAlert) {
     $scope.dbname = $routeParams.name;
@@ -92,6 +101,7 @@ function DBCtrl($scope, $http, $routeParams, $rootScope, $location, consAuth, bA
 }
 
 function SGWCtrl($scope, $http, $routeParams, $rootScope, $location, consAuth, bAlert) {
+
     $scope.sgwname = $routeParams.name;
     var sgwurl = "/api/sgw/" + $scope.sgwname + "/";
     $http.get(sgwurl)
