@@ -62,7 +62,7 @@
                         <li><a ng-click="logout()">Log Out</a></li>
                     </ul>
                 </li>
-                <li ng-show="auth.checked"><a ng-hide="loggedin" ng-click="login()">Log In</a></li>
+                <li class="ng-cloak" ng-show="!auth.loggedin"><a ng-click="login()">Log In</a></li>
             </ul>
         </div>
     </div>
