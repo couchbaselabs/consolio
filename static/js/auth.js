@@ -7,6 +7,7 @@ consAuth.factory('consAuth', function ($rootScope, $http, $location) {
         gravatar: "",
         authtoken: "",
         checked: false,
+        redirected: false,
         userPrefs: {}
     };
 
@@ -27,6 +28,10 @@ consAuth.factory('consAuth', function ($rootScope, $http, $location) {
                     auth.authtoken = "";
                     auth.checked = true;
                     $rootScope.loggedin = true;
+                    if (auth.loggedin && !auth.redirected && false) {
+                        auth.redirected = true;
+                        $location.url('/dashboard/');
+                    }
                 }).
                 error(function (res, err) {
                     bAlert("Error", "Couldn't log you in.", "error");
@@ -62,6 +67,7 @@ consAuth.factory('consAuth', function ($rootScope, $http, $location) {
 
     function login() {
         navigator.id.request();
+        $location.url('/dashboard/');
     }
 
     function getAuth() {

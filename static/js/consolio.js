@@ -195,10 +195,8 @@ function AdminCtrl($scope, $http, $rootScope, $location, bAlert) {
 function LoginCtrl($scope, $http, $rootScope, $location, consAuth) {
     $rootScope.$watch('loggedin', function() {
         $scope.auth = consAuth.get();
-        if ($scope.auth.loggedin) {
-            $location.url('/dashboard/');
-        }
     });
+
     $http.get("/api/me/").success(function(me) { $scope.me = me; });
 
     $scope.logout = consAuth.logout;
