@@ -1,5 +1,6 @@
 var consAuth = angular.module('consAuth', []);
-consAuth.factory('consAuth', function ($rootScope, $http) {
+
+consAuth.factory('consAuth', function ($rootScope, $http, $location) {
     var auth = {
         loggedin: false,
         username: "",

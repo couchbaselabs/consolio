@@ -29,7 +29,17 @@ function ConsolioCtrl($scope, $http, $rootScope, consAuth, bAlert) {
 }
 
 function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
-    $rootScope.$watch('loggedin', function() { $scope.auth = consAuth.get(); });
+    $rootScope.$watch('loggedin', function() {
+        $scope.auth = consAuth.get();
+
+        $http.get("/api/me/").success(function(me) { $scope.me = me; });
+
+        $http.get("/api/sgw/").success(function(sgws) {
+            console.log(sgws);
+            $scope.syncgws = sgws;
+        });
+
+    });
 
     $http.get("/api/me/").success(function(me) { $scope.me = me; });
 
@@ -182,8 +192,13 @@ function AdminCtrl($scope, $http, $rootScope, $location, bAlert) {
     };
 }
 
-function LoginCtrl($scope, $http, $rootScope, consAuth) {
-    $rootScope.$watch('loggedin', function() { $scope.auth = consAuth.get(); });
+function LoginCtrl($scope, $http, $rootScope, $location, consAuth) {
+    $rootScope.$watch('loggedin', function() {
+        $scope.auth = consAuth.get();
+        if ($scope.auth.loggedin) {
+            $location.url('/dashboard/');
+        }
+    });
     $http.get("/api/me/").success(function(me) { $scope.me = me; });
 
     $scope.logout = consAuth.logout;
