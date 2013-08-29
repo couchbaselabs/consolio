@@ -91,6 +91,25 @@ func handleNewDB(w http.ResponseWriter, req *http.Request) {
 	mustEncode(w, d)
 }
 
+func handleMkDBConf(w http.ResponseWriter, req *http.Request) {
+	name := mux.Vars(req)["name"]
+	d := consolio.Item{}
+	err := db.Get("db-"+name, &d)
+	if err != nil {
+		glog.Warningf("Error retrieving database %q: %v", name, err)
+		showError(w, req, "Unknown database", 404)
+		return
+	}
+
+	if !d.Enabled {
+		glog.Warningf("Trying to activate disabled DB %q", name)
+		showError(w, req, "Disabled database", 404)
+		return
+	}
+
+	mustEncode(w, d)
+}
+
 func tstr(t time.Time) string {
 	return t.Format("20060102150405.999999999")
 }
@@ -440,6 +459,7 @@ func main() {
 	r.HandleFunc(*backendPrefix+"update/sgw/{name}", handleUpdateSGW).Methods("POST")
 	r.HandleFunc(*backendPrefix+"update/db/{name}", handleUpdateDB).Methods("POST")
 	r.HandleFunc(*backendPrefix+"sgwconf/{name}", handleMkSGWConf)
+	r.HandleFunc(*backendPrefix+"dbconf/{name}", handleMkDBConf)
 
 	r.Handle("/", http.RedirectHandler("/index/", 302))
 
