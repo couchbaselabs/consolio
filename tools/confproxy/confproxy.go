@@ -18,14 +18,14 @@ var (
 )
 
 type Database struct {
-	Sync, Users  *json.RawMessage
-	Name, Server string
-	Pass         string `json:"db_pass"`
+	Sync, Users    *json.RawMessage
+	DBName, Server string
+	Pass           string `json:"db_pass"`
 }
 
 func (d Database) MarshalJSON() ([]byte, error) {
 	m := map[string]interface{}{}
-	m["bucket"] = d.Name
+	m["bucket"] = d.DBName
 	m["sync"] = d.Sync
 	if d.Users != nil {
 		m["users"] = d.Users
@@ -35,7 +35,7 @@ func (d Database) MarshalJSON() ([]byte, error) {
 	if err == nil {
 		pass, err := consoliotools.Decrypt(d.Pass)
 		if err == nil {
-			u.User = url.UserPassword(d.Name, pass)
+			u.User = url.UserPassword(d.DBName, pass)
 		} else {
 			log.Printf("Error decrypting password: %v", err)
 		}
@@ -65,9 +65,6 @@ func getit(u string) (*Database, error) {
 		Extra Database
 	}{}
 	err = d.Decode(&reson)
-	if err == nil {
-		reson.Extra.Name = reson.Name
-	}
 	return &reson.Extra, nil
 }
 
