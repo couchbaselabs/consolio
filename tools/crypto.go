@@ -13,7 +13,6 @@ import (
 
 	"code.google.com/p/go.crypto/openpgp"
 	"code.google.com/p/go.crypto/openpgp/armor"
-	"github.com/golang/glog"
 )
 
 var (
@@ -21,19 +20,20 @@ var (
 	keys     openpgp.EntityList
 )
 
-func InitCrypto(keyRingPath, pass string) {
+func InitCrypto(keyRingPath, pass string) error {
 	f, err := os.Open(keyRingPath)
 	if err != nil {
-		glog.Fatalf("Can't open keyring: %v", err)
+		return err
 	}
 	defer f.Close()
 
 	keys, err = openpgp.ReadKeyRing(f)
 	if err != nil {
-		glog.Fatalf("Can't read keyring: %v", err)
+		return err
 	}
 
 	password = pass
+	return nil
 }
 
 func Decrypt(s string) (string, error) {

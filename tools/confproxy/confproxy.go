@@ -29,6 +29,9 @@ type SyncGateway struct {
 func (s *SyncGateway) MarshalJSON() ([]byte, error) {
 	d := s.Extra
 	m := map[string]interface{}{}
+	if d.Sync == nil {
+		return nil, fmt.Errorf("Invalid JSON, missing syncgw")
+	}
 	m["bucket"] = d.DBName
 	m["sync"] = d.Sync
 	if d.Users != nil {
@@ -105,7 +108,11 @@ func main() {
 		log.Fatalf("Invalid conf type: %v", *confType)
 	}
 
-	consoliotools.InitCrypto(*keyRingPath, *keyPassword)
+	err := consoliotools.InitCrypto(*keyRingPath, *keyPassword)
+	if err != nil {
+		log.Fatalf("Error initializing crypto: %v", err)
+	}
+
 	baseUrl := flag.Arg(0)
 	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
 		u := baseUrl + req.URL.Path[1:]
@@ -114,10 +121,15 @@ func main() {
 			http.Error(w, err.Error(), 404)
 			return
 		}
+
+		d, err := json.Marshal(db)
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+			return
+		}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		e := json.NewEncoder(w)
-		e.Encode(db)
+		w.Write(d)
 	})
 
 	http.ListenAndServe(*bindAddr, nil)
