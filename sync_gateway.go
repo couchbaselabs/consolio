@@ -123,63 +123,22 @@ func handleNewSGW(w http.ResponseWriter, req *http.Request) {
 }
 
 func handleMkSGWConf(w http.ResponseWriter, req *http.Request) {
-	viewRes := struct {
-		Rows []struct {
-			Key []string
-			Doc struct {
-				Json consolio.Item
-			}
-		}
-	}{}
-
-	empty := &json.RawMessage{'{', '}'}
-	err := db.ViewCustom("consolio", "items",
-		map[string]interface{}{
-			"reduce":       false,
-			"include_docs": true,
-			"stale":        false,
-			"start_key":    []interface{}{sgwType},
-			"end_key":      []interface{}{sgwType, empty},
-		},
-		&viewRes)
+	name := mux.Vars(req)["name"]
+	d := consolio.Item{}
+	err := db.Get("sgw-"+name, &d)
 	if err != nil {
-		showError(w, req, "Did Error listing stuff: "+
-			err.Error(), 500)
+		glog.Warningf("Error retrieving sync gateway %q: %v", name, err)
+		showError(w, req, "Unknown sync gateway", 404)
 		return
 	}
 
-	// "persona": { "origin": "http://example.com/", "register": true },
-
-	type Persona struct {
-		Origin   string `json:"origin"`
-		Register bool   `json:"register"`
+	if !d.Enabled {
+		glog.Warningf("Trying to activate disabled DB %q", name)
+		showError(w, req, "Disabled database", 404)
+		return
 	}
 
-	rv := struct {
-		Intf      string                            `json:"interface"`
-		AdminIntf string                            `json:"adminInterface"`
-		Log       []string                          `json:"log"`
-		Databases map[string]map[string]interface{} `json:"databases"`
-
-		Persona Persona `json:"persona"`
-	}{
-		Intf:      ":4984",
-		AdminIntf: ":4985",
-		Log:       []string{"REST"},
-		Databases: map[string]map[string]interface{}{},
-		Persona:   Persona{*sgwPersonaOrigin, *sgwPersonaRegister},
-	}
-
-	for _, r := range viewRes.Rows {
-		h := r.Doc.Json.ExtraInfo
-		h["server"] = *slumdb
-		h["bucket"] = h["dbname"]
-
-		delete(h, "dbname")
-		rv.Databases[r.Key[2]] = h
-	}
-
-	mustEncode(w, rv)
+	mustEncode(w, d)
 }
 
 func handleGetSGW(w http.ResponseWriter, req *http.Request) {

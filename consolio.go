@@ -463,10 +463,10 @@ func main() {
 		"/db/",
 		"/sgw/",
 		"/admin/",
-	    "/terms_of_service/",
-	    "/acceptable_use/",
-	    "/privacy_policy/",
-	    "/dashboard/",
+		"/terms_of_service/",
+		"/acceptable_use/",
+		"/privacy_policy/",
+		"/dashboard/",
 	}
 
 	for _, p := range appPages {
@@ -502,7 +502,7 @@ func main() {
 	r.HandleFunc(*backendPrefix+"todo/{id}", handleTaskStatus).Methods("POST")
 	r.HandleFunc(*backendPrefix+"update/sgw/{name}", handleUpdateSGW).Methods("POST")
 	r.HandleFunc(*backendPrefix+"update/db/{name}", handleUpdateDB).Methods("POST")
-	r.HandleFunc(*backendPrefix+"sgwconf/", handleMkSGWConf)
+	r.HandleFunc(*backendPrefix+"sgwconf/{name}", handleMkSGWConf)
 
 	r.Handle("/", http.RedirectHandler("/index/", 302))
 
