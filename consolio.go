@@ -279,67 +279,6 @@ func handleDeleteWebhook(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func handleListTODO(w http.ResponseWriter, req *http.Request) {
-	viewRes := struct {
-		Rows []struct {
-			ID  string
-			Doc struct {
-				Json consolio.ChangeEvent
-			}
-		}
-	}{}
-
-	err := db.ViewCustom("consolio", "events", map[string]interface{}{
-		"include_docs": true,
-		"start_key":    []string{"todo"},
-		"stale":        false,
-	}, &viewRes)
-	if err != nil {
-		showError(w, req, err.Error(), 500)
-		return
-	}
-
-	rv := []consolio.ChangeEvent{}
-	for _, r := range viewRes.Rows {
-		r.Doc.Json.ID = r.ID
-		rv = append(rv, r.Doc.Json)
-	}
-
-	mustEncode(w, rv)
-}
-
-func handleTaskStatus(w http.ResponseWriter, req *http.Request) {
-	ce := consolio.ChangeEvent{}
-	k := mux.Vars(req)["id"]
-	err := db.Get(k, &ce)
-	if err != nil {
-		showError(w, req, err.Error(), 500)
-		return
-	}
-
-	ce.Error = req.FormValue("error")
-	if ce.Error == "" {
-		ce.Processed = time.Now().UTC()
-	} else {
-		ce.Failures++
-		glog.Warningf("Failure #%v on event %v (%v) - %v",
-			ce.Failures, k, ce.Item, ce.Error)
-		if ce.Failures > maxFailures {
-			glog.Errorf("Giving up on %v (%v) after %v",
-				k, ce.Item, ce.Error)
-			ce.Processed = time.Now().UTC()
-		}
-	}
-
-	err = db.Set(k, 0, ce)
-	if err != nil {
-		showError(w, req, err.Error(), 500)
-		return
-	}
-
-	w.WriteHeader(204)
-}
-
 func handleUpdateItem(prefix string, w http.ResponseWriter, req *http.Request) {
 	k := prefix + "-" + mux.Vars(req)["name"]
 	it := &consolio.Item{}
@@ -498,8 +437,6 @@ func main() {
 	r.HandleFunc("/api/webhook/{name}/",
 		handleDeleteWebhook).Methods("DELETE").MatcherFunc(adminRequired)
 
-	r.HandleFunc(*backendPrefix+"todo/", handleListTODO)
-	r.HandleFunc(*backendPrefix+"todo/{id}", handleTaskStatus).Methods("POST")
 	r.HandleFunc(*backendPrefix+"update/sgw/{name}", handleUpdateSGW).Methods("POST")
 	r.HandleFunc(*backendPrefix+"update/db/{name}", handleUpdateDB).Methods("POST")
 	r.HandleFunc(*backendPrefix+"sgwconf/{name}", handleMkSGWConf)

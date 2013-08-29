@@ -8,15 +8,12 @@ import (
 
 const ddocKey = "consolio"
 const markerKey = "/@consolioddocVersion"
-const ddocVersion = 4
+const ddocVersion = 5
 const ddocBody = `{
   "id": "_design/consolio",
   "views": {
     "webhooks": {
       "map": "function (doc, meta) {\n  if (doc.type === 'webhook') {\n    emit(doc.name, doc.url);\n  }\n}"
-    },
-    "events": {
-      "map": "function (doc, meta) {\n  if (doc.type === 'create' || doc.type === 'delete') {\n    emit([doc.processed ? 'done' : 'todo', doc.ts], null);\n  }\n}"
     },
     "items": {
       "map": "function (doc, meta) {\n  if (doc.owner && doc.type && doc.name) {\n    emit([doc.type, doc.owner, doc.name], doc.size || 0);\n  }\n}",
