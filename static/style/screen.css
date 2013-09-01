@@ -30,3 +30,7 @@
 }
 
 .ng-cloak { display: none !important; }
+
+#sgw-list td {
+    vertical-align: middle;
+}

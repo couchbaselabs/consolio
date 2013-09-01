@@ -5,26 +5,30 @@
 <div ng-show="auth.loggedin">
     <h4>Your Sync Gateways</h4><hr>
     <p ng-hide="syncgws"><em>No sync gateways defined yet</em></p>
-    <table class="table table-hover" ng-show="syncgws">
+    <table id="sgw-list" class="table table-hover" ng-show="syncgws">
         <thead>
+            <th>&nbsp;</th>
             <th>Name</th>
             <th>Urls</th>
+            <th>Status</th>
             <th>Storage</th>
             <th>Average Usage</th>
             <th>&nbsp;</th>
         </thead>
         <tbody>
         <tr ng-repeat="d in syncgws" >
-            <td><a href="/sgw/{{d.name}}/"><span class="glyphicon glyphicon-cloud" style="font-size: 130%;margin-bottom: -3px;margin-right: 5px;"></span>&nbsp;{{d.name}}</a></td>
-            <td><a href="{{d.url}}" target="_blank">Sync&nbsp;<span class="glyphicon glyphicon-new-window"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{d.url}}" target="_blank">Admin&nbsp;<span class="glyphicon glyphicon-new-window"></span></a></td>
+            <td style="width: 10px;"><span class="glyphicon glyphicon-cloud" style="font-size: 130%;margin-top: 4px;"></span></td>
+            <td><a href="/sgw/{{d.name}}/">&nbsp;{{d.name}}</a></td>
+            <td><a href="http://sync.couchbasecloud.com/{{d.name}}" target="_blank">Sync&nbsp;<span class="glyphicon glyphicon-new-window"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{d.url}}" target="_blank">Admin&nbsp;<span class="glyphicon glyphicon-new-window"></span></a></td>
+            <td>unknown</td>
             <td>{{d.size}} of 500MB</td>
             <td>xxx ops/day {{console.log(d)}}</td>
-            <td style="text-align: right;"><button>configure</button>&nbsp;<button>delete</button></td>
+            <td style="text-align: right;"><button class="btn btn-info">configure</button>&nbsp;<button ng-click="delete()" class="btn btn-danger">Delete {{sgwname}}</button></td>
         </tr>
         </tbody>
     </table>
 
-    <button ng-hide="wantnewsgw" ng-click="wantnewsgw = true">New Sync Gateway</button>
+    <button class="btn" ng-hide="wantnewsgw" ng-click="wantnewsgw = true">New Sync Gateway</button>
 
     <div ng-show="wantnewsgw">
     <form ng-submit="newsgw()">

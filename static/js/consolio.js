@@ -85,6 +85,16 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
                 $scope.wantnewsgw = false;
             });
     };
+
+    $scope.delete = function() {
+        $http.delete(sgwurl)
+            .success(function(data) {
+                $location.path("/dashboard/");
+            })
+            .error(function(data, code) {
+                bAlert("Error " + code, "Couldn't delete SGW: " + data, "error");
+            });
+    };
 }
 
 
