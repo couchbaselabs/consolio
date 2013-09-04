@@ -3,15 +3,26 @@
 <head>
     <title>Couchbase Cloud - Sandbox</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
-    <link href="/static/style/screen.css" rel="stylesheet" media="screen"/>
+
     <script src="http://code.jquery.com/jquery.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
     <script src="/static/lib/angular/angular.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="/static/lib/codemirror/lib/codemirror.js"></script>
+    <script src="/static/lib/angular-ui-codemirror/ui-codemirror.js"></script>
+    <script src="/static/lib/codemirror/addon/edit/closebrackets.js"></script>
+    <script src="/static/js/codemirror_javascript_sync_gateway.js"></script>
+    <script src="/static/js/codemirror_formatting.js"></script>
+    <script src="/static/lib/ZeroClipboard.min.js"></script>
+
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.no-icons.min.css">
+    <link rel="stylesheet"href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css">
+    <link rel="stylesheet" href="/static/lib/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="/static/lib/codemirror/theme/night.css">
+    <link rel="stylesheet" href="/static/style/screen.css" media="screen"/>
 </head>
 
-<body ng-controller="ConsolioCtrl">
+<body>
 
 <header class="navbar navbar-fixed-top  navbar-inverse">
     <div class="container">
@@ -62,7 +73,7 @@
                         <li><a ng-click="logout()">Log Out</a></li>
                     </ul>
                 </li>
-                <li class="ng-cloak" ng-show="!auth.loggedin"><a ng-click="login()">Log In</a></li>
+                <li class="ng-cloak" ng-show="auth.checked"><a ng-show="!loggedin" ng-click="login()">Log In</a></li>
             </ul>
         </div>
     </div>

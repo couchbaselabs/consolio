@@ -1,62 +1,116 @@
-<h1>Dashboard</h1>
-<br />
-
-
 <div ng-show="auth.loggedin">
-    <h4>Your Sync Gateways</h4><hr>
-    <p ng-hide="syncgws"><em>No sync gateways defined yet</em></p>
-    <table id="sgw-list" class="table table-hover" ng-show="syncgws">
-        <thead>
-            <th>&nbsp;</th>
+    <h1>Dashboard</h1>
+    <br/>
+
+
+    <div>
+        <h4>Your Sync Gateways</h4>
+        <hr>
+        <p ng-hide="syncgws"><em>No sync gateways created yet...</em></p>
+        <table id="sgw-list" class="table table-hover" ng-show="syncgws">
+            <thead>
             <th>Name</th>
             <th>Urls</th>
             <th>Status</th>
             <th>Storage</th>
             <th>Average Usage</th>
             <th>&nbsp;</th>
-        </thead>
-        <tbody>
-        <tr ng-repeat="d in syncgws" >
-            <td style="width: 10px;"><span class="glyphicon glyphicon-cloud" style="font-size: 130%;margin-top: 4px;"></span></td>
-            <td><a href="/sgw/{{d.name}}/">&nbsp;{{d.name}}</a></td>
-            <td><a href="http://sync.couchbasecloud.com/{{d.name}}" target="_blank">Sync&nbsp;<span class="glyphicon glyphicon-new-window"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{d.url}}" target="_blank">Admin&nbsp;<span class="glyphicon glyphicon-new-window"></span></a></td>
-            <td>unknown</td>
-            <td>{{d.size}} of 500MB</td>
-            <td>xxx ops/day {{console.log(d)}}</td>
-            <td style="text-align: right;"><button class="btn btn-info">configure</button>&nbsp;<button ng-click="delete()" class="btn btn-danger">Delete {{sgwname}}</button></td>
-        </tr>
-        </tbody>
-    </table>
+            </thead>
+            <tbody ng-repeat="d in syncgws" ng-switch="row.configure" ng-init="row={configure:false}">
+            <tr ng-switch-default>
+                <td><a href="/sgw/{{d.name}}/"><span class="sgw-name">{{d.name}}</span></a></td>
+                <td><span class="sgw-url">Sync</span>
+                    <button id="sgw-{{$index}}" class="zerocopy-button" ng-click="clickSyncUrlButton($index)"
+                            data-clipboard-text="http://sync.couchbasecloud.com/{{d.name}}"><span
+                            class="glyphicon icon-copy"></span></button>
+                    &nbsp;&nbsp;&nbsp;
+                    <span class="sgw-url">Admin</span>
+                    <button id="sgwa-{{$index}}" class="zerocopy-button" ng-click="clickAdminSyncUrlButton($index)"
+                            data-clipboard-text="http://login:password@sync.couchbasecloud.com/{{d.name}}"><span
+                            class="glyphicon icon-copy"></span></button>
+                </td>
+                <td>unknown</td>
+                <td>{{d.size}} of 500MB</td>
+                <td>xxx ops/day {{console.log(d)}}</td>
+                <td ng-if="row.configure=false" style="text-align: right;">
+                    <button class="btn btn-info" ng-click="row.configure=true">configure</button>
+                    &nbsp;
+                    <button ng-click="delete({{$index}})" class="btn btn-danger">Delete</button>
+                </td>
+            </tr>
+            <tr ng-switch-when="true">
+                <td><a href="/sgw/{{d.name}}/"><span class="sgw-name">{{d.name}}</span></a></td>
+                <td colspan="4">
+                    <table>
+                        <tr>
+                            <td><strong>Sync Function</strong></td>
+                            <td><textarea class="syncfunction" ng-model="d.extra.sync"
+                                   ui-codemirror="editorOptions"></textarea></td>
 
-    <button class="btn" ng-hide="wantnewsgw" ng-click="wantnewsgw = true">New Sync Gateway</button>
+                        </tr>
+                    </table>
+                </td>
+                <td style="text-align: right;">
+                    <button class="btn btn-success" ng-click="row.configure=false;saveSyncFunction($index)">save</button>
+                    &nbsp;
+                    <button class="btn btn-danger" ng-click="row.configure=false">cancel</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
-    <div ng-show="wantnewsgw">
-    <form ng-submit="newsgw()">
-        Create a new sync gateway<br>
-        Name: <input ng-bind="newsgwname" id="newsgwname" type="text" /><br/>
-        <label>Allow Guest? <input type="checkbox" id="newsgwguest" /></label><br/>
-        Sync Function:<br/>
-        <textarea id="newswsync" rows="5" cols="80">
-            function(doc) {
-            channel(doc.channels);
-            }</textarea><br/>
-        <input type="submit"/>
-    </form>
-    <hr>
-    <div>
-        <dl class="dl-horizontal">
-            <dt>...</dt>
-            <dd>...</dd>
-        </dl>
+        <button class="btn" ng-hide="wantnewsgw" ng-click="wantnewsgw = true">New Sync Gateway</button>
+
+        <div ng-show="wantnewsgw">
+            <form ng-submit="newsgw()">
+                <h3>Create a new Sync Gateway</h3>
+                Name: <input ng-bind="newsgwname" id="newsgwname" type="text"/><br/>
+                <label>Allow Guest? <input type="checkbox" id="newsgwguest"/></label><br/>
+                Sync Function:<br/>
+                <textarea id="newswsync" class="syncfunction">function(doc) {
+    channel(doc.channels);
+}</textarea><br/>
+                <button class="btn">Create</button>
+            </form>
+            <hr>
+            <div>
+                <dl class="dl-horizontal">
+                    <dt>...</dt>
+                    <dd>...</dd>
+                </dl>
+            </div>
+        </div>
+
     </div>
-    </div>
-
 </div>
 
-<div>
-    <p ng-hide="auth.loggedin">
-        Please <a ng-click="login()">log in</a> to make use of this
-        service.  It's quick and easy (and you don't even need to
-        register!)
-    </p>
+<div ng-show="auth.checked">
+    <div ng-show="!auth.loggedin">
+        <h1>Dashboard</h1>
+        <br/>
+
+        <p>
+            Please <a ng-click="login()">log in</a> to make use of this
+            service. It's quick and easy (and you don't even need to
+            register!)
+        </p>
+    </div>
 </div>
+
+
+<script>
+    $(function () {
+        ZeroClipboard.setDefaults({ moviePath: '/static/swf/ZeroClipboard.swf' });
+        var zclient = new ZeroClipboard();
+
+        zclient.on('complete', function (client, args) {
+            alert("Copied text to clipboard: " + args.text);
+        });
+
+        zclient.on('dataRequested', function (client, args) {
+            clip.setText(args.text);
+            console.log(args.text);
+        });
+    })
+
+</script>

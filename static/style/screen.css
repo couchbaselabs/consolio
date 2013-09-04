@@ -34,3 +34,16 @@
 #sgw-list td {
     vertical-align: middle;
 }
+
+.sgw-name {
+    font-weight: bold;
+    font-size: 125%;
+}
+
+.CodeMirror {
+    /* Set height, width, borders, and global font properties here */
+    font-family: monospace;
+    height: 100px;
+    width: 600px;
+    font-size: 11px;
+}

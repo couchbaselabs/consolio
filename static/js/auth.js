@@ -1,6 +1,7 @@
 var consAuth = angular.module('consAuth', []);
 
 consAuth.factory('consAuth', function ($rootScope, $http, $location) {
+
     var auth = {
         loggedin: false,
         username: "",
@@ -13,6 +14,7 @@ consAuth.factory('consAuth', function ($rootScope, $http, $location) {
 
     navigator.id.watch({
         onlogin: function (assertion) {
+            console.log("navigator.id.onLogin()");
             $http.post('/auth/login', "assertion=" + assertion + "&audience=" +
                 encodeURIComponent(location.protocol + "//" + location.host),
                 {headers: {"Content-Type": "application/x-www-form-urlencoded"}}).
@@ -28,16 +30,17 @@ consAuth.factory('consAuth', function ($rootScope, $http, $location) {
                     auth.authtoken = "";
                     auth.checked = true;
                     $rootScope.loggedin = true;
-                    if (auth.loggedin && !auth.redirected && false) {
-                        auth.redirected = true;
-                        $location.url('/dashboard/');
-                    }
+//                    if (auth.loggedin && !auth.redirected && false) {
+//                        auth.redirected = true;
+//                        $location.url('/dashboard/');
+//                    }
                 }).
                 error(function (res, err) {
                     bAlert("Error", "Couldn't log you in.", "error");
                 });
         },
         onlogout: function () {
+            //console.log("navigator.id.onLogout()");
             $http.post('/auth/logout').
                 success(function (res) {
                     $rootScope.loggedin = false;
@@ -51,9 +54,14 @@ consAuth.factory('consAuth', function ($rootScope, $http, $location) {
                     bAlert("Error", "Problem logging out.", "error");
                     // we failed to log out, do not pretend to have succeeded
                 });
-        }});
+        },
+        onready: function () {
+            console.log("navigator.id.onReady()");
+            auth.checked = true;
+        }
+    });
+
     function fetchAuthToken() {
-        auth.checked = true;
         console.log("fetch")
         $http.get("/api/me/token/").
             success(function (res) {
@@ -67,7 +75,6 @@ consAuth.factory('consAuth', function ($rootScope, $http, $location) {
 
     function login() {
         navigator.id.request();
-        $location.url('/dashboard/');
     }
 
     function getAuth() {

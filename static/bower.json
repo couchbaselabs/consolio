@@ -1,0 +1,15 @@
+{
+  "name": "consolio",
+  "version": "0.0.1",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2.0-rc.1",
+    "angular-ui-codemirror": "latest"
+  }
+}
