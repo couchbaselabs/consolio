@@ -16,8 +16,10 @@ type Item struct {
 	ExtraInfo map[string]interface{} `json:"extra"`
 
 	// Stuff provided by the service
-	Size int64  `json:"size"`
-	URL  string `json:"url"`
+	URL      string           `json:"url"`
+	LastStat time.Time        `json:"last_stat"`
+	State    string           `json:"state"`
+	Stats    *json.RawMessage `json:"stats"`
 }
 
 func (i Item) String() string {

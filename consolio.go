@@ -398,6 +398,7 @@ func main() {
 
 	initPgp(*keyRing, strings.Split(*encryptTo, ","))
 
+	go eventListener()
 	go hookRunner()
 
 	r := mux.NewRouter()
