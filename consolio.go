@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
-	"strconv"
 	"strings"
 	"time"
 
@@ -309,15 +308,6 @@ func handleUpdateItem(prefix string, w http.ResponseWriter, req *http.Request) {
 
 	if u := req.FormValue("url"); u != "" {
 		it.URL = u
-	}
-
-	if s := req.FormValue("size"); s != "" {
-		si, err := strconv.ParseInt(s, 10, 64)
-		if err != nil {
-			showError(w, req, err.Error(), 400)
-			return
-		}
-		it.Size = si
 	}
 
 	err = db.Set(k, 0, it)
