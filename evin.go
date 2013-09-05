@@ -95,7 +95,7 @@ func eventListener() {
 	}
 
 	handler := coap.NewServeMux()
-	handler.HandleFunc("dbinfo/", evInfoHandler)
+	handler.HandleFunc("/dbinfo", evInfoHandler)
 
 	glog.Fatal(coap.ListenAndServe("udp", *evListen, handler))
 }
