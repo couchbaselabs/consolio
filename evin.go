@@ -63,8 +63,13 @@ func evInfoHandler(l *net.UDPConn, a *net.UDPAddr, m *coap.Message) *coap.Messag
 
 		switch we.Type {
 		case "state":
-			// TODO:  Implement state tracking
+			s := struct{ State string }{}
+			err := json.Unmarshal([]byte(*we.Data), &s)
+			if err != nil {
+				return nil, err
+			}
 			item.LastChange = time.Now().UTC()
+			item.State = s.State
 			glog.Infof("Got state change for %q: %s", we.DB, *we.Data)
 		case "stats":
 			item.LastStat = time.Now().UTC()
