@@ -1,0 +1,11 @@
+[Unit]
+Description=CBGB Service
+After=network.target
+ 
+[Service]
+ExecStart=/home/core/run-cbgb
+Restart=always
+RestartSec=10
+ 
+[Install]
+WantedBy=local.target

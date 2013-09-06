@@ -1,0 +1,11 @@
+[Unit]
+Description=Configuration Proxy Service
+After=network.target
+ 
+[Service]
+ExecStart=/home/core/run-confproxy
+Restart=always
+RestartSec=10
+ 
+[Install]
+WantedBy=local.target

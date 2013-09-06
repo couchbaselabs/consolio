@@ -1,0 +1,9 @@
+#!/bin/sh
+
+addr=`ifconfig docker0 | grep ' inet ' | awk '{print $2}'`
+
+exec /usr/bin/docker run -u nobody dustin/cbgb \
+     /usr/local/sbin/cbgb -adminUser=cbadm -adminPass=@ADMINPASS@ \
+     -event-url=@EVENTURL@ \
+     -config-svc=http://$addr:8475/ \
+     -data /var/db/cbgb/
