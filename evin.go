@@ -78,7 +78,7 @@ func evInfoHandler(l *net.UDPConn, a *net.UDPAddr, m *coap.Message) *coap.Messag
 	})
 
 	if err != nil {
-		glog.Warningf("Error updating %q as %v: %v: %v",
+		glog.Warningf("Error updating %q as %v: %s: %v",
 			we.DB, we.Type, *we.Data, err)
 		return nil
 	}
