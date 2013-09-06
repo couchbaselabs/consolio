@@ -45,6 +45,11 @@ func evInfoHandler(l *net.UDPConn, a *net.UDPAddr, m *coap.Message) *coap.Messag
 		return nil
 	}
 
+	if we.DB == db.Name {
+		glog.Infof("Skipping update for my own bucket: %s", m.Payload)
+		return nil
+	}
+
 	err = db.Update("db-"+we.DB, 0, func(current []byte) ([]byte, error) {
 		if len(current) == 0 {
 			return nil, NotFound
