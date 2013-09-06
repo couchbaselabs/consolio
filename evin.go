@@ -38,7 +38,6 @@ func evInfoHandler(l *net.UDPConn, a *net.UDPAddr, m *coap.Message) *coap.Messag
 		return nil
 	}
 
-	glog.Infof("Received %s at %v", m.Payload, m.PathString())
 	we := wireEvent{}
 	err := json.Unmarshal(m.Payload, &we)
 	if err != nil {
