@@ -65,10 +65,10 @@ func evInfoHandler(l *net.UDPConn, a *net.UDPAddr, m *coap.Message) *coap.Messag
 		case "state":
 			// TODO:  Implement state tracking
 			item.LastChange = time.Now().UTC()
-			glog.Infof("Got state change: %s", *we.Data)
+			glog.Infof("Got state change for %q: %s", we.DB, *we.Data)
 		case "stats":
 			item.LastStat = time.Now().UTC()
-			glog.Infof("Got stats: %s", *we.Data)
+			glog.Infof("Got stats for %q: %s", we.DB, *we.Data)
 			item.Stats = we.Data
 		default:
 			return nil, fmt.Errorf("Unknown event type: %q", we.Type)
@@ -78,7 +78,8 @@ func evInfoHandler(l *net.UDPConn, a *net.UDPAddr, m *coap.Message) *coap.Messag
 	})
 
 	if err != nil {
-		glog.Warningf("Error updating %v: %v", we.DB, err)
+		glog.Warningf("Error updating %q as %v: %v: %v",
+			we.DB, we.Type, *we.Data, err)
 		return nil
 	}
 
