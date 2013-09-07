@@ -1,6 +1,6 @@
 #!/bin/sh
 
-exec /usr/bin/docker run -u nobody \
+exec /usr/bin/docker run -p 8475:8475 -u nobody \
     -v /home/core/.gnupg/:/home/gpg/ dustin/confproxy \
     /usr/local/sbin/confproxy \
     -type @CONFTYPE@ \
