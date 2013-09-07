@@ -2,8 +2,9 @@
 
 addr=`ifconfig docker0 | grep ' inet ' | awk '{print $2}'`
 
-exec /usr/bin/docker run -u nobody dustin/cbgb \
-     /usr/local/sbin/cbgb -adminUser=cbadm -adminPass=@ADMINPASS@ \
-     -event-url=@EVENTURL@ \
-     -config-svc=http://$addr:8475/ \
-     -log-no-ts -data /var/db/cbgb/
+exec /usr/bin/docker run -p 8091:8091 -p 8092:8092 -p 11210:11210 \
+    -u nobody dustin/cbgb \
+    /usr/local/sbin/cbgb -adminUser=cbadm -adminPass=@ADMINPASS@ \
+    -event-url=@EVENTURL@ \
+    -config-svc=http://$addr:8475/ \
+    -log-no-ts -data /var/db/cbgb/

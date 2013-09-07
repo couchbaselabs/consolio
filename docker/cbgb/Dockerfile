@@ -8,5 +8,3 @@ RUN chmod 755 /usr/local/sbin/cbgb
 
 RUN mkdir -p /var/db/cbgb/
 RUN chown nobody /var/db/cbgb/
-
-EXPOSE 8091:8091 8092:8092 11210:11210
