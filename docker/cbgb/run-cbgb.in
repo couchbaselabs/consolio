@@ -6,4 +6,4 @@ exec /usr/bin/docker run -u nobody dustin/cbgb \
      /usr/local/sbin/cbgb -adminUser=cbadm -adminPass=@ADMINPASS@ \
      -event-url=@EVENTURL@ \
      -config-svc=http://$addr:8475/ \
-     -data /var/db/cbgb/
+     -log-no-ts -data /var/db/cbgb/
