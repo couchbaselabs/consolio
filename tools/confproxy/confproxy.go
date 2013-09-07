@@ -103,6 +103,7 @@ func getit(u string) (interface{}, error) {
 
 func main() {
 	flag.Parse()
+	log.SetFlags(0)
 
 	if _, ok := obGens[*confType]; !ok {
 		log.Fatalf("Invalid conf type: %v", *confType)
