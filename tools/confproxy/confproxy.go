@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"net/url"
 
 	"github.com/couchbaselabs/consolio/tools"
 )
@@ -18,70 +17,7 @@ var (
 	confType    = flag.String("type", "sgw", "Configuration type (sgw|cbgb)")
 )
 
-type SyncGateway struct {
-	Extra struct {
-		Sync, Users    *json.RawMessage
-		DBName, Server string
-		Pass           string `json:"db_pass"`
-	}
-}
-
-func (s *SyncGateway) MarshalJSON() ([]byte, error) {
-	d := s.Extra
-	m := map[string]interface{}{}
-	if d.Sync == nil {
-		return nil, fmt.Errorf("Invalid JSON, missing syncgw")
-	}
-	m["bucket"] = d.DBName
-	m["sync"] = d.Sync
-	if d.Users != nil {
-		m["users"] = d.Users
-	}
-
-	u, err := url.Parse(d.Server)
-	if err == nil {
-		pass, err := consoliotools.Decrypt(d.Pass)
-		if err == nil {
-			u.User = url.UserPassword(d.DBName, pass)
-		} else {
-			log.Printf("Error decrypting password: %v", err)
-		}
-		m["server"] = u.String()
-	} else {
-		m["server"] = d.Server
-	}
-
-	return json.Marshal(m)
-}
-
-type Database struct {
-	Password string
-}
-
-func (d *Database) MarshalJSON() ([]byte, error) {
-	m := map[string]interface{}{
-		"memoryOnly":       0,
-		"numPartitions":    1,
-		"passwordHash":     "",
-		"passwordHashFunc": "",
-		"passwordSalt":     "",
-		"quotaBytes":       500 * 1024 * 1024,
-	}
-
-	pass, err := consoliotools.Decrypt(d.Password)
-	if err == nil {
-		m["passwordHash"] = pass
-	} else {
-		log.Printf("Error decrypting password: %v", err)
-	}
-
-	return json.Marshal(m)
-}
-
-var obGens = map[string]func() interface{}{
-	"sgw":  func() interface{} { return &SyncGateway{} },
-	"cbgb": func() interface{} { return &Database{} },
-}
+var obGens = map[string]func() interface{}{}
 
 func getit(u string) (interface{}, error) {
 	res, err := http.Get(u)
