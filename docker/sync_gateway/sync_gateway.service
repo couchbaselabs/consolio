@@ -1,0 +1,11 @@
+[Unit]
+Description=Sync Gateway Service
+After=network.target
+ 
+[Service]
+ExecStart=/home/core/run-sgw
+Restart=always
+RestartSec=10
+ 
+[Install]
+WantedBy=local.target
