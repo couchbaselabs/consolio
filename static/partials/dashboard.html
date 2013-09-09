@@ -113,13 +113,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Sync Gateway: {{modal_sgw_name}}</h4>
+                <h4 class="modal-title">{{modal_sgw_name}} [Sync Gateway]</h4>
             </div>
             <div class="modal-body">
                 <h4>API Access URL</h4>
-                {{modal_api_url}}
+                <input type="text" class="sgw-urls" value="{{modal_api_url}}" />
                 <h4>ADMIN Access URL</h4>
-                {{modal_admin_url}}
+                <input type="text" class="sgw-urls" value="{{modal_admin_url}}" />
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

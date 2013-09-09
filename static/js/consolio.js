@@ -78,17 +78,7 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
     $scope.setModalContent = function(i) {
         if ($scope.syncgws[i]) {
 
-            if ($scope.authuser == null || $scope.authtoken == null) {
-                $http.get("/api/me/token/").
-                    success(function (res) {
-                        // This isn't exactly right, but it's pretty close
-                        $scope.authuser = encodeURIComponent(sgw.owner);
-                        $scope.authtoken = res.token;
-                    });
-            }
-
             var sgw = $scope.syncgws[i]
-
             $scope.modal_sgw_name = sgw.name;
 
             if (sgw.extra.url) {
@@ -98,7 +88,24 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
                 $scope.modal_api_url = "http://sync.couchbasecloud.com/" + sgw.name;
             }
 
-            $scope.modal_admin_url = "http://" + $scope.authuser + ":" + $scope.authtoken + "@syncadm.couchbasecloud.com:8083/" + sgw.name + "/"
+            if ($scope.authuser == null || $scope.authtoken == null) {
+                $http.get("/api/me/token/").
+                    success(function (res) {
+                        // This isn't exactly right, but it's pretty close
+                        $scope.authuser = encodeURIComponent(sgw.owner);
+                        $scope.authtoken = res.token;
+
+
+
+                        $scope.modal_admin_url = "http://" + $scope.authuser + ":" + $scope.authtoken + "@syncadm.couchbasecloud.com:8083/" + sgw.name + "/"
+                    });
+            }
+            else {
+                $scope.modal_admin_url = "http://" + $scope.authuser + ":" + $scope.authtoken + "@syncadm.couchbasecloud.com:8083/" + sgw.name + "/"
+            }
+
+
+
 
         }
     }

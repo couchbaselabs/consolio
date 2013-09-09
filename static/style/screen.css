@@ -74,3 +74,14 @@ td.form-input {
     color: rgb(185, 74, 72);
     font-weight: bold;
 }
+
+#myModal {
+    /* new custom width
+    width: 900px !important;
+    /* must be half of the width, minus scrollbar on the left (30px)
+    margin-left: -320px; */
+}
+
+input.sgw-urls {
+  width: 500px;
+}
