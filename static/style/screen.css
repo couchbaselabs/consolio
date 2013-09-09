@@ -43,7 +43,14 @@
 .CodeMirror {
     /* Set height, width, borders, and global font properties here */
     font-family: monospace;
-    height: 100px;
-    width: 600px;
-    font-size: 11px;
+    height: auto;
+    width: 550px;
+    font-size: 12px;
+    min-height: 3em;
+}
+
+/*Codemirror won't update if hidden by display: none. */
+.edithide {
+    position: absolute;
+    top: -9999px;
 }

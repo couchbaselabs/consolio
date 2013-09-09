@@ -2,7 +2,7 @@ var consAlert = angular.module('consAlert', []);
 consAlert.factory('bAlert', function() {
     function bAlert(heading, message, kind) {
         var kindclass = "";
-        if(kind) {
+        if (kind) {
             kindclass = "alert-" + kind;
         }
         $("#app").prepend(

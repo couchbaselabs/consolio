@@ -2,43 +2,36 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e6221524-85a8-4749-81cd-f76526b96abf" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/swf/ZeroClipboard.swf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/lib/ZeroClipboard.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/js/codemirror_formatting.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/bootstrap/css/bootstrap-responsive.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/bootstrap/css/bootstrap.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/bootstrap/img/glyphicons-halflings-white.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/bootstrap/img/glyphicons-halflings.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/bootstrap/js/bootstrap.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/lib/angular/angular-cookies.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/lib/angular/angular-cookies.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/lib/angular/angular-loader.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/lib/angular/angular-loader.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/lib/angular/angular-resource.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/lib/angular/angular-resource.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/lib/angular/angular-sanitize.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/lib/angular/angular-sanitize.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/lib/angular/angular.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/lib/angular/angular.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/lib/angular/version.txt" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/js/angular-ngif.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/js/angular_codemirror.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/lib/angular/.bower.json" afterPath="$PROJECT_DIR$/static/lib/angular/.bower.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/alert.js" afterPath="$PROJECT_DIR$/static/js/alert.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/lib/angular/angular.js" afterPath="$PROJECT_DIR$/static/lib/angular/angular.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/lib/angular/angular.min.js" afterPath="$PROJECT_DIR$/static/lib/angular/angular.min.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/app.html" afterPath="$PROJECT_DIR$/static/app.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/auth.js" afterPath="$PROJECT_DIR$/static/js/auth.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/bower.json" afterPath="$PROJECT_DIR$/static/bower.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/lib/angular/bower.json" afterPath="$PROJECT_DIR$/static/lib/angular/bower.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/consolio.go" afterPath="$PROJECT_DIR$/consolio.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/js/consolio.js" afterPath="$PROJECT_DIR$/static/js/consolio.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/types/constypes.go" afterPath="$PROJECT_DIR$/types/constypes.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/partials/dashboard.html" afterPath="$PROJECT_DIR$/static/partials/dashboard.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/style/screen.css" afterPath="$PROJECT_DIR$/static/style/screen.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sync_gateway.go" afterPath="$PROJECT_DIR$/sync_gateway.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="consolio.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378239064971" ignored="false" />
-    <file path="/consolio.go" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1377573851270" ignored="false" />
-    <file path="/app.html" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378276292359" ignored="false" />
-    <file path="/screen.css" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378271017760" ignored="false" />
+    <file path="/Dummy.txt" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378700018731" ignored="false" />
+    <file path="/consolio.go" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378413464940" ignored="false" />
+    <file path="/app.html" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378701458012" ignored="false" />
+    <file path="/screen.css" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378417818231" ignored="false" />
     <file path="/index.html" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378272576342" ignored="false" />
     <file path="/terms_of_service.html" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1377884566145" ignored="false" />
-    <file path="/consolio.js" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378276814803" ignored="false" />
+    <file path="/consolio.js" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378701779667" ignored="false" />
     <file path="/auth.js" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378258691844" ignored="false" />
     <file path="/privacy_policy.html" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1377883879811" ignored="false" />
-    <file path="/dashboard.html" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378274391169" ignored="false" />
+    <file path="/dashboard.html" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378702645677" ignored="false" />
     <file path="/a.dummy" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378276925545" ignored="false" />
     <file path="$PROJECT_DIR$/static/codemirror-3.16/mode/php/index.html" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378267760999" ignored="false" />
     <file path="$PROJECT_DIR$/static/codemirror-3.16/mode/smartymixed/index.html" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378267760999" ignored="false" />
@@ -47,10 +40,11 @@
     <file path="$PROJECT_DIR$/static/codemirror-3.16/doc/manual.html" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378267760999" ignored="false" />
     <file path="$PROJECT_DIR$/static/codemirror-3.16/mode/apl/index.html" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378267760999" ignored="false" />
     <file path="$PROJECT_DIR$/static/codemirror-3.16/doc/releases.html" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378267760999" ignored="false" />
-    <file path="$PROJECT_DIR$/static/lib/angular-ui-codemirror/.bower.json" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378270672418" ignored="false" />
     <file path="/codemirror.css" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378271695207" ignored="false" />
     <file path="/javascript.js" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378272207262" ignored="false" />
     <file path="/codemirror_javascript_sync_gateway.js" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378272515763" ignored="false" />
+    <file path="/sync_gateway.go" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378406475733" ignored="false" />
+    <file path="/constypes.go" changelist="e6221524-85a8-4749-81cd-f76526b96abf" time="1378407476946" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,32 +64,47 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="auth.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/static/js/auth.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="76" column="8" selection-start="2669" selection-end="2669" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="consolio.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="consolio.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/static/js/consolio.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="202" column="19" selection-start="7685" selection-end="7685" vertical-scroll-proportion="0.5701754">
+            <state line="91" column="34" selection-start="3920" selection-end="3920" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="dashboard.html" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="dashboard.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/static/partials/dashboard.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="43" column="134" selection-start="2141" selection-end="2141" vertical-scroll-proportion="-26.875">
-              <folding>
-                <element signature="n#style#0;n#td#5;n#tr#0;n#tbody#0;n#table#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#td#2;n#tr#1;n#tbody#0;n#table#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-              </folding>
+            <state line="65" column="34" selection-start="3337" selection-end="3337" vertical-scroll-proportion="0.32223415">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="alert.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/static/js/alert.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="4" column="11" selection-start="175" selection-end="175" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="consolio.go" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/consolio.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="432" column="93" selection-start="9459" selection-end="9459" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="constypes.go" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/types/constypes.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="68" column="0" selection-start="1744" selection-end="1744" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -103,7 +112,7 @@
       <file leaf-file-name="app.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/static/app.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="62" selection-start="1263" selection-end="1263" vertical-scroll-proportion="-7.0408163">
+            <state line="9" column="60" selection-start="430" selection-end="430" vertical-scroll-proportion="-5.625">
               <folding />
             </state>
           </provider>
@@ -112,19 +121,8 @@
       <file leaf-file-name="screen.css" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/static/style/screen.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="47" column="17" selection-start="779" selection-end="779" vertical-scroll-proportion="0.0">
+            <state line="54" column="17" selection-start="916" selection-end="916" vertical-scroll-proportion="0.0">
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="codemirror_javascript_sync_gateway.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/static/js/codemirror_javascript_sync_gateway.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -147,30 +145,30 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/static/partials/privacy_policy.html" />
-        <option value="$PROJECT_DIR$/static/partials/terms_of_service.html" />
-        <option value="$PROJECT_DIR$/static/js/auth.js" />
-        <option value="$PROJECT_DIR$/static/lib/angular/components.json" />
-        <option value="$PROJECT_DIR$/static/lib/bower.json" />
-        <option value="$PROJECT_DIR$/static/lib/angular/bower.json" />
-        <option value="$PROJECT_DIR$/static/bower.json" />
-        <option value="$PROJECT_DIR$/static/lib/codemirror/lib/codemirror.css" />
-        <option value="$PROJECT_DIR$/static/style/screen.css" />
-        <option value="$PROJECT_DIR$/static/lib/codemirror/mode/javascript/javascript.js" />
         <option value="$PROJECT_DIR$/static/lib/codemirror/mode/javascript/index.html" />
-        <option value="$PROJECT_DIR$/static/partials/dashboard.html" />
-        <option value="$PROJECT_DIR$/static/app.html" />
         <option value="$PROJECT_DIR$/static/js/codemirror_formatting.js" />
         <option value="$PROJECT_DIR$/static/js/codemirror_javascript_sync_gateway.js" />
+        <option value="$PROJECT_DIR$/static/js/auth.js" />
+        <option value="$PROJECT_DIR$/static/lib/angular/.bower.json" />
+        <option value="$PROJECT_DIR$/static/lib/angular/angular-ngif.js" />
+        <option value="$PROJECT_DIR$/sync_gateway.go" />
+        <option value="$PROJECT_DIR$/consolio.go" />
+        <option value="$PROJECT_DIR$/static/js/angular_codemirror.js" />
+        <option value="$PROJECT_DIR$/static/style/screen.css" />
+        <option value="$PROJECT_DIR$/types/constypes.go" />
+        <option value="$PROJECT_DIR$/static/bower.json" />
+        <option value="$PROJECT_DIR$/static/app.html" />
         <option value="$PROJECT_DIR$/static/js/consolio.js" />
+        <option value="$PROJECT_DIR$/static/js/alert.js" />
+        <option value="$PROJECT_DIR$/static/partials/dashboard.html" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="377" />
+    <option name="x" value="338" />
     <option name="y" value="22" />
-    <option name="width" value="1819" />
-    <option name="height" value="1286" />
+    <option name="width" value="1582" />
+    <option name="height" value="1114" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -198,7 +196,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -214,6 +211,34 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="consolio" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="consolio" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="consolio" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="types" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="consolio" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="consolio" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tools" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -317,82 +342,13 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="codemirror" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="consolio" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="consolio" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="static" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="codemirror" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="addon" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="consolio" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="consolio" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="static" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="angular" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="consolio" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="consolio" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="static" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="js" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -444,14 +400,13 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="377" y="22" width="1819" height="1286" extended-state="0" />
+    <frame x="338" y="22" width="1582" height="1114" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32962328" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16258352" sideWeight="0.6703767" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21552277" sideWeight="0.6703767" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32997987" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -460,6 +415,7 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32962328" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -526,119 +482,110 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/static/lib/codemirror/theme/twilight.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/partials/sgw.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="78" selection-start="358" selection-end="436" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/lib/codemirror/lib/codemirror.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-3.8598049">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/lib/codemirror/theme/night.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/lib/codemirror/lib/codemirror.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="16" selection-start="138" selection-end="138" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/lib/codemirror/mode/javascript/javascript.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="55" selection-start="805" selection-end="805" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/bower.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="36" selection-start="232" selection-end="232" vertical-scroll-proportion="0.16129032">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/lib/codemirror/mode/meta.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/lib/codemirror/mode/javascript/typescript.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/lib/codemirror/mode/javascript/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="23" selection-start="849" selection-end="849" vertical-scroll-proportion="0.2956989">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/style/screen.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="17" selection-start="779" selection-end="779" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/js/codemirror_javascript_sync_gateway.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/static/partials/dashboard.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="134" selection-start="2141" selection-end="2141" vertical-scroll-proportion="-26.875">
-          <folding>
-            <element signature="n#style#0;n#td#5;n#tr#0;n#tbody#0;n#table#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#td#2;n#tr#1;n#tbody#0;n#table#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/js/codemirror_formatting.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="96" vertical-scroll-proportion="0.0">
+        <state line="28" column="104" selection-start="1390" selection-end="1390" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/static/app.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="62" selection-start="1263" selection-end="1263" vertical-scroll-proportion="-7.0408163">
+        <state line="7" column="44" selection-start="344" selection-end="344" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/style/screen.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="14" selection-start="552" selection-end="552" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/js/auth.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="66" column="14" selection-start="2490" selection-end="2490" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sync_gateway.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="127" column="15" selection-start="3149" selection-end="3152" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/lib/codemirror/.bower.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="0" selection-start="104" selection-end="104" vertical-scroll-proportion="0.06355932">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/types/constypes.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="68" column="0" selection-start="1744" selection-end="1744" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/app.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="60" selection-start="430" selection-end="430" vertical-scroll-proportion="-5.625">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/bower.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="28" selection-start="234" selection-end="234" vertical-scroll-proportion="0.2065678">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/style/screen.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="54" column="17" selection-start="916" selection-end="916" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/js/angular_codemirror.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="50" column="30" selection-start="2084" selection-end="2084" vertical-scroll-proportion="0.5196281">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/consolio.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="432" column="93" selection-start="9459" selection-end="9459" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/js/angular-ngif.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="1" selection-start="82" selection-end="82" vertical-scroll-proportion="0.0154958675">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/static/js/consolio.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="202" column="19" selection-start="7685" selection-end="7685" vertical-scroll-proportion="0.5701754">
+        <state line="91" column="34" selection-start="3920" selection-end="3920" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/js/alert.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="11" selection-start="175" selection-end="175" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/partials/dashboard.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="65" column="34" selection-start="3337" selection-end="3337" vertical-scroll-proportion="0.32223415">
           <folding />
         </state>
       </provider>

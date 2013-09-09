@@ -14,7 +14,7 @@ consAuth.factory('consAuth', function ($rootScope, $http, $location) {
 
     navigator.id.watch({
         onlogin: function (assertion) {
-            console.log("navigator.id.onLogin()");
+            //console.log("navigator.id.onLogin()");
             $http.post('/auth/login', "assertion=" + assertion + "&audience=" +
                 encodeURIComponent(location.protocol + "//" + location.host),
                 {headers: {"Content-Type": "application/x-www-form-urlencoded"}}).
@@ -56,7 +56,7 @@ consAuth.factory('consAuth', function ($rootScope, $http, $location) {
                 });
         },
         onready: function () {
-            console.log("navigator.id.onReady()");
+            //console.log("navigator.id.onReady()");
             auth.checked = true;
         }
     });

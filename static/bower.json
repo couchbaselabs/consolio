@@ -10,6 +10,6 @@
   ],
   "dependencies": {
     "angular": "~1.2.0-rc.1",
-    "angular-ui-codemirror": "latest"
+    "angular-route": "~1.2.0-rc.2"
   }
 }

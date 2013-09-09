@@ -432,10 +432,11 @@ func main() {
 	r.HandleFunc("/api/database/", handleListDBs).Methods("GET")
 	r.HandleFunc("/api/database/", handleNewDB).Methods("POST")
 
-	r.HandleFunc("/api/sgw/{name}/", handleGetSGW).Methods("GET")
-	r.HandleFunc("/api/sgw/{name}/", handleDeleteSGW).Methods("DELETE")
-	r.HandleFunc("/api/sgw/", handleListSGWs).Methods("GET")
-	r.HandleFunc("/api/sgw/", handleNewSGW).Methods("POST")
+	r.HandleFunc("/api/sgw/{name}/", handleGetSGW).Methods("GET")           // Get SGW
+	r.HandleFunc("/api/sgw/{name}/", handleDeleteSGW).Methods("DELETE")     // Delete SGW
+	r.HandleFunc("/api/sgw/{name}/", handleUpdateSGW).Methods("POST")       // Update the sync funk
+	r.HandleFunc("/api/sgw/", handleListSGWs).Methods("GET")                // Get SGW List
+	r.HandleFunc("/api/sgw/", handleNewSGW).Methods("POST")                 // Create New SGW
 
 	r.HandleFunc("/api/me/", handleMe).Methods("GET")
 	r.HandleFunc("/api/me/token/", handleUserAuthToken).Methods("GET")

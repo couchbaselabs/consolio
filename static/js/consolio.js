@@ -1,4 +1,4 @@
-angular.module("consolio", ['ui.codemirror', 'consAuth', 'consAlert']).
+angular.module("consolio", ['ui.codemirror', 'consAuth', 'consAlert', 'angularCodeMirror', 'ngRoute']).
     filter('calDate',function () {
         return function (dstr) {
             return moment(dstr).calendar();
@@ -26,8 +26,8 @@ angular.module("consolio", ['ui.codemirror', 'consAuth', 'consAlert']).
 
 function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
 
-    console.log("%c DashCtrl>>>>>>", 'background: #222; color: #bada55');
-    console.log({ loggedin: $rootScope.loggedin, syncgws: $scope.syncgws, init: $scope.init, sgws_size: $scope.syncgws_size});
+    //console.log("%c DashCtrl>>>>>>", 'background: #222; color: #bada55');
+    //console.log({ loggedin: $rootScope.loggedin, syncgws: $scope.syncgws, init: $scope.init, sgws_size: $scope.syncgws_size});
     $scope.init = $scope.init || false;
 
     if (!$scope.init) {
@@ -40,8 +40,8 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
     $rootScope.$watch('loggedin', function () {
         if ($rootScope.loggedin == true) {
 
-            console.log("%c DashCtrl - $watch loggedin", 'background: #222; color: #bada55');
-            console.log({ loggedin: $rootScope.loggedin, syncgws: $scope.syncgws, init: $scope.init, sgws_size: $scope.syncgws_size});
+            //console.log("%c DashCtrl - $watch loggedin", 'background: #222; color: #bada55');
+            //console.log({ loggedin: $rootScope.loggedin, syncgws: $scope.syncgws, init: $scope.init, sgws_size: $scope.syncgws_size});
 
             $http.get("/api/me/").success(function (me) {
                 $scope.me = me;
@@ -50,7 +50,15 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
             $http.get("/api/sgw/").success(function (sgws) {
 
                 $scope.syncgws = sgws;
-                //setTimeout($scope.setButtons(), 2000);
+
+                if ($scope.syncgws.length > 0) {
+                    // For the cancel edit feature on sync functions, we edit a copy (so a copy needs to be created)
+                    angular.forEach($scope.syncgws, function (i) {
+                        //console.log(i);
+                        i.extra.sync_copy = i.extra.sync;
+                    });
+                }
+
             });
         }
     });
@@ -63,26 +71,34 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
         });
     };
 
-    $scope.wantnewsgw = false;
+    $scope.wantNewSGW = false;
+    $scope.newSGW_name = "";
+    $scope.newSGW_guest = false;
+    $scope.newSGW_sync = "function(doc) { \n\tchannel(doc.channels);\n}";
 
-    $scope.newsgw = function () {
-        var sgwname = $("#newsgwname").val();
-        var guest = $("#newsgwguest").is(":checked");
+
+    $scope.createNewSGW = function () {
+        //var sgwname = $("#newsgwname").val();
+        //var guest = $("#newsgwguest").is(":checked");
+        //var func = $("#newswsync").val();
         var dbname = $("#newsgwdb").val();
-        var func = $("#newswsync").val();
         $http.post('/api/sgw/',
-            'name=' + encodeURIComponent(sgwname) +
-                '&guest=' + (guest ? "true" : "false") +
-                '&syncfun=' + encodeURIComponent(func),
+            'name=' + encodeURIComponent($scope.newSGW_name) +
+                '&guest=' + ($scope.newSGW_guest ? "true" : "false") +
+                '&syncfun=' + encodeURIComponent($scope.newSGW_sync),
             {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
             .error(function (data, code) {
                 bAlert("Error " + code, "Couldn't create " + dbname +
-                    ": " + data, "error");
+                    ": " + data, "danger");
             })
             .success(function (data) {
-                $("#newsgwname").val("");
-                $("#newsgwguest").val("");
-                $("#newsgwdb").val("");
+//                $("#newsgwname").val("");
+//                $("#newsgwguest").val("");
+//                $("#newsgwdb").val("");
+                $scope.wantNewSGW = false;
+                $scope.newSGW_name = "";
+                $scope.newSGW_guest = false;
+                $scope.newSGW_sync = "function(doc) { \n\tchannel(doc.channels);\n}";
                 var tmp = $scope.syncgws.slice(0);
                 tmp.push(data);
                 $scope.syncgws = tmp;
@@ -104,22 +120,22 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
     };
 
     $scope.$watch("syncgws", function (value) {
-        console.log("%c Watch syncgws[]", 'background: #222; color: #55daba');
-        console.log({ loggedin: $rootScope.loggedin, syncgws: $scope.syncgws, init: $scope.init, sgws_size: $scope.syncgws_size});
+        //console.log("%c Watch syncgws[]", 'background: #222; color: #55daba');
+        //console.log({ loggedin: $rootScope.loggedin, syncgws: $scope.syncgws, init: $scope.init, sgws_size: $scope.syncgws_size});
         var val = value || null;
         if (val) {
             //console.log("values..." + $scope.syncgws_size + "/" + $scope.syncgws.length.toString());
 
             if ($scope.syncgws.length > 0 && $scope.syncgws_size != $scope.syncgws.length) {
-                console.log("%c BOOM!", 'color: #ff0000');
+                //console.log("%c BOOM!", 'color: #ff0000');
                 $scope.syncgws_size = $scope.syncgws.length
-                console.log({ x: true, loggedin: $rootScope.loggedin, syncgws: $scope.syncgws, init: $scope.init, sgws_size: $scope.syncgws_size});
-                setTimeout($scope.setButtons, 2000);
+                //console.log({ x: true, loggedin: $rootScope.loggedin, syncgws: $scope.syncgws, init: $scope.init, sgws_size: $scope.syncgws_size});
+                //setTimeout($scope.setButtons, 2000);
             }
         }
     });
 
-    $scope.clickSyncUrlButton = function(i) {
+    $scope.clickSyncUrlButton = function (i) {
         console.log($scope.syncgws[i]);
         var sgw = $scope.syncgws[i];
         var btn = $("sgw-" + i.toString());
@@ -133,7 +149,7 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
         });
     }
 
-    $scope.clickAdminSyncUrlButton = function(i) {
+    $scope.clickAdminSyncUrlButton = function (i) {
         console.log($scope.syncgws[i]);
         var sgw = $scope.syncgws[i];
         var btn = $("sgwa-" + i.toString());
@@ -149,85 +165,96 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
 
     }
 
-    $scope.setButtons = function() {
+    // Not used for now
+    $scope.setButtons = function () {
 
-//        $("button.zerocopy-button").each(function (i, e) {
-//            console.log($(this));
-//            var clip = new ZeroClipboard($(this), { moviePath: '/static/swf/ZeroClipboard.swf' });
-//            var txt = $(this).attr("data-clipboard-text");
-//            console.log(txt);
-//
-//            clip.on( 'complete', function ( client, args ) {
-//                alert("Copied text to clipboard: " + args.text );
+        $("button.zerocopy-button").each(function (i, e) {
+            console.log($(this));
+            var clip = new ZeroClipboard($(this), { moviePath: '/static/swf/ZeroClipboard.swf' });
+            var txt = $(this).attr("data-clipboard-text");
+            console.log(txt);
+
+            clip.on( 'complete', function ( client, args ) {
+                alert("Copied text to clipboard: " + args.text );
+            });
+
+            clip.on( 'dataRequested', function ( client, args ) {
+                clip.setText(txt);
+                console.log(txt);
+            });
+//            $(this).click(function (event) {
+//                console.log("click");
 //            });
-//
-//            clip.on( 'dataRequested', function ( client, args ) {
-//                clip.setText(txt);
-//                console.log(txt);
-//            });
-////            $(this).click(function (event) {
-////                console.log("click");
-////            });
-//        });
+        });
     }
 
-    $scope.cleanInput = function(editor){
-        console.log("clean");
-        var autoformat = function(editor) {
+    $scope.formatInput = function (editor) {
+
+        console.log("%c ******* formatInput()", 'color: #0000ff');
+
+        var autoformat = function (editor) {
             var totalLines = editor.lineCount();
             var totalChars = editor.getTextArea().value.length;
-            editor.autoFormatRange({line:0, ch:0}, {line:totalLines, ch:totalChars});
-            editor.getDoc().setCursor({line:0, ch:0});
+            editor.autoFormatRange({line: 0, ch: 0}, {line: totalLines, ch: totalChars});
+            editor.getDoc().setCursor({line: 0, ch: 0});
         }
 
         autoformat(editor);
+
+        $scope.editor = editor;
     }
 
-    $scope.reParseInput = function(editor){
-        console.log("reparse");
+    $scope.reParseInput = function (editor) {
+        console.log("%c ******* reParseInput()", 'color: #0000ff');
         var doc = editor.getDoc();
 
         // Options
         doc.markClean()
 
         // Events
-        editor.on("beforeChange", function(){
-            console.log("before_change");
-        });
-
-        editor.on("change", function(){
-            console.log("change");
-        });
+//        editor.on("beforeChange", function () {
+//            console.log("editor BeforeChange");
+//        });
+//
+//        editor.on("change", function () {
+//            console.log("editor OnChange");
+//        });
     }
 
-    $scope.codemirrorLoaded = function(editor){
+    $scope.cmLoaded = function (editor) {
 
-        console.log("codemirrorLoaded");
-
-        var autoformat = function(editor) {
-            var totalLines = editor.lineCount();
-            var totalChars = editor.getTextArea().value.length;
-            editor.autoFormatRange({line:0, ch:0}, {line:totalLines, ch:totalChars});
-            editor.getDoc().setCursor({line:0, ch:0});
-        }
-
-        autoformat(editor);
+//          var autoformat = function (editor) {
+//            var totalLines = editor.lineCount();
+//            var totalChars = editor.getTextArea().value.length;
+//            editor.autoFormatRange({line: 0, ch: 0}, {line: totalLines, ch: totalChars});
+//            editor.getDoc().setCursor({line: 0, ch: 0});
+//        }
+//
+//        autoformat(editor);
     }
 
     $scope.editorOptions = {
-        lineWrapping : true,
+        lineWrapping: true,
         lineNumbers: true,
         mode: 'javascript',
         theme: 'night',
         smartIndent: true,
         onChange: $scope.reParseInput,
-        onFocus: $scope.cleanInput,
-        onLoad: $scope.codemirrorLoaded
+        onFocus: $scope.formatInput,
+        onLoad: function (editor){
+            console.log("%c ******* CodeMirror Loaded", 'color: #0000ff');
+        }
     }
 
-    $scope.saveSyncFunction = function(i){
-        console.log("saved - " + i.toString())
-        console.log($scope.syncgws[i].extra.sync)
+    $scope.saveSyncFunction = function (i) {
+        $scope.syncgws[i].extra.sync = $scope.syncgws[i].extra.sync_copy
+        // Here we actually save the sync function through http post
+        //
+
+    }
+
+    $scope.cancelSaveSyncFunction = function (i) {
+        $scope.syncgws[i].extra.sync_copy = $scope.syncgws[i].extra.sync
     }
 }
 
@@ -342,12 +369,12 @@ function AdminCtrl($scope, $http, $rootScope, $location, bAlert) {
 }
 
 function LoginCtrl($scope, $http, $rootScope, consAuth) {
-    console.log("LoginCtrl");
+    //console.log("LoginCtrl");
 
     $rootScope.$watch('loggedin', function () {
 
         if ($rootScope.loggedin) {
-            console.log("LoginCtrl - $watch loggedin");
+            //console.log("LoginCtrl - $watch loggedin");
             $scope.auth = consAuth.get();
         }
     });

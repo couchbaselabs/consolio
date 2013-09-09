@@ -4,8 +4,36 @@
 
 
     <div>
-        <h4>Your Sync Gateways</h4>
+        <h4>Your Sync Gateways <button class="btn btn-xs btn-success" ng-disabled="wantNewSGW" ng-click="wantNewSGW = true"><span class="icon-plus"></span> New Sync Gateway</button></h4>
         <hr>
+        <div ng-show="wantNewSGW" class="animate-if well">
+            <form name="form_createNewSGW" novalidate>
+                <h3>Create a new Sync Gateway</h3>
+                <table cellpadding="5">
+                    <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td><input class="form-control" ng-bind="newSGW_name" id="newSGW_name" type="text" min="3" max="15" style="width: 200px;"/> <span ng-show="form_createNewSGW.newSGW_name.$error.min || form_createNewSGW.newSGW_name.$error.max">Must be at least 3 characters!</span></td>
+                    </tr>
+                    <tr>
+                        <td>Allow Guest?</td>
+                        <td><input type="checkbox" id="newSGW_guest"/></td>
+                    </tr>
+                    <tr>
+                        <td>Sync Function</td>
+                        <td><cb-editor live="1" editing="wantNewSGW" id="newSGW_sync"
+                                      source="newSGW_sync" editfn="sync_edit_toggle"></cb-editor></td>
+                    </tr>
+                    <tr><td></td><td>
+                        <button class="btn btn-danger btn-sm" ng-click="wantNewSGW = false">Cancel</button>&nbsp;
+                        <button class="btn btn-success btn-sm" ng-click="createNewSGW()">Create</button>
+                    </td></tr>
+                    </tbody>
+                </table>
+                <br/>
+            </form>
+        </div>
+
         <p ng-hide="syncgws"><em>No sync gateways created yet...</em></p>
         <table id="sgw-list" class="table table-hover" ng-show="syncgws">
             <thead>
@@ -16,7 +44,11 @@
             <th>Average Usage</th>
             <th>&nbsp;</th>
             </thead>
+
+
             <tbody ng-repeat="d in syncgws" ng-switch="row.configure" ng-init="row={configure:false}">
+
+            <!-- Displayed when not configuring -->
             <tr ng-switch-default>
                 <td><a href="/sgw/{{d.name}}/"><span class="sgw-name">{{d.name}}</span></a></td>
                 <td><span class="sgw-url">Sync</span>
@@ -29,57 +61,41 @@
                             data-clipboard-text="http://login:password@sync.couchbasecloud.com/{{d.name}}"><span
                             class="glyphicon icon-copy"></span></button>
                 </td>
-                <td>unknown</td>
-                <td>{{d.size}} of 500MB</td>
+                <td>{{d.state.length == 0 ? "unknown" : d.state}}</td>
+                <td>{{d.stats ? d.stats.size + " of 500 MB" : "unknown"}}</td>
                 <td>xxx ops/day {{console.log(d)}}</td>
                 <td ng-if="row.configure=false" style="text-align: right;">
-                    <button class="btn btn-info" ng-click="row.configure=true">configure</button>
+                    <button class="btn btn-info" ng-click="row.configure=true;editor.focus">configure</button>
                     &nbsp;
                     <button ng-click="delete({{$index}})" class="btn btn-danger">Delete</button>
                 </td>
             </tr>
+
+            <!-- Displayed when configuring -->
             <tr ng-switch-when="true">
                 <td><a href="/sgw/{{d.name}}/"><span class="sgw-name">{{d.name}}</span></a></td>
                 <td colspan="4">
                     <table>
                         <tr>
                             <td><strong>Sync Function</strong></td>
-                            <td><textarea class="syncfunction" ng-model="d.extra.sync"
-                                   ui-codemirror="editorOptions"></textarea></td>
+                            <td><textarea class="syncfunction" ng-model="d.extra.sync_copy"
+                                          ui-codemirror="editorOptions"></textarea></td>
 
                         </tr>
                     </table>
                 </td>
                 <td style="text-align: right;">
-                    <button class="btn btn-success" ng-click="row.configure=false;saveSyncFunction($index)">save</button>
+                    <button class="btn btn-success btn-sm" ng-click="row.configure=false;saveSyncFunction($index)">save
+                    </button>
                     &nbsp;
-                    <button class="btn btn-danger" ng-click="row.configure=false">cancel</button>
+                    <button class="btn btn-danger btn-sm" ng-click="row.configure=false;cancelSaveSyncFunction($index)">
+                        cancel
+                    </button>
                 </td>
             </tr>
             </tbody>
         </table>
 
-        <button class="btn" ng-hide="wantnewsgw" ng-click="wantnewsgw = true">New Sync Gateway</button>
-
-        <div ng-show="wantnewsgw">
-            <form ng-submit="newsgw()">
-                <h3>Create a new Sync Gateway</h3>
-                Name: <input ng-bind="newsgwname" id="newsgwname" type="text"/><br/>
-                <label>Allow Guest? <input type="checkbox" id="newsgwguest"/></label><br/>
-                Sync Function:<br/>
-                <textarea id="newswsync" class="syncfunction">function(doc) {
-    channel(doc.channels);
-}</textarea><br/>
-                <button class="btn">Create</button>
-            </form>
-            <hr>
-            <div>
-                <dl class="dl-horizontal">
-                    <dt>...</dt>
-                    <dd>...</dd>
-                </dl>
-            </div>
-        </div>
 
     </div>
 </div>
@@ -101,16 +117,5 @@
 <script>
     $(function () {
         ZeroClipboard.setDefaults({ moviePath: '/static/swf/ZeroClipboard.swf' });
-        var zclient = new ZeroClipboard();
-
-        zclient.on('complete', function (client, args) {
-            alert("Copied text to clipboard: " + args.text);
-        });
-
-        zclient.on('dataRequested', function (client, args) {
-            clip.setText(args.text);
-            console.log(args.text);
-        });
-    })
-
+    });
 </script>

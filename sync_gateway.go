@@ -122,6 +122,8 @@ func handleNewSGW(w http.ResponseWriter, req *http.Request) {
 	mustEncode(w, d)
 }
 
+// TODO: func handleUpdateSGWConf
+
 func handleMkSGWConf(w http.ResponseWriter, req *http.Request) {
 	name := mux.Vars(req)["name"]
 	d := consolio.Item{}

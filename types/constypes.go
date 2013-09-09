@@ -63,4 +63,6 @@ type User struct {
 	AuthToken string                 `json:"auth_token,omitmepty"`
 	Internal  bool                   `json:"internal"`
 	Prefs     map[string]interface{} `json:"prefs"`
+	AcceptedTerms bool
+    //time.Now().UTC()
 }
