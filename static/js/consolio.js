@@ -71,17 +71,65 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
         });
     };
 
+    $scope.modal_sgw_name = "sgw_name";
+    $scope.modal_api_url = "api_url";
+    $scope.modal_admin_url = "admin_url";
+
+    $scope.setModalContent = function(i) {
+        if ($scope.syncgws[i]) {
+
+            if ($scope.authuser == null || $scope.authtoken == null) {
+                $http.get("/api/me/token/").
+                    success(function (res) {
+                        // This isn't exactly right, but it's pretty close
+                        $scope.authuser = encodeURIComponent(sgw.owner);
+                        $scope.authtoken = res.token;
+                    });
+            }
+
+            var sgw = $scope.syncgws[i]
+
+            $scope.modal_sgw_name = sgw.name;
+
+            if (sgw.extra.url) {
+                $scope.modal_api_url = sgw.url
+            }
+            else {
+                $scope.modal_api_url = "http://sync.couchbasecloud.com/" + sgw.name;
+            }
+
+            $scope.modal_admin_url = "http://" + $scope.authuser + ":" + $scope.authtoken + "@syncadm.couchbasecloud.com:8083/" + sgw.name + "/"
+
+        }
+    }
+
+
     $scope.wantNewSGW = false;
     $scope.newSGW_name = "";
     $scope.newSGW_guest = false;
     $scope.newSGW_sync = "function(doc) { \n\tchannel(doc.channels);\n}";
+    $scope.newSGW_error = false;
 
+    $scope.newSGW_name_changed = function () {
+        $scope.newSGW_name = $scope.newSGW_name.replace(" ", "_");
+
+        if ($scope.newSGW_name.length < 5) {
+            $scope.newSGW_error = true;
+        }
+        else {
+            $scope.newSGW_error = false;
+        }
+    }
 
     $scope.createNewSGW = function () {
-        //var sgwname = $("#newsgwname").val();
-        //var guest = $("#newsgwguest").is(":checked");
-        //var func = $("#newswsync").val();
-        var dbname = $("#newsgwdb").val();
+        console.log("**** Creating sync gateway...");
+        console.log($scope.newSGW_name);
+        console.log($scope.newSGW_guest);
+        console.log($scope.newSGW_sync);
+        console.log("****");
+        if ($scope.newSGW_error) {
+            return false;
+        }
         $http.post('/api/sgw/',
             'name=' + encodeURIComponent($scope.newSGW_name) +
                 '&guest=' + ($scope.newSGW_guest ? "true" : "false") +
@@ -92,14 +140,14 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
                     ": " + data, "danger");
             })
             .success(function (data) {
-//                $("#newsgwname").val("");
-//                $("#newsgwguest").val("");
-//                $("#newsgwdb").val("");
+                console.log("SUCCESS");
+                console.log(data);
                 $scope.wantNewSGW = false;
                 $scope.newSGW_name = "";
                 $scope.newSGW_guest = false;
                 $scope.newSGW_sync = "function(doc) { \n\tchannel(doc.channels);\n}";
                 var tmp = $scope.syncgws.slice(0);
+                data.extra.sync_copy = data.extra.sync;
                 tmp.push(data);
                 $scope.syncgws = tmp;
                 $scope.wantnewsgw = false;

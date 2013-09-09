@@ -54,3 +54,23 @@
     position: absolute;
     top: -9999px;
 }
+
+.not-reported {
+    font-size: 12px;
+    font-style: italic;
+}
+
+td.form-label {
+    font-weight: bold;
+    vertical-align: middle;
+    font-size: 15px;
+}
+
+td.form-input {
+    vertical-align: middle;
+}
+
+.form-error {
+    color: rgb(185, 74, 72);
+    font-weight: bold;
+}
