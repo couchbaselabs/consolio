@@ -31,7 +31,7 @@ func evInfoHandler(l *net.UDPConn, a *net.UDPAddr, m *coap.Message) *coap.Messag
 	}
 
 	// Verify we got something sensible
-	cType, ok := m.Option(coap.ContentType).(uint32)
+	cType, ok := m.Option(coap.ContentFormat).(uint32)
 	if !ok || coap.MediaType(cType) != coap.AppJSON {
 		glog.Warningf("Got invalid content type on request: %v",
 			coap.MediaType(cType))
