@@ -11,6 +11,7 @@ angular.module("consolio", ['ui.codemirror', 'consAuth', 'consAlert', 'angularCo
                 when('/terms_of_service/', {templateUrl: '/static/partials/terms_of_service.html'}).
                 when('/acceptable_use/', {templateUrl: '/static/partials/acceptable_use.html'}).
                 when('/privacy_policy/', {templateUrl: '/static/partials/privacy_policy.html'}).
+                when('/learn/', {templateUrl: '/static/partials/learn.html'}).
                 when('/dashboard/', {templateUrl: '/static/partials/dashboard.html',
                     controller: 'DashCtrl'}).
                 when('/db/:name/', {templateUrl: '/static/partials/db.html',
@@ -25,6 +26,9 @@ angular.module("consolio", ['ui.codemirror', 'consAuth', 'consAlert', 'angularCo
         }]);
 
 function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
+
+    $scope.logout = consAuth.logout;
+    $scope.login = consAuth.login;
 
     //console.log("%c DashCtrl>>>>>>", 'background: #222; color: #bada55');
     //console.log({ loggedin: $rootScope.loggedin, syncgws: $scope.syncgws, init: $scope.init, sgws_size: $scope.syncgws_size});
@@ -75,7 +79,7 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
     $scope.modal_api_url = "api_url";
     $scope.modal_admin_url = "admin_url";
 
-    $scope.setModalContent = function(i) {
+    $scope.setModalContent = function (i) {
         if ($scope.syncgws[i]) {
 
             var sgw = $scope.syncgws[i]
@@ -96,7 +100,6 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
                         $scope.authtoken = res.token;
 
 
-
                         $scope.modal_admin_url = "http://" + $scope.authuser + ":" + $scope.authtoken + "@syncadm.couchbasecloud.com:8083/" + sgw.name + "/"
                     });
             }
@@ -105,11 +108,8 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
             }
 
 
-
-
         }
     }
-
 
     $scope.wantNewSGW = false;
     $scope.newSGW_name = "";
@@ -229,11 +229,11 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
             var txt = $(this).attr("data-clipboard-text");
             console.log(txt);
 
-            clip.on( 'complete', function ( client, args ) {
-                alert("Copied text to clipboard: " + args.text );
+            clip.on('complete', function (client, args) {
+                alert("Copied text to clipboard: " + args.text);
             });
 
-            clip.on( 'dataRequested', function ( client, args ) {
+            clip.on('dataRequested', function (client, args) {
                 clip.setText(txt);
                 console.log(txt);
             });
@@ -296,7 +296,7 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
         smartIndent: true,
         onChange: $scope.reParseInput,
         onFocus: $scope.formatInput,
-        onLoad: function (editor){
+        onLoad: function (editor) {
             console.log("%c ******* CodeMirror Loaded", 'color: #0000ff');
         }
     }
@@ -311,6 +311,54 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
     $scope.cancelSaveSyncFunction = function (i) {
         $scope.syncgws[i].extra.sync_copy = $scope.syncgws[i].extra.sync
     }
+
+
+    ZeroClipboard.setDefaults({ moviePath: '/static/swf/ZeroClipboard.swf' });
+
+    var clip1 = makeZero($("#copy-api-url"));
+    var clip2 = makeZero($("#copy-admin-url"));
+
+}
+
+function makeZero(item) {
+
+    var clip = new ZeroClipboard(item, { moviePath: '/static/swf/ZeroClipboard.swf' });
+
+    clip.on('load', function (client) {
+    });
+
+    clip.on('complete', function (client, args) {
+    });
+
+    clip.on('mouseover', function (client) {
+    });
+
+    clip.on('mouseout', function (client) {
+        var x = $(this);
+        setTimeout(function() {
+            x.addClass("btn-info");
+            x.removeClass("btn-success");
+            $("#notify-copied").fadeOut('slow', function(){
+                $("#notify-copied").removeClass("in");
+            })
+        }, 2000);
+    });
+
+    clip.on('mousedown', function (client) {
+        // alert("mouse down");
+    });
+
+    clip.on('mouseup', function (client) {
+        $(this).addClass("btn-success");
+        $(this).removeClass("btn-info");
+        $("#notify-copied").show().addClass("in");
+//        item.tooltip({
+//            title: 'copied!'
+//        });
+        // alert("mouse up");
+    });
+
+    return clip;
 }
 
 
@@ -438,8 +486,12 @@ function LoginCtrl($scope, $http, $rootScope, consAuth) {
         $scope.me = me;
     });
 
+    $scope.login = function(){
+        $('#signupModal').modal('hide')
+        consAuth.login();
+    }
+
     $scope.logout = consAuth.logout;
-    $scope.login = consAuth.login;
     $scope.authtoken = "";
 
     $scope.getAuthToken = function () {

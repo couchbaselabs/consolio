@@ -416,6 +416,7 @@ func main() {
 		"/acceptable_use/",
 		"/privacy_policy/",
 		"/dashboard/",
+		"/learn/",
 	}
 
 	for _, p := range appPages {

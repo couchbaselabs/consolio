@@ -14,7 +14,7 @@
     <script src="/static/lib/codemirror/addon/edit/closebrackets.js"></script>
     <script src="/static/js/codemirror_javascript_sync_gateway.js"></script>
     <script src="/static/js/codemirror_formatting.js"></script>
-    <script src="/static/lib/ZeroClipboard.min.js"></script>
+
 
 
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
@@ -51,7 +51,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right" ng-controller="LoginCtrl">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Learn More About Couchbase <b class="caret"></b></a>
+                    <a href="/learn/" class="dropdown-toggle" data-toggle="dropdown">Learn More<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
                             <a href="http://www.couchbase.com/couchbase-server/overview" target="_blank">Couchbase Server <span class="glyphicon glyphicon-new-window"></span></a>
@@ -72,11 +72,11 @@
                         <li ng-show="me.admin">
                             <a href="/admin/">Admin</a>
                         </li>
-                        <li><a href="/prefs/">Preferences</a></li>
+                        <!--<li><a href="/prefs/">Preferences</a></li>-->
                         <li><a ng-click="logout()">Log Out</a></li>
                     </ul>
                 </li>
-                <li class="ng-cloak" ng-show="auth.checked"><a ng-show="!loggedin" ng-click="login()">Log In</a></li>
+                <li class="ng-cloak" ng-show="auth.checked"><button class="btn btn-sm btn-success" style="margin-top: 10px;" ng-show="!loggedin" data-toggle="modal" href="#signupModal">Sign In&nbsp;&nbsp;<span class="icon-signin" style="font-size: 110%;"></span></button></li>
             </ul>
         </div>
     </div>
@@ -104,6 +104,36 @@
     </div>
 </footer>
 
+<!-- Modal -->
+<div ng-controller="LoginCtrl" class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Sign In to Couchbase Cloud</h4>
+            </div>
+            <div class="modal-body">
+                <p>Couchbase Cloud offers a convenient way to sign in and/or create an account
+                using Mozilla Persona. Mozilla Persona only needs a valid e-mail address
+                and a password to get your account started. If you already have a Mozilla
+                Persona, you can use your existing Persona associated e-mail address
+                and password to log in.</p>
+                
+                <p>By clicking Sign In, you have agreed to our <a href="/terms_of_service/">Terms of Service</a>,
+                    and have read our <a href="/privacy_policy/">Data Privacy Policy</a>.
+                </p>
+                <p style="text-align: center;"><a href="#" ng-click="login()" class="persona-button dark"><span>Sign In</span></a></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script src="/static/lib/ZeroClipboard.min.js"></script>
 <script src="/static/lib/moment.min.js"></script>
 <script src="/static/lib/lodash.min.js"></script>
 <script src="https://login.persona.org/include.js"></script>

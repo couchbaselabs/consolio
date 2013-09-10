@@ -4,35 +4,46 @@
 
 
     <div>
-        <h4>Your Sync Gateways <button class="btn btn-xs btn-success" ng-disabled="wantNewSGW" ng-click="wantNewSGW = true"><span class="icon-plus"></span> New Sync Gateway</button></h4>
+        <h4>Your Sync Gateways
+            <button class="btn btn-xs btn-success" ng-disabled="wantNewSGW" ng-click="wantNewSGW = true"><span
+                    class="icon-plus"></span> New Sync Gateway
+            </button>
+        </h4>
         <hr>
         <form ng-show="wantNewSGW" name="form_createNewSGW" novalidate class="form-horizontal well" role="form">
             <h3>Create a New Sync Gateway</h3>
 
             <div ng-class="{'form-group': true, 'has-error': newSGW_error, 'has-success': !newSGW_error}">
                 <label class="col-lg-2 control-label" for="newSGW_name">Name</label>
+
                 <div class="col-lg-10">
-                    <input class="form-control" ng-model="newSGW_name" id="newSGW_name" type="text" min="3" max="15" ng-change="newSGW_name_changed()" style="width: 200px;"/><span ng-if="newSGW_error" class="form-error">&nbsp;&nbsp;Must be at least 5 characters!</span>
+                    <input class="form-control" ng-model="newSGW_name" id="newSGW_name" type="text" min="3" max="15"
+                           ng-change="newSGW_name_changed()" style="width: 200px;"/><span ng-if="newSGW_error"
+                                                                                          class="form-error">&nbsp;&nbsp;Must be at least 5 characters!</span>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-lg-2 control-label" for="newSGW_guest">Allow Guest?</label>
+
                 <div class="col-lg-10">
                     <div class="checkbox"><label>
-                    <input type="checkbox" id="newSGW_guest" ng_model="newSGW_guest" />
+                        <input type="checkbox" id="newSGW_guest" ng_model="newSGW_guest"/>
                     </label></div>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-lg-2 control-label" for="newSGW_sync">Sync Function</label>
+
                 <div class="col-lg-10">
-                    <cb-editor live="1" editing="wantNewSGW" id="newSGW_sync" name="newSGW_sync" source="newSGW_sync" editfn="sync_edit_toggle"></cb-editor>
+                    <cb-editor live="1" editing="wantNewSGW" id="newSGW_sync" name="newSGW_sync" source="newSGW_sync"
+                               editfn="sync_edit_toggle"></cb-editor>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-lg-2">&nbsp;</div>
                 <div class="col-lg-10 col-lg-offset-2">
-                    <button class="btn btn-danger btn-sm" ng-click="wantNewSGW = false">Cancel</button>&nbsp;
+                    <button class="btn btn-danger btn-sm" ng-click="wantNewSGW = false">Cancel</button>
+                    &nbsp;
                     <button class="btn btn-success btn-sm" ng-click="createNewSGW()">Create</button>
                 </div>
             </div>
@@ -56,8 +67,10 @@
             <!-- Displayed when not configuring -->
             <tr ng-switch-default>
                 <td><span class="sgw-name">{{d.name}}</span></td>
-                <td><button id="sgwm-{{$index}}" data-toggle="modal" href="#myModal" ng-click="setModalContent($index)">View <span
-                        class="icon icon-eye-open"></span></button>
+                <td>
+                    <button id="sgwm-{{$index}}" data-toggle="modal" href="#myModal" ng-click="setModalContent($index)">
+                        View <span
+                            class="icon icon-eye-open"></span></button>
                 </td>
                 <td>{{d.state.length == 0 ? "(not reported yet)" : d.state}}</td>
                 <td>{{d.stats ? d.stats.size + " of 500 MB" : "(not reported yet)"}}</td>
@@ -81,9 +94,13 @@
                     </table>
                 </td>
                 <td style="text-align: right;">
-                    <button class="btn btn-danger btn-sm" ng-click="row.configure=false;cancelSaveSyncFunction($index)">cancel</button>
+                    <button class="btn btn-danger btn-sm" ng-click="row.configure=false;cancelSaveSyncFunction($index)">
+                        cancel
+                    </button>
                     &nbsp;
-                    <button class="btn btn-success btn-sm" ng-click="row.configure=false;saveSyncFunction($index)">save</button>
+                    <button class="btn btn-success btn-sm" ng-click="row.configure=false;saveSyncFunction($index)">
+                        save
+                    </button>
                 </td>
             </tr>
             </tbody>
@@ -99,7 +116,7 @@
         <br/>
 
         <p>
-            Please <a ng-click="login()">log in</a> to make use of this
+            Please <a data-toggle="modal" href="#signupModal">Sign In</a> to make use of this
             service. It's quick and easy (and you don't even need to
             register!)
         </p>
@@ -116,20 +133,21 @@
                 <h4 class="modal-title">{{modal_sgw_name}} [Sync Gateway]</h4>
             </div>
             <div class="modal-body">
+                <div id="notify-copied" class="alert alert-success fade" style="display: none;text-align: center">url copied to clipboard!</div>
                 <h4>API Access URL</h4>
-                <input type="text" class="sgw-urls" value="{{modal_api_url}}" />
+                <input type="text" class="sgw-urls" value="{{modal_api_url}}"/>
+                <button id="copy-api-url" class="btn btn-sm btn-info" data-clipboard-text="{{modal_api_url}}"><span
+                        class="icon icon-copy"></span></button>
                 <h4>ADMIN Access URL</h4>
-                <input type="text" class="sgw-urls" value="{{modal_admin_url}}" />
+                <input type="text" class="sgw-urls" value="{{modal_admin_url}}"/>
+                <button id="copy-admin-url" class="btn btn-sm btn-info" data-clipboard-text="{{modal_admin_url}}"><span
+                        class="icon icon-copy"></span></button>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
-<script>
-    $(function () {
-        ZeroClipboard.setDefaults({ moviePath: '/static/swf/ZeroClipboard.swf' });
-    });
-</script>
