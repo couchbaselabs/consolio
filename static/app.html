@@ -50,19 +50,22 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right" ng-controller="LoginCtrl">
-                <li class="dropdown">
-                    <a href="/learn/" class="dropdown-toggle" data-toggle="dropdown">Learn More<b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="http://www.couchbase.com/couchbase-server/overview" target="_blank">Couchbase Server <span class="glyphicon glyphicon-new-window"></span></a>
-                        </li>
-                        <li>
-                            <a href="https://github.com/couchbase/couchbase-lite-ios" target="_blank">Couchbase Lite IOS <span class="glyphicon glyphicon-new-window"></span></a>
-                        </li>
-                        <li>
-                            <a href="https://github.com/couchbase/couchbase-lite-android" target="_blank">Couchbase Lite Android <span class="glyphicon glyphicon-new-window"></span></a>
-                        </li>
-                    </ul>
+                <!--<li class="dropdown">-->
+                    <!--<a href="/learn/" class="dropdown-toggle" data-toggle="dropdown">Learn More<b class="caret"></b></a>-->
+                    <!--<ul class="dropdown-menu">-->
+                        <!--<li>-->
+                            <!--<a href="http://www.couchbase.com/couchbase-server/overview" target="_blank">Couchbase Server <span class="glyphicon glyphicon-new-window"></span></a>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<a href="https://github.com/couchbase/couchbase-lite-ios" target="_blank">Couchbase Lite IOS <span class="glyphicon glyphicon-new-window"></span></a>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<a href="https://github.com/couchbase/couchbase-lite-android" target="_blank">Couchbase Lite Android <span class="glyphicon glyphicon-new-window"></span></a>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</li>-->
+                <li>
+                    <a href="/faq/">FAQ</a>
                 </li>
                 <li class="dropdown" ng-show="loggedin">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -89,15 +92,23 @@
 
 <footer>
     <div class="navbar navbar-fixed-bottom navbar-inverse">
+        <ul class="nav navbar-nav pull-left">
+            <li>
+                <a href="https://groups.google.com/forum/#!forum/couchbase-cloud/new">Couchbase Cloud Google Group</a>
+            </li>
+            <li>
+                <a href="http://www.couchbase.com/communities/couchbase-mobile-community">Couchbase Mobile</a>
+            </li>
+        </ul>
         <ul class="nav navbar-nav pull-right">
             <li>
                 <a href="/terms_of_service/">Terms of Service</a>
             </li>
             <li>
-                <a href="/acceptable_use/">Acceptable Use</a>
+                <a href="/privacy_policy/">Data Privacy Policy</a>
             </li>
             <li>
-                <a href="/privacy_policy/">Data Privacy Policy</a>
+                <a href="mailto:couchbase-cloud@googlegroups.com">Contact Us</a>
             </li>
         </ul>
 

@@ -11,7 +11,7 @@ angular.module("consolio", ['ui.codemirror', 'consAuth', 'consAlert', 'angularCo
                 when('/terms_of_service/', {templateUrl: '/static/partials/terms_of_service.html'}).
                 when('/acceptable_use/', {templateUrl: '/static/partials/acceptable_use.html'}).
                 when('/privacy_policy/', {templateUrl: '/static/partials/privacy_policy.html'}).
-                when('/learn/', {templateUrl: '/static/partials/learn.html'}).
+                when('/faq/', {templateUrl: '/static/partials/faq.html'}).
                 when('/dashboard/', {templateUrl: '/static/partials/dashboard.html',
                     controller: 'DashCtrl'}).
                 when('/db/:name/', {templateUrl: '/static/partials/db.html',
