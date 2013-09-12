@@ -43,7 +43,7 @@ app.directive('confirmDelete', function () {
 
 function SwitchCtrl($scope, $rootScope) {
 
-    $rootScope.switch = { visible: false }
+    $rootScope.switch = { visible: true }
 
     $scope.switch_toggle = function () {
         if ($rootScope.switch.visible) {
@@ -559,7 +559,7 @@ function prettySize(s) {
     var sizes = ["B", "KB", "MB", "GB", "TB", "PB", "EB"];
     var suffix = sizes[parseInt(e)];
     var val = s / Math.pow(1024, Math.floor(e));
-    x = val.toFixed(2) + suffix;
-    console.log(x);
+    x = val.toFixed(2) + " " + suffix;
+    //console.log(x);
     return x;
 }
