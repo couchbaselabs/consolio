@@ -261,7 +261,9 @@ func handleListTopDBs(w http.ResponseWriter, req *http.Request) {
 	viewRes := struct {
 		Rows []struct {
 			Key   float64
-			Value string
+			Value struct {
+				Name, Owner string
+			}
 		}
 	}{}
 
@@ -275,12 +277,12 @@ func handleListTopDBs(w http.ResponseWriter, req *http.Request) {
 	}
 
 	type T struct {
-		Size float64
-		Name string
+		Size        float64
+		Name, Owner string
 	}
 	res := []T{}
 	for _, r := range viewRes.Rows {
-		res = append(res, T{r.Key, r.Value})
+		res = append(res, T{r.Key, r.Value.Name, r.Value.Owner})
 	}
 
 	mustEncode(w, res)

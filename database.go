@@ -8,7 +8,7 @@ import (
 
 const ddocKey = "consolio"
 const markerKey = "/@consolioddocVersion"
-const ddocVersion = 6
+const ddocVersion = 7
 const ddocBody = `{
   "id": "_design/consolio",
   "views": {
@@ -20,7 +20,7 @@ const ddocBody = `{
       "reduce": "_sum"
     },
     "bysize": {
-      "map": "function (doc, meta) {\n  if (doc.stats && doc.stats.fileSize) {\n    var name = doc.extra.generated_for || doc.name;\n    emit(doc.stats.fileSize, name);\n  }\n}"
+      "map": "function (doc, meta) {\n  if (doc.stats && doc.stats.fileSize) {\n    var name = doc.extra.generated_for || doc.name;\n    emit(doc.stats.fileSize, {name: name, owner: doc.owner});\n  }\n}"
     }
   }
 }`
