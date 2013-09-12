@@ -87,23 +87,25 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert, $location) {
             $http.get("/api/sgw/").success(function (sgws) {
 
                 $scope.syncgws = sgws;
-                console.log(sgws);
 
                 if ($scope.syncgws.length > 0) {
 
                     $http.get("/api/database/").success(function(dbs) {
                        $scope.databases = dbs;
                         console.log(dbs);
-                    });
-                    // For the cancel edit feature on sync functions, we edit a copy (so a copy needs to be created)
-                    angular.forEach($scope.syncgws, function (i) {
-                        //console.log(i);
-                        i.stats = _.filter($scope.databases, function(db) {
-                            if (i.extra.dbname == db.name)
-                                return db.stats;
+
+                        // For the cancel edit feature on sync functions, we edit a copy (so a copy needs to be created)
+                        angular.forEach($scope.syncgws, function (i) {
+                            //console.log(i);
+                            i.stats = _.filter($scope.databases, function(db) {
+                                if (i.extra.dbname == db.name)
+                                    return db.stats;
+                            });
+                            i.extra.sync_copy = i.extra.sync;
                         });
-                        i.extra.sync_copy = i.extra.sync;
+                        console.log(sgws);
                     });
+
                 }
 
             });
