@@ -549,3 +549,14 @@ function LoginCtrl($scope, $http, $rootScope, consAuth) {
             });
     };
 }
+
+function prettySize(s) {
+    if (s < 10) {
+        return s + "B";
+    }
+    var e = parseInt(Math.floor(Math.log(s) / Math.log(1024)));
+    var sizes = ["B", "KB", "MB", "GB", "TB", "PB", "EB"];
+    var suffix = sizes[parseInt(e)];
+    var val = s / Math.pow(1024, Math.floor(e));
+    return val.toFixed(2) + suffix;
+}
