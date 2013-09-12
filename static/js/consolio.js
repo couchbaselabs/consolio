@@ -92,7 +92,7 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert, $location) {
 
                     $http.get("/api/database/").success(function(dbs) {
                        $scope.databases = dbs;
-                        console.log(dbs);
+                        //console.log(dbs);
 
                         // For the cancel edit feature on sync functions, we edit a copy (so a copy needs to be created)
                         angular.forEach($scope.syncgws, function (i) {
@@ -103,7 +103,7 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert, $location) {
                             });
                             i.extra.sync_copy = i.extra.sync;
                         });
-                        console.log(sgws);
+                        //console.log(sgws);
                     });
 
                 }
@@ -558,5 +558,7 @@ function prettySize(s) {
     var sizes = ["B", "KB", "MB", "GB", "TB", "PB", "EB"];
     var suffix = sizes[parseInt(e)];
     var val = s / Math.pow(1024, Math.floor(e));
-    return val.toFixed(2) + suffix;
+    x = val.toFixed(2) + suffix;
+    console.log(x);
+    return x;
 }
