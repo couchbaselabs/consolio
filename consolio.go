@@ -260,7 +260,7 @@ func handleListWebhooks(w http.ResponseWriter, req *http.Request) {
 func handleListTopDBs(w http.ResponseWriter, req *http.Request) {
 	viewRes := struct {
 		Rows []struct {
-			Key   int64
+			Key   float64
 			Value string
 		}
 	}{}
@@ -275,7 +275,7 @@ func handleListTopDBs(w http.ResponseWriter, req *http.Request) {
 	}
 
 	type T struct {
-		Size int64
+		Size float64
 		Name string
 	}
 	res := []T{}
