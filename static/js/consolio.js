@@ -43,7 +43,7 @@ app.directive('confirmDelete', function () {
 
 function SwitchCtrl($scope, $rootScope) {
 
-    $rootScope.switch = { visible: true }
+    $rootScope.switch = { visible: false }
 
     $scope.switch_toggle = function () {
         if ($rootScope.switch.visible) {
