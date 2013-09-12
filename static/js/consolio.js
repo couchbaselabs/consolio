@@ -60,6 +60,7 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert, $location) {
 
     $scope.logout = consAuth.logout;
     $scope.login = consAuth.login;
+    $scope.prettySize = prettySize;
 
     $scope.switch = $rootScope.switch;
 
