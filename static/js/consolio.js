@@ -1,4 +1,4 @@
-angular.module("consolio", ['ui.codemirror', 'consAuth', 'consAlert', 'angularCodeMirror', 'ngRoute']).
+var app = angular.module("consolio", ['ui.codemirror', 'consAuth', 'consAlert', 'angularCodeMirror', 'ngRoute']).
     filter('calDate',function () {
         return function (dstr) {
             return moment(dstr).calendar();
@@ -25,10 +25,43 @@ angular.module("consolio", ['ui.codemirror', 'consAuth', 'consAlert', 'angularCo
             $locationProvider.hashPrefix('!');
         }]);
 
-function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
+app.directive('confirmDelete', function () {
+    return {
+        priority: 1,
+        terminal: true,
+        link: function (scope, element, attr) {
+            var msg = attr.confirmDelete || "Are you sure?";
+            var clickAction = attr.ngClick;
+            element.bind('click',function () {
+                if ( window.confirm(msg) ) {
+                    scope.$eval(clickAction)
+                }
+            });
+        }
+    };
+});
+
+function SwitchCtrl($scope, $rootScope) {
+
+    $rootScope.switch = { visible: false }
+
+    $scope.switch_toggle = function () {
+        if ($rootScope.switch.visible) {
+            $rootScope.switch.visible = false;
+        }
+        else {
+            $rootScope.switch.visible = true;
+        }
+        console.log($rootScope.switch.visible);
+    }
+}
+
+function DashCtrl($scope, $http, $rootScope, consAuth, bAlert, $location) {
 
     $scope.logout = consAuth.logout;
     $scope.login = consAuth.login;
+
+    $scope.switch = $rootScope.switch;
 
     //console.log("%c DashCtrl>>>>>>", 'background: #222; color: #bada55');
     //console.log({ loggedin: $rootScope.loggedin, syncgws: $scope.syncgws, init: $scope.init, sgws_size: $scope.syncgws_size});
@@ -162,16 +195,19 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert) {
     };
 
     $scope.delete = function (i) {
-        //swgurl = $scope.syncgws[]
+        var sgwurl = "/api/sgw/" + $scope.syncgws[i].name + "/";
         console.log("DELETE");
         console.log("index = " + i);
-//        $http.delete(sgwurl)
-//            .success(function(data) {
-//                $location.path("/dashboard/");
-//            })
-//            .error(function(data, code) {
-//                bAlert("Error " + code, "Couldn't delete SGW: " + data, "error");
-//            });
+        console.log(sgwurl);
+        $http.delete(sgwurl)
+            .success(function(data) {
+                $scope.syncgws = _.filter($scope.syncgws, function(e){
+                    return e.name != $scope.syncgws[i].name;
+                });
+            })
+            .error(function(data, code) {
+                bAlert("Error " + code, "Couldn't delete SGW: " + data, "error");
+            });
     };
 
     $scope.$watch("syncgws", function (value) {

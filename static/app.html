@@ -28,6 +28,7 @@
 <body>
 
 <header class="navbar navbar-fixed-top  navbar-inverse">
+    <div id="switch" ng-controller="SwitchCtrl" ng-click="switch_toggle()" ng-class="{ 'toggle-on': switch, 'toggle-off': !switch }">&nbsp;</div>
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">

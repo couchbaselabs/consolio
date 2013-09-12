@@ -106,7 +106,22 @@ dl, dt, dd {
     margin: 20px 18px
 }
 
+#switch {
+    top: 0;
+    right: 0;
+    position: fixed;
+    z-index: 1000;
+    width: 20px;
+    height: 20px;
+    cursor: crosshair !important;
+}
 
+.toggle-on {
+    border: 0px solid green;
+}
+.toggle-off {
+    border: 0px solid red;
+}
 /**********************************************************/
 /* PERSONAL BUTTON STYLES */
 /**********************************************************/

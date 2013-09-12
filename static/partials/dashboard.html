@@ -53,11 +53,11 @@
         <p ng-hide="syncgws"><em>No sync gateways created yet...</em></p>
         <table id="sgw-list" class="table table-hover" ng-show="syncgws">
             <thead>
-            <th>Name</th>
+            <th style="width: 250px;">Name</th>
             <th>Urls</th>
-            <th>Status</th>
-            <th>Storage</th>
-            <th>Average Usage</th>
+            <th ng-show="switch.visible">Status</th>
+            <th ng-show="switch.visible">Storage</th>
+            <th ng-show="switch.visible">Average Usage</th>
             <th>&nbsp;</th>
             </thead>
 
@@ -65,18 +65,19 @@
             <tbody ng-repeat="d in syncgws" ng-switch="row.configure" ng-init="row={configure:false}">
 
             <!-- Displayed when not configuring -->
-            <tr ng-switch-default>
+            <tr ng-switch-default>{{console.log(d)}}
                 <td><span class="sgw-name">{{d.name}}</span></td>
                 <td>
                     <button id="sgwm-{{$index}}" data-toggle="modal" href="#myModal" ng-click="setModalContent($index)">
                         View <span
                             class="icon icon-eye-open"></span></button>
                 </td>
-                <td>{{d.state.length == 0 ? "(not reported yet)" : d.state}}</td>
-                <td>{{d.stats ? d.stats.size + " of 500 MB" : "(not reported yet)"}}</td>
-                <td>{{d.stats ? (d.stats.ops ? "xxx ops/day" : "(not reported yet)") : "(not reported yet)" }}</td>
+                <td ng-show="switch.visible">{{d.state.length == 0 ? "(not reported yet)" : d.state}}</td>
+                <td ng-show="switch.visible">{{d.stats ? d.stats.size + " of 500 MB" : "(not reported yet)"}}</td>
+                <td ng-show="switch.visible">{{d.stats ? (d.stats.ops ? "xxx ops/day" : "(not reported yet)") : "(not reported yet)" }}</td>
                 <td style="text-align: right;">
                     <button class="btn btn-info" ng-click="row.configure=true;editor.focus">configure</button>
+                    <button class="btn btn-danger" ng-click="delete($index)" confirm-delete="Really Delete '{{d.name}}' ?">delete</button>
                 </td>
             </tr>
 
