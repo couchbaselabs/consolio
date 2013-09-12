@@ -57,7 +57,7 @@
             <th>Urls</th>
             <th ng-show="switch.visible">Status</th>
             <th ng-show="switch.visible">Storage</th>
-            <th ng-show="switch.visible">Average Usage</th>
+            <th ng-show="switch.visible">Usage</th>
             <th>&nbsp;</th>
             </thead>
 
@@ -72,7 +72,7 @@
                         View <span
                             class="icon icon-eye-open"></span></button>
                 </td>
-                <td ng-show="switch.visible">{{d.state.length == 0 ? "(not reported yet)" : d.state}}</td>
+                <td ng-show="switch.visible">{{!d.state ? "active" : d.state}}</td>
                 <td ng-show="switch.visible">{{d.stats ? d.stats.size + " of 500 MB" : "(not reported yet)"}}</td>
                 <td ng-show="switch.visible">{{d.stats ? (d.stats.ops ? "xxx ops/day" : "(not reported yet)") : "(not reported yet)" }}</td>
                 <td style="text-align: right;">
