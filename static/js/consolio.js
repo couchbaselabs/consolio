@@ -52,7 +52,7 @@ function SwitchCtrl($scope, $rootScope) {
         else {
             $rootScope.switch.visible = true;
         }
-        console.log($rootScope.switch.visible);
+        //console.log($rootScope.switch.visible);
     }
 }
 
@@ -87,6 +87,7 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert, $location) {
             $http.get("/api/sgw/").success(function (sgws) {
 
                 $scope.syncgws = sgws;
+                console.log(sgws);
 
                 if ($scope.syncgws.length > 0) {
                     // For the cancel edit feature on sync functions, we edit a copy (so a copy needs to be created)

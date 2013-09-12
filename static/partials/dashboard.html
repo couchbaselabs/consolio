@@ -65,7 +65,7 @@
             <tbody ng-repeat="d in syncgws" ng-switch="row.configure" ng-init="row={configure:false}">
 
             <!-- Displayed when not configuring -->
-            <tr ng-switch-default>{{console.log(d)}}
+            <tr ng-switch-default>
                 <td><span class="sgw-name">{{d.name}}</span></td>
                 <td>
                     <button id="sgwm-{{$index}}" data-toggle="modal" href="#myModal" ng-click="setModalContent($index)">
