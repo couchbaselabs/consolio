@@ -123,7 +123,7 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert, $location) {
                 $scope.modal_api_url = sgw.url
             }
             else {
-                $scope.modal_api_url = "http://sync.couchbasecloud.com/" + sgw.name;
+                $scope.modal_api_url = "http://sync.couchbasecloud.com/" + sgw.name + "/";
             }
 
             if ($scope.authuser == null || $scope.authtoken == null) {
