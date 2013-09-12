@@ -97,7 +97,7 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert, $location) {
                         // For the cancel edit feature on sync functions, we edit a copy (so a copy needs to be created)
                         angular.forEach($scope.syncgws, function (i) {
                             //console.log(i);
-                            i.stats = _.find($scope.databases, function(db) {
+                            i.stats = _.detect($scope.databases, function(db) {
                                 if (i.extra.dbname == db.name)
                                     return db.stats;
                             });
