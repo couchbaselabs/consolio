@@ -99,7 +99,7 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert, $location) {
                     angular.forEach($scope.syncgws, function (i) {
                         //console.log(i);
                         i.stats = _.filter($scope.databases, function(db) {
-                            if (i.extra.dbName == db.name)
+                            if (i.extra.dbname == db.name)
                                 return db.stats;
                         });
                         i.extra.sync_copy = i.extra.sync;
