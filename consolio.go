@@ -257,6 +257,35 @@ func handleListWebhooks(w http.ResponseWriter, req *http.Request) {
 	mustEncode(w, hooks)
 }
 
+func handleListTopDBs(w http.ResponseWriter, req *http.Request) {
+	viewRes := struct {
+		Rows []struct {
+			Key   int64
+			Value string
+		}
+	}{}
+
+	err := db.ViewCustom("consolio", "bysize", map[string]interface{}{
+		"limit":      50,
+		"descending": true,
+	}, &viewRes)
+	if err != nil {
+		showError(w, req, err.Error(), 500)
+		return
+	}
+
+	type T struct {
+		Size int64
+		Name string
+	}
+	res := []T{}
+	for _, r := range viewRes.Rows {
+		res = append(res, T{r.Key, r.Value})
+	}
+
+	mustEncode(w, res)
+}
+
 func adminRequired(r *http.Request, rm *mux.RouteMatch) bool {
 	return whoami(r).Admin
 }
@@ -433,15 +462,17 @@ func main() {
 	r.HandleFunc("/api/database/", handleListDBs).Methods("GET")
 	r.HandleFunc("/api/database/", handleNewDB).Methods("POST")
 
-	r.HandleFunc("/api/sgw/{name}/", handleGetSGW).Methods("GET")           // Get SGW
-	r.HandleFunc("/api/sgw/{name}/", handleDeleteSGW).Methods("DELETE")     // Delete SGW
-	r.HandleFunc("/api/sgw/{name}/", handleUpdateSGW).Methods("POST")       // Update the sync funk
-	r.HandleFunc("/api/sgw/", handleListSGWs).Methods("GET")                // Get SGW List
-	r.HandleFunc("/api/sgw/", handleNewSGW).Methods("POST")                 // Create New SGW
+	r.HandleFunc("/api/sgw/{name}/", handleGetSGW).Methods("GET")       // Get SGW
+	r.HandleFunc("/api/sgw/{name}/", handleDeleteSGW).Methods("DELETE") // Delete SGW
+	r.HandleFunc("/api/sgw/{name}/", handleUpdateSGW).Methods("POST")   // Update the sync funk
+	r.HandleFunc("/api/sgw/", handleListSGWs).Methods("GET")            // Get SGW List
+	r.HandleFunc("/api/sgw/", handleNewSGW).Methods("POST")             // Create New SGW
 
 	r.HandleFunc("/api/me/", handleMe).Methods("GET")
 	r.HandleFunc("/api/me/token/", handleUserAuthToken).Methods("GET")
 
+	r.HandleFunc("/api/topdbs/",
+		handleListTopDBs).Methods("GET").MatcherFunc(adminRequired)
 	r.HandleFunc("/api/webhook/",
 		handleListWebhooks).Methods("GET").MatcherFunc(adminRequired)
 	r.HandleFunc("/api/webhook/",
