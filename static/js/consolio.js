@@ -52,7 +52,6 @@ function SwitchCtrl($scope, $rootScope) {
         else {
             $rootScope.switch.visible = true;
         }
-        //console.log($rootScope.switch.visible);
     }
 }
 
@@ -63,9 +62,6 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert, $location) {
     $scope.prettySize = prettySize;
 
     $scope.switch = $rootScope.switch;
-
-    //console.log("%c DashCtrl>>>>>>", 'background: #222; color: #bada55');
-    //console.log({ loggedin: $rootScope.loggedin, syncgws: $scope.syncgws, init: $scope.init, sgws_size: $scope.syncgws_size});
     $scope.init = $scope.init || false;
 
     if (!$scope.init) {
@@ -77,9 +73,6 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert, $location) {
 
     $rootScope.$watch('loggedin', function () {
         if ($rootScope.loggedin == true) {
-
-            //console.log("%c DashCtrl - $watch loggedin", 'background: #222; color: #bada55');
-            //console.log({ loggedin: $rootScope.loggedin, syncgws: $scope.syncgws, init: $scope.init, sgws_size: $scope.syncgws_size});
 
             $http.get("/api/me/").success(function (me) {
                 $scope.me = me;
@@ -93,18 +86,16 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert, $location) {
 
                     $http.get("/api/database/").success(function(dbs) {
                        $scope.databases = dbs;
-                        //console.log(dbs);
-
-                        // For the cancel edit feature on sync functions, we edit a copy (so a copy needs to be created)
+                        // For the cancel edit feature on sync
+                        // functions, we edit a copy (so a copy needs
+                        // to be created)
                         angular.forEach($scope.syncgws, function (i) {
-                            //console.log(i);
                             i.stats = _.detect($scope.databases, function(db) {
                                 if (i.extra.dbname == db.name)
                                     return db.stats;
                             });
                             i.extra.sync_copy = i.extra.sync;
                         });
-                        //console.log(sgws);
                     });
 
                 }
@@ -224,16 +215,10 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert, $location) {
     };
 
     $scope.$watch("syncgws", function (value) {
-        //console.log("%c Watch syncgws[]", 'background: #222; color: #55daba');
-        //console.log({ loggedin: $rootScope.loggedin, syncgws: $scope.syncgws, init: $scope.init, sgws_size: $scope.syncgws_size});
         var val = value || null;
         if (val) {
-            //console.log("values..." + $scope.syncgws_size + "/" + $scope.syncgws.length.toString());
-
             if ($scope.syncgws.length > 0 && $scope.syncgws_size != $scope.syncgws.length) {
-                //console.log("%c BOOM!", 'color: #ff0000');
                 $scope.syncgws_size = $scope.syncgws.length
-                //console.log({ x: true, loggedin: $rootScope.loggedin, syncgws: $scope.syncgws, init: $scope.init, sgws_size: $scope.syncgws_size});
             }
         }
     });
@@ -291,27 +276,9 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert, $location) {
         // Options
         doc.markClean()
 
-        // Events
-//        editor.on("beforeChange", function () {
-//            console.log("editor BeforeChange");
-//        });
-//
-//        editor.on("change", function () {
-//            console.log("editor OnChange");
-//        });
     }
 
-    $scope.cmLoaded = function (editor) {
-
-//          var autoformat = function (editor) {
-//            var totalLines = editor.lineCount();
-//            var totalChars = editor.getTextArea().value.length;
-//            editor.autoFormatRange({line: 0, ch: 0}, {line: totalLines, ch: totalChars});
-//            editor.getDoc().setCursor({line: 0, ch: 0});
-//        }
-//
-//        autoformat(editor);
-    }
+    $scope.cmLoaded = function (editor) {}
 
     $scope.editorOptions = {
         lineWrapping: true,
@@ -369,18 +336,12 @@ function makeZero(item) {
         }, 2000);
     });
 
-    clip.on('mousedown', function (client) {
-        // alert("mouse down");
-    });
+    clip.on('mousedown', function (client) {});
 
     clip.on('mouseup', function (client) {
         $(this).addClass("btn-success");
         $(this).removeClass("btn-info");
         $("#notify-copied").show().addClass("in");
-//        item.tooltip({
-//            title: 'copied!'
-//        });
-        // alert("mouse up");
     });
 
     return clip;
@@ -459,12 +420,8 @@ function AdminCtrl($scope, $http, $rootScope, $location, bAlert) {
 }
 
 function LoginCtrl($scope, $http, $rootScope, consAuth) {
-    //console.log("LoginCtrl");
-
     $rootScope.$watch('loggedin', function () {
-
         if ($rootScope.loggedin) {
-            //console.log("LoginCtrl - $watch loggedin");
             $scope.auth = consAuth.get();
         }
     });
@@ -498,6 +455,5 @@ function prettySize(s) {
     var suffix = sizes[parseInt(e)];
     var val = s / Math.pow(1024, Math.floor(e));
     x = val.toFixed(2) + " " + suffix;
-    //console.log(x);
     return x;
 }
