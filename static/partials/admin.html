@@ -1,16 +1,4 @@
 <h1>Admin</h1>
 
-<h2>Webhooks</h2>
+<p>[no content]</p>
 
-<ul>
-  <li ng-repeat="h in webhooks">{{h.name}} - {{h.url}}
-    <button ng-click="delete(h.name)" class="btn btn-mini btn-danger">&times;</button></li>
-</ul>
-
-<h3>Add Webhook</h3>
-
-<form ng-submit="add()">
-  Name: <input ng-model="newhookname" id="newhookname" /><br/>
-  URL: <input ng-model="newhookurl" id="newhookurl" /><br/>
-  <input type="submit" />
-</form>

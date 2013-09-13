@@ -480,44 +480,6 @@ function AdminCtrl($scope, $http, $rootScope, $location, bAlert) {
         .error(function (data, error) {
             $location.path("/index/");
         });
-
-    $scope.webhooks = [];
-    $http.get("/api/webhook/")
-        .success(function (data) {
-            $scope.webhooks = data;
-        })
-        .error(function (data, error) {
-            bAlert("Error " + code, "Couldn't get webhooks: " + data, "error");
-        });
-
-    $scope.add = function () {
-        var n = $("#newhookname").val();
-        var u = $("#newhookurl").val();
-        $http.post("/api/webhook/",
-            'name=' + encodeURIComponent(n) +
-                '&url=' + encodeURIComponent(u),
-            {headers: {"Content-Type": "application/x-www-form-urlencoded"}})
-            .success(function (data) {
-                $("#newhookname").val("");
-                $("#newhookurl").val("");
-                $scope.webhooks.push(data);
-            })
-            .error(function (data, code) {
-                bAlert("Error " + code, "Couldn't create webhook: " + data, "error");
-            });
-    };
-
-    $scope.delete = function (n) {
-        $http.delete("/api/webhook/" + encodeURIComponent(n) + "/")
-            .success(function (data) {
-                $scope.webhooks = _.filter($scope.webhooks, function (e) {
-                    return e.name !== n;
-                });
-            })
-            .error(function (data, code) {
-                bAlert("Error " + code, "Couldn't delete webhook: " + data, "error");
-            });
-    };
 }
 
 function LoginCtrl($scope, $http, $rootScope, consAuth) {

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"crypto/sha1"
 	"encoding/hex"
 	"encoding/json"
@@ -9,7 +8,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/url"
 	"regexp"
 	"strings"
 	"time"
@@ -226,37 +224,6 @@ func handleDeleteDB(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(204)
 }
 
-func getWebhooks() ([]Webhook, error) {
-	rv := []Webhook{}
-
-	viewRes := struct {
-		Rows []struct {
-			Key, Value string
-		}
-	}{}
-
-	err := db.ViewCustom("consolio", "webhooks", nil, &viewRes)
-	if err != nil {
-		return rv, err
-	}
-
-	for _, r := range viewRes.Rows {
-		rv = append(rv, Webhook{Name: r.Key, Url: r.Value, Type: "webhook"})
-	}
-
-	return rv, err
-}
-
-func handleListWebhooks(w http.ResponseWriter, req *http.Request) {
-	hooks, err := getWebhooks()
-	if err != nil {
-		showError(w, req, err.Error(), 500)
-		return
-	}
-
-	mustEncode(w, hooks)
-}
-
 func handleListTopDBs(w http.ResponseWriter, req *http.Request) {
 	viewRes := struct {
 		Rows []struct {
@@ -292,42 +259,6 @@ func adminRequired(r *http.Request, rm *mux.RouteMatch) bool {
 	return whoami(r).Admin
 }
 
-func handleNewWebhook(w http.ResponseWriter, req *http.Request) {
-	wh := Webhook{
-		Name: req.FormValue("name"),
-		Url:  req.FormValue("url"),
-		Type: "webhook",
-	}
-
-	_, err := url.Parse(wh.Url)
-	if err != nil {
-		showError(w, req, err.Error(), 500)
-		return
-	}
-
-	k := "wh-" + wh.Name
-	err = db.Set(k, 0, wh)
-	if err != nil {
-		showError(w, req, err.Error(), 500)
-		return
-	}
-
-	mustEncode(w, wh)
-}
-
-func handleDeleteWebhook(w http.ResponseWriter, req *http.Request) {
-	k := "wh-" + mux.Vars(req)["name"]
-	err := db.Delete(k)
-	switch {
-	case gomemcached.IsNotFound(err):
-		showError(w, req, "Not found", 404)
-	case err != nil:
-		showError(w, req, err.Error(), 500)
-	default:
-		w.WriteHeader(204)
-	}
-}
-
 func handleMe(w http.ResponseWriter, req *http.Request) {
 	mustEncode(w, whoami(req))
 }
@@ -337,52 +268,6 @@ func RewriteURL(to string, h http.Handler) http.Handler {
 		r.URL.Path = to
 		h.ServeHTTP(w, r)
 	})
-}
-
-func runHook(wh Webhook, content []byte) error {
-	req, err := http.NewRequest("POST", wh.Url, bytes.NewReader(content))
-	if err != nil {
-		return err
-	}
-
-	req.Header.Set("Content-Type", "application/json")
-
-	res, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return err
-	}
-	defer res.Body.Close()
-	if res.StatusCode >= 300 {
-		return fmt.Errorf("HTTP Error: %v", res.Status)
-	}
-	return nil
-}
-
-func runHooks(h consolio.ChangeEvent) {
-	hooks, err := getWebhooks()
-	if err != nil {
-		glog.Infof("Error getting web hooks:  %v", err)
-		return
-	}
-
-	content, err := json.Marshal(h)
-	if err != nil {
-		glog.Infof("Error marshaling hook event: %v", err)
-		return
-	}
-
-	for _, wh := range hooks {
-		err := runHook(wh, content)
-		if err != nil {
-			glog.Infof("Error running hook %v -> %v: %v", h, wh, err)
-		}
-	}
-}
-
-func hookRunner() {
-	for h := range eventCh {
-		runHooks(h)
-	}
 }
 
 func main() {
@@ -400,7 +285,6 @@ func main() {
 	initPgp(*keyRing, strings.Split(*encryptTo, ","))
 
 	go eventListener()
-	go hookRunner()
 
 	r := mux.NewRouter()
 
@@ -445,12 +329,6 @@ func main() {
 
 	r.HandleFunc("/api/topdbs/",
 		handleListTopDBs).Methods("GET").MatcherFunc(adminRequired)
-	r.HandleFunc("/api/webhook/",
-		handleListWebhooks).Methods("GET").MatcherFunc(adminRequired)
-	r.HandleFunc("/api/webhook/",
-		handleNewWebhook).Methods("POST").MatcherFunc(adminRequired)
-	r.HandleFunc("/api/webhook/{name}/",
-		handleDeleteWebhook).Methods("DELETE").MatcherFunc(adminRequired)
 
 	r.HandleFunc(*backendPrefix+"sgwconf/{name}", handleMkSGWConf)
 	r.HandleFunc(*backendPrefix+"dbconf/{name}", handleMkDBConf)
