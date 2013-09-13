@@ -328,36 +328,6 @@ func handleDeleteWebhook(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func handleBackendUpdateItem(prefix string, w http.ResponseWriter, req *http.Request) {
-	k := prefix + "-" + mux.Vars(req)["name"]
-	it := &consolio.Item{}
-	err := db.Get(k, it)
-	if err != nil {
-		showError(w, req, "Not found", 404)
-		return
-	}
-
-	if u := req.FormValue("url"); u != "" {
-		it.URL = u
-	}
-
-	err = db.Set(k, 0, it)
-	if err != nil {
-		showError(w, req, err.Error(), 500)
-		return
-	}
-
-	w.WriteHeader(204)
-}
-
-func handleBackendUpdateSGW(w http.ResponseWriter, req *http.Request) {
-	handleBackendUpdateItem("sgw", w, req)
-}
-
-func handleBackendUpdateDB(w http.ResponseWriter, req *http.Request) {
-	handleBackendUpdateItem("db", w, req)
-}
-
 func handleMe(w http.ResponseWriter, req *http.Request) {
 	mustEncode(w, whoami(req))
 }
@@ -482,8 +452,6 @@ func main() {
 	r.HandleFunc("/api/webhook/{name}/",
 		handleDeleteWebhook).Methods("DELETE").MatcherFunc(adminRequired)
 
-	r.HandleFunc(*backendPrefix+"update/sgw/{name}", handleBackendUpdateSGW).Methods("POST")
-	r.HandleFunc(*backendPrefix+"update/db/{name}", handleBackendUpdateDB).Methods("POST")
 	r.HandleFunc(*backendPrefix+"sgwconf/{name}", handleMkSGWConf)
 	r.HandleFunc(*backendPrefix+"dbconf/{name}", handleMkDBConf)
 
