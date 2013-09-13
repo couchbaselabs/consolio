@@ -234,7 +234,6 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert, $location) {
                 //console.log("%c BOOM!", 'color: #ff0000');
                 $scope.syncgws_size = $scope.syncgws.length
                 //console.log({ x: true, loggedin: $rootScope.loggedin, syncgws: $scope.syncgws, init: $scope.init, sgws_size: $scope.syncgws_size});
-                //setTimeout($scope.setButtons, 2000);
             }
         }
     });
@@ -267,29 +266,6 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert, $location) {
             console.log(txt);
         });
 
-    }
-
-    // Not used for now
-    $scope.setButtons = function () {
-
-        $("button.zerocopy-button").each(function (i, e) {
-            console.log($(this));
-            var clip = new ZeroClipboard($(this), { moviePath: '/static/swf/ZeroClipboard.swf' });
-            var txt = $(this).attr("data-clipboard-text");
-            console.log(txt);
-
-            clip.on('complete', function (client, args) {
-                alert("Copied text to clipboard: " + args.text);
-            });
-
-            clip.on('dataRequested', function (client, args) {
-                clip.setText(txt);
-                console.log(txt);
-            });
-//            $(this).click(function (event) {
-//                console.log("click");
-//            });
-        });
     }
 
     $scope.formatInput = function (editor) {
