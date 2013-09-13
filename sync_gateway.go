@@ -122,7 +122,32 @@ func handleNewSGW(w http.ResponseWriter, req *http.Request) {
 	mustEncode(w, d)
 }
 
-// TODO: func handleUpdateSGWConf
+func handleUpdateSGW(w http.ResponseWriter, req *http.Request) {
+	name := mux.Vars(req)["name"]
+
+	err := db.Update("sgw-"+name, 0, func(current []byte) ([]byte, error) {
+		if len(current) == 0 {
+			return nil, NotFound
+		}
+
+		item := consolio.Item{}
+		err := json.Unmarshal(current, &item)
+		if err != nil {
+			return nil, err
+		}
+
+		if s := req.FormValue("sync"); s != "" {
+			item.ExtraInfo["sync"] = strings.TrimSpace(s)
+		}
+
+		return json.Marshal(&item)
+	})
+
+	if err != nil {
+		showError(w, req, "Unable to update sgw: "+err.Error(), 500)
+		return
+	}
+}
 
 func handleMkSGWConf(w http.ResponseWriter, req *http.Request) {
 	name := mux.Vars(req)["name"]
