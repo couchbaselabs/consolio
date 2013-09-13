@@ -296,8 +296,6 @@ function DashCtrl($scope, $http, $rootScope, consAuth, bAlert, $location) {
     $scope.saveSyncFunction = function (i) {
         $scope.syncgws[i].extra.sync = $scope.syncgws[i].extra.sync_copy
         // Here we actually save the sync function through http post
-        //
-
     }
 
     $scope.cancelSaveSyncFunction = function (i) {
