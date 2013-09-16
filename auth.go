@@ -8,6 +8,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"io"
 	"net/http"
 	"strings"
 	"time"
@@ -39,12 +40,9 @@ func init() {
 
 func randstring(l int) string {
 	stuff := make([]byte, l)
-	bytesread, err := rand.Read(stuff)
+	_, err := io.ReadFull(rand.Reader, stuff)
 	if err != nil {
 		panic(err)
-	}
-	if bytesread != l {
-		panic("short read")
 	}
 
 	for i := range stuff {
