@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/couchbaselabs/consolio/tools"
 )
@@ -69,5 +70,11 @@ func main() {
 		w.Write(d)
 	})
 
-	http.ListenAndServe(*bindAddr, nil)
+	server := &http.Server{
+		Addr:         *bindAddr,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: time.Second,
+	}
+
+	server.ListenAndServe()
 }
