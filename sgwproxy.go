@@ -77,16 +77,16 @@ func sgwProxy() {
 		glog.Fatalf("Error creating errorist: %v", err)
 	}
 
-	server := &http.Server{
-		Handler:     errorizer{},
-		ReadTimeout: time.Second * 30,
-	}
-
-	go server.Serve(errorist)
+	go http.Serve(errorist, errorizer{})
 
 	brokenHost = errorist.Addr().String()
 	glog.Infof("Errorizer is on %v", brokenHost)
 
 	glog.Infof("Running sgw proxy on %v", *proxyBind)
-	glog.Fatal(http.ListenAndServe(*proxyBind, proxy))
+	server := &http.Server{
+		Addr:        *proxyBind,
+		Handler:     proxy,
+		ReadTimeout: 30 * time.Second,
+	}
+	glog.Fatal(server.ListenAndServe())
 }
