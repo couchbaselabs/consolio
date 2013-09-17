@@ -237,6 +237,7 @@ func handleListTopDBs(w http.ResponseWriter, req *http.Request) {
 	err := db.ViewCustom("consolio", "bysize", map[string]interface{}{
 		"limit":      50,
 		"descending": true,
+		"stale":      false,
 	}, &viewRes)
 	if err != nil {
 		showError(w, req, err.Error(), 500)
