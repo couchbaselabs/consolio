@@ -7,6 +7,7 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/golang/glog"
 
@@ -75,7 +76,13 @@ func sgwProxy() {
 	if err != nil {
 		glog.Fatalf("Error creating errorist: %v", err)
 	}
-	go http.Serve(errorist, errorizer{})
+
+	server := &http.Server{
+		Handler:     errorizer{},
+		ReadTimeout: time.Second * 30,
+	}
+
+	go server.Serve(errorist)
 
 	brokenHost = errorist.Addr().String()
 	glog.Infof("Errorizer is on %v", brokenHost)
