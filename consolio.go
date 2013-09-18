@@ -28,8 +28,6 @@ var backendPrefix = flag.String("backendPrefix", "/backend/",
 
 var db *couchbase.Bucket
 
-var eventCh = make(chan consolio.ChangeEvent, 10)
-
 func showError(w http.ResponseWriter, r *http.Request,
 	msg string, code int) {
 	glog.Infof("Reporting error %v/%v", code, msg)
@@ -131,7 +129,6 @@ func recordEvent(t string, i consolio.Item) error {
 	if !a {
 		return fmt.Errorf("Failed to add %v", k)
 	}
-	eventCh <- ev
 	return nil
 }
 
