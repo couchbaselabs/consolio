@@ -114,9 +114,14 @@ func (m *machine) rage(in io.RuneReader) error {
 func rewriteJson(in io.Reader, trans transformer) io.Reader {
 	pr, pw := io.Pipe()
 
+	br, ok := in.(io.RuneReader)
+	if !ok {
+		br = bufio.NewReader(in)
+	}
+
 	go func() {
 		m := newMachine(pw, trans)
-		pw.CloseWithError(m.rage(bufio.NewReader(in)))
+		pw.CloseWithError(m.rage(br))
 	}()
 
 	return pr
