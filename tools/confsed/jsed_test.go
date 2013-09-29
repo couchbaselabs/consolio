@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"io"
 	"io/ioutil"
 	"strings"
 	"testing"
@@ -21,6 +22,25 @@ func verify(t *testing.T, trans transformer, in, exp []byte) {
 
 func TestIdentity(t *testing.T) {
 	verify(t, identity, sample, sample)
+}
+
+type boringReader struct {
+	r io.Reader
+}
+
+func (br *boringReader) Read(b []byte) (int, error) {
+	return br.r.Read(b)
+}
+
+func TestBuffering(t *testing.T) {
+	got, err := ioutil.ReadAll(rewriteJson(&boringReader{bytes.NewReader(sample)},
+		identity))
+	if err != nil {
+		t.Errorf("Error reading stuff: %v", err)
+	}
+	if !bytes.Equal(sample, got) {
+		t.Errorf("Expected\n%s\ngot\n%s", sample, got)
+	}
 }
 
 func TestStripQuote(t *testing.T) {
