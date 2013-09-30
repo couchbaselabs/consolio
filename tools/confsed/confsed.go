@@ -40,6 +40,11 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 }
 
 func initRewrite(conf string) {
+	if conf == "" {
+		rewriter = strings.NewReplacer()
+		return
+	}
+
 	f, err := os.Open(conf)
 	if err != nil {
 		log.Fatalf("Error opening %v: %v", conf, err)
@@ -62,7 +67,7 @@ func initRewrite(conf string) {
 
 func main() {
 	bindAddr := flag.String("bind", ":7081", "Address to listen")
-	rewriteConf := flag.String("rewriteconf", "/dev/null",
+	rewriteConf := flag.String("rewriteconf", "",
 		"Path to json rewrite rules")
 
 	flag.Parse()
