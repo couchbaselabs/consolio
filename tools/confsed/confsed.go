@@ -31,12 +31,20 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}
 	defer res.Body.Close()
 
-	for k, v := range res.Header {
-		res.Header[k] = v
+	for k, vs := range res.Header {
+		h := w.Header()
+		h.Del(k)
+		for _, v := range vs {
+			h.Add(k, v)
+		}
 	}
 	w.WriteHeader(res.StatusCode)
 
-	io.Copy(w, rewriteJson(res.Body, rewriter.Replace))
+	if strings.Contains(res.Header.Get("content-type"), "json") {
+		io.Copy(w, rewriteJson(res.Body, rewriter.Replace))
+	} else {
+		io.Copy(w, res.Body)
+	}
 }
 
 func initRewrite(conf string) {
