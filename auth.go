@@ -185,10 +185,11 @@ func performAuth(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if time.Now().Unix()*1000 >= int64(resdata.Expires) {
-		glog.Infof("browserId assertion had expired as of %v (current is %v)",
+		glog.Warningf("browserId assertion had expired as of %v (current is %v)",
 			resdata.Expires, time.Now().Unix())
-		showError(w, r, "Browserid assertion is expired", 500)
-		return
+		// This is a workaround for something not yet understood. - cbugg: bug-926
+		// showError(w, r, "Browserid assertion is expired", 500)
+		// return
 	}
 
 	encoded, err := secureCookie.Encode("consolio.User", resdata)
