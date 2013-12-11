@@ -5,18 +5,12 @@
 
 <dl>
     <dt>Q: What is Couchbase Cloud?</dt>
-    <dd>Couchbase Cloud is a free Couchbase Server and Sync Gateway instance that helps Couchbase Lite developers up and
-        running quickly.
+    <dd>Couchbase Cloud is a free sandbox service that helps Couchbase Lite mobile developers get up and running quickly with syncing and data storage backed by Couchbase technology.
     </dd>
     <dt>Q: How does it work?</dt>
-    <dd>It’s free! Couchbase Lite, our embedded JSON database for mobile was designed with sync capability in mind.
-        Couchbase Lite works with Couchbase Sync Gateway, a sync tier that serves as an extension of our award-winning
-        NoSQL database, Couchbase Server.
-
+    <dd>Our sandbox service is free, and was designed to help developers using Couchbase Lite, our native NoSQL database for mobile, focus more on app development and less on server-side needs.
         <br/><br/>
-        On Couchbase Cloud, developers can start a Sync Gateway and Couchbase Server instance. Couchbase Lite-backed
-        mobile apps that need to share, collaborate or securely back up data to a back-end store can use the Sync
-        Gateway REST APIs to pull and push data to Couchbase Server.
+        On Couchbase Cloud, developers can start a Sync Gateway instance with its own attached Couchbase Server instance. Developers can configure the Sync Gateway as your sync needs require. If you are familiar with Couchbase Lite, simply use the Couchbase Cloud URL for your Sync Gateway instance (along the lines of: http://www.sync.couchbasecloud.com:4984/{your_sync_gateway_name}) in your app code for syncing and remote replication. For more information, check out one of our <a href="https://github.com/couchbaselabs/TodoLite-PhoneGap">example tutorials</a>, or our documentation on <a href="http://docs.couchbase.com/couchbase-lite/cbl-concepts/">Couchbase Lite</a> and <a href="http://docs.couchbase.com/sync-gateway/">Sync Gateway</a>.
         <br/><br/>
         Play around with Couchbase Cloud to see what a full Couchbase service stack can do for you.
     </dd>
@@ -26,16 +20,15 @@
 <h3>II. Getting Started</h3>
 <dl>
     <dt>Q: How do I sign-up?</dt>
-    <dd>It’s easy. Couchbase Cloud uses Mozilla Persona to create and authenticate accounts. Sign-in with just a valid
-        e-mail address, and a password. That’s it! Start your registration here to get your own Couchbase Cloud today.
+    <dd>Couchbase Cloud uses Mozilla Persona to create and authenticate accounts. Sign-in with just a valid e-mail address, and a password. That's it! Start your registration <a href="http://www.couchbasecloud.com">here</a> to get your own Couchbase Cloud account today.
     </dd>
 
     <dt>Q: How do I create and connect to Couchbase Cloud Sync Gateways?</dt>
     <dd>After you’ve opened your Couchbase Cloud account, head over to your Dashboard. Click the “New Sync Gateway”
         button to create a new Couchbase Cloud Sync Gateway. This opens a Sync Gateway configuration window.
         <br/><br/>
-        Give your Sync Gateway a name, and add your custom Sync Function code. If you are unfamiliar with the Sync
-        Function APIs, check out the documentation here. Below is an example and breakdown of some Sync Function code.
+        Give your Sync Gateway a name, and add your custom <a href="http://docs.couchbase.com/sync-gateway/#sync-function-api">Sync Function code</a>. If you are unfamiliar with the Sync
+        Function APIs, check out the documentation <a href="https://github.com/couchbaselabs/CouchChat-iOS/wiki/Chat-App-Data-Model">here</a>. Below is an example and breakdown of some Sync Function code.
 
 <pre>
 {
@@ -65,23 +58,23 @@
     <dt>Q: How do I change my Couchbase Cloud username or password?</dt>
     <dd>Our account authentication is handled by Mozilla Persona, with each account username tied to a valid e-mail
         address. While username updating is limited in Persona, you can easily update your password at
-        login.persona.org.
+        <a href="http://login.persona.org">login.persona.org</a>.
     </dd>
 
     <dt>Q: Can I connect directly to my Couchbase Cloud Couchbase Server instances instead of through Sync Gateway?</dt>
     <dd>It’s an offering that we’re actively thinking about, but in the meantime if you’re looking for access to
-        Couchbase Servers, we recommend checking out our Amazon Marketplace offerings, or download Couchbase Server for
+        Couchbase Servers, we recommend checking out our <a href="https://aws.amazon.com/marketplace/seller-profile/ref=dtl_pcp_sold_by?ie=UTF8&id=1a064a14-5ac2-4980-9167-15746aabde72">Amazon Marketplace offerings</a>, or download <a href="http://www.couchbase.com/download">Couchbase Server</a> for
         your in-house use.
     </dd>
 
     <dt>Q: Are there REST APIs for Sync Gateway?</dt>
     <dd>The sync is performed using REST calls from Couchbase Lite to Sync Gateway. For more information about the sync
-        REST APIs, check out our Sync Gateway documentation here. We also have REST APIs for Sync Gateway
-        administration.
+        REST APIs, check out our Sync Gateway documentation <a href="http://docs.couchbase.com/sync-gateway/#sync-rest-api">here</a>. We also have REST APIs for Sync Gateway
+        administration, which you can find out more about <a href="http://docs.couchbase.com/sync-gateway/#admin-rest-api">here</a>.
     </dd>
 
     <dt>Q: Can I run commands to Couchbase Cloud through REST APIs?</dt>
-    <dd>Yes! You can run commands to your Couchbase Cloud Sync Gateway, or any Sync Gateway, using our Admin REST APIs.
+    <dd>Yes, you can run commands to your Couchbase Cloud Sync Gateway, or any Sync Gateway, using our <a href="http://docs.couchbase.com/sync-gateway/#admin-rest-api">Admin REST APIs</a>.
         First, find your Couchbase Cloud Sync Gateway’s Admin REST API port by going to your Dashboard, and clicking on
         your Sync Gateway instance’s “Admin” URL link. Using this URL, and the curl tool you can send REST API commands
         to your Sync Gateway.
@@ -93,8 +86,7 @@
 <dl>
     <dt>Q: How secure is my data?</dt>
     <dd>Couchbase Cloud is a great prototyping tool to help developers get a sense of what its like to work with
-        Couchbase Server, and Couchbase Sync Gateway. We recommend hosting your secure data on an in-house Couchbase
-        Server instance, or on AWS via our Amazon Marketplace offerings.
+        Couchbase Server, and Couchbase Sync Gateway. We recommend hosting your secure data on an in-house <a href="http://www.couchbase.com/download">Couchbase Server</a> instance, or on AWS via our <a href="https://aws.amazon.com/marketplace/seller-profile/ref=dtl_pcp_sold_by?ie=UTF8&id=1a064a14-5ac2-4980-9167-15746aabde72">Amazon Marketplace offerings</a>.
     </dd>
 </dl>
 
@@ -107,15 +99,15 @@
 
         <br/><br/>
         When you are ready to go into production, we offer an exclusive Couchbase Server and Sync Gateway bundle for
-        free on the Amazon Marketplace. We also offer a variety of Couchbase Server Enterprise Edition a la carte
-        options on Amazon Marketplace, as well as downloads of both Couchbase Server and Sync Gateway on our website.
+        free on the <a href="https://aws.amazon.com/marketplace/seller-profile/ref=dtl_pcp_sold_by?ie=UTF8&id=1a064a14-5ac2-4980-9167-15746aabde72">Amazon Marketplace</a>. We also offer a variety of Couchbase Server Enterprise Edition a la carte
+        options on Amazon Marketplace, as well as downloads of both <a href="http://www.couchbase.com/download">Couchbase Server</a> and Sync Gateway on our website.
     </dd>
 
     <dt>Q: How can I backup my data?</dt>
     <dd>Couchbase Cloud is a great prototyping tool to help you get a sense of what its like to work with Couchbase
         Server, and Couchbase Sync Gateway. We recommend using a production-quality Couchbase Server for your regular
-        and backup needs. For cloud-based solutions, check our Amazon Marketplace offerings, or if you’re looking to
-        move your data in-house, download Couchbase Server and Sync Gateway from our website.
+        and backup needs. For cloud-based solutions, check our <a href="https://aws.amazon.com/marketplace/seller-profile/ref=dtl_pcp_sold_by?ie=UTF8&id=1a064a14-5ac2-4980-9167-15746aabde72">Amazon Marketplace offerings</a>, or if you’re looking to
+        move your data in-house, download <a href="http://www.couchbase.com/download">Couchbase Server</a> and Sync Gateway from our website.
     </dd>
 
     <dt>Q: How do I export my data?</dt>
@@ -127,7 +119,7 @@
     </dd>
 
     <dt>Q: How do I restart my server?</dt>
-    <dd>If you are having server issues, get in touch with us and we will investigate the problem. If a restart is
+    <dd>If you are having server issues, <a href="https://groups.google.com/forum/#!forum/couchbase-cloud">get in touch with us</a> and we will investigate the problem. If a restart is
         needed, we will let you know and coordinate an appropriate downtime.
     </dd>
 </dl>
@@ -137,14 +129,13 @@
 <dl>
     <dt>Q: Is there a limit to the number of Sync Gateways I can create?</dt>
     <dd>Each of our Couchbase Cloud accounts host up to 500MB to give developers the freedom to prototype what they
-        need. When you’re ready to go to production, check out our Amazon Marketplace offerings or download Couchbase
-        Server and/or Sync Gateway for your in-house needs.
+        need. When you’re ready to go to production, check out our <a href="https://aws.amazon.com/marketplace/seller-profile/ref=dtl_pcp_sold_by?ie=UTF8&id=1a064a14-5ac2-4980-9167-15746aabde72">Amazon Marketplace offerings</a> or download <a href="http://www.couchbase.com/download">Couchbase Server</a> and Sync Gateway for your in-house needs.
     </dd>
 
     <dt>Q: Can I use Couchbase Cloud for production?</dt>
     <dd>No. Couchbase Cloud is a sandbox service, and is our premier prototyping tool for developers interested in a
         hands-on learning experience for Sync Gateway and Couchbase Server. When you’re ready to go to production, check
-        out our Amazon Marketplace offerings or download Couchbase Server and/or Sync Gateway for your in-house needs.
+        out our <a href="https://aws.amazon.com/marketplace/seller-profile/ref=dtl_pcp_sold_by?ie=UTF8&id=1a064a14-5ac2-4980-9167-15746aabde72">Amazon Marketplace offerings</a> or download <a href="http://www.couchbase.com/download">Couchbase Server</a> and Sync Gateway for your in-house needs.
     </dd>
 </dl>
 
@@ -163,27 +154,26 @@
 <dl>
     <dt>Q: Does Couchbase Cloud have support?</dt>
     <dd>We’re currently in alpha, and do not have formal support offerings, but we would love to hear feedback and
-        questions from the developer community. Feel free to get in touch with us right here.
+        questions from the developer community. Feel free to get in touch with us right <a href="https://groups.google.com/forum/#!forum/couchbase-cloud">here</a> at our Google Groups.
         <br/><br/>
         We also recommend checking out our Couchbase Server Enterprise Edition, which comes with a variety of full
-        service options. Learn more here.
+        service options. Learn more <a href="http://www.couchbase.com/couchbase-server/overview">here</a>.
     </dd>
 
     <dt>Q: What version of Couchbase Server does Couchbase Cloud use?</dt>
-    <dd>Couchbase Cloud uses a specialized hosting edition of Couchbase Server that is compatible with Couchbase Server
-        2.0.
+    <dd>Couchbase Cloud uses a specialized hosting edition of Couchbase Server that is compatible with Couchbase Server 2.0.
     </dd>
 
     <dt>Q: What version of Sync Gateway does Couchbase Cloud use?</dt>
     <dd>We are currently using Sync Gateway 1.0-Beta.</dd>
 
     <dt>Q: How do I delete my account?</dt>
-    <dd>You can safely delete your databases at any time. If you need to delete your account, just let us know.</dd>
+    <dd>You can safely delete your databases at any time. If you need to delete your account, just <a href="http://www.couchbase.com/contact">let us know</a>.</dd>
 </dl>
 
 
 <h3>IX. Documentation</h3>
 <dl>
     <dt>Q: Is there a Couchbase Cloud tutorial for Sync Gateway or Couchbase Server?</dt>
-    <dd>We host documentation for all of our products at docs.couchbase.com. Check out our documentation for Couchbase Server here, and documentation for Sync Gateway here.</dd>
+    <dd>Not specifically for Couchbase Cloud, but we do for Couchbase Server and Sync Gateway. We host documentation for all of our products at <a href="http://docs.couchbase.com">docs.couchbase.com</a>. Check out our documentation for Couchbase Server <a href="http://docs.couchbase.com/couchbase-manual-2.2/">here</a>, and documentation for Sync Gateway <a href="docs.couchbase.com/sync-gateway/">here</a>.</dd>
 </dl>
